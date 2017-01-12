@@ -12,8 +12,8 @@ BASE_CFLAGS=-Dstricmp=strcasecmp
 # -funroll-loops
 
 #use these cflags to optimize it
-CFLAGS=$(BASE_CFLAGS) -m486 -O6 -ffast-math \
-	-fomit-frame-pointer -fexpensive-optimizations -malign-loops=2 \
+CFLAGS=$(BASE_CFLAGS) -m32 -O6 -ffast-math \
+	-fomit-frame-pointer -malign-loops=2 \
 	-malign-jumps=2 -malign-functions=2
 
 #use these when debugging 
