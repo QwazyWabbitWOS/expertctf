@@ -1,4 +1,16 @@
 Release/
 Debug/
 ipch/
+.svn
+*.manifest
+*.lastbuildstate
+*.idb
 *.sdf
+*.vcproj
+*.gitignore
+*.opensdf
+*.res
+*.xcodeproj
+*.o
+*.so
+dependencies
