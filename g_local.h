@@ -536,7 +536,7 @@ extern cvar_t *bfgdmgradius;
 extern cvar_t *bfgdamage;
 extern cvar_t *bfgspeed;
 //CTF
-extern	qboolean	is_quad;
+//extern	qboolean	is_quad;
 //CTF
 
 #define world	(&g_edicts[0])
