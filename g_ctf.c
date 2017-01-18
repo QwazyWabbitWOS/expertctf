@@ -246,7 +246,7 @@ static edict_t *loc_findradius (edict_t *from, vec3_t org, float rad)
 static gitem_t *flag1_item;
 static gitem_t *flag2_item;
 
-void InitSpawnLists();
+void InitSpawnLists(void);
 
 void CTFInit(void)
 {
@@ -426,7 +426,7 @@ list_t findLegalSpawns(int team) {
  * Find a list of spawn points for each team that are to spawn at
  * in CTF, that is, are not to near to the enemy's flag
  */
-void InitSpawnLists() {
+void InitSpawnLists(void) {
 
 	ctfgame.teamSpawns[TEAM1] = findLegalSpawns(TEAM1);
 	ctfgame.teamSpawns[TEAM2] = findLegalSpawns(TEAM2);
@@ -857,7 +857,7 @@ void CTFCheckHurtCarrier(edict_t *targ, edict_t *attacker)
 #define		CTF_DISTRIBUTION_BASE_RADIUS		1500
 
 // count the number of players in each general area of the map
-void countPlayers() {
+void countPlayers(void) {
 
 	int i, team;
 	edict_t *ent;
@@ -929,7 +929,7 @@ void countPlayers() {
 
 // convert player counts to imageindexes for pics showing 
 // concentration of players at each location
-void convertToPics() {
+void convertToPics(void) {
 
 	int team, location;
 	int numMembers;
@@ -969,7 +969,7 @@ void convertToPics() {
 	}
 }
 
-void calcTeamDistribution() {
+void calcTeamDistribution(void) {
 	countPlayers();
 	convertToPics();
 }

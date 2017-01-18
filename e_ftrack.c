@@ -513,7 +513,7 @@ void FlagTrackScoring(edict_t *targ, edict_t *inflictor, edict_t *attacker)
 	
 }
 
-void FlagTrackInit() {
+void FlagTrackInit(void) {
 	int i;
 	int flagsPerTeam = ceil(maxclients->value / 4);
 

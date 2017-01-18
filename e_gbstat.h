@@ -69,16 +69,16 @@
 #define GS_TYPE_CTF_CARRIER_KILL		"Carrier Kill"
 #define GS_TYPE_CTF_CARRIER_SAVE		"Carrier Save"
 
-qboolean gsStartLogging();
-qboolean gsStopLogging();
+qboolean gsStartLogging(void);
+qboolean gsStopLogging(void);
 
-void gsEnumConnectedClients();
+void gsEnumConnectedClients(void);
 void gsPlayerNameChange(char* szOldName, char* szNewName);
 void gsTeamChange(char* szOldName, char* szNewName);
-void gsLogLevelStart();
-void gsLogDate();
-void gsGameStart();
-void gsGameEnd();
+void gsLogLevelStart(void);
+void gsLogDate(void);
+void gsGameStart(void);
+void gsGameEnd(void);
 void gsLogClientConnect(edict_t *ent);
 void gsLogClientDisconnect(edict_t *ent);
 void gsLogFrag(edict_t *vict, edict_t *attk, int cod);

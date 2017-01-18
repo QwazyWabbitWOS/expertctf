@@ -14,7 +14,7 @@
  * Returns true if teamplay is active (whether by model or by skin)
  * false otherwise.
  */
-qboolean teamplayEnabled()
+qboolean teamplayEnabled(void)
 {
 	// Are we using skinteams or modelteams?
 	if ((int)dmflags->value & (DF_SKINTEAMS | DF_MODELTEAMS))
@@ -1147,7 +1147,7 @@ void InitTeamAudio(void)
 }
 
 // Spider: precached team audio
-void ExpertTeamAudioInit()
+void ExpertTeamAudioInit(void)
 {	
 	// Spider: MisH Team Audio
 	gi.AddCommandString("sv prop bonita/yes		8\n");

@@ -16,7 +16,7 @@ typedef struct {
 	list_t values;
 } props_t;
 
-props_t *newProps();
+props_t *newProps(void);
 void freeProps(props_t *props);
 void printProps(props_t *props);
 char *getProp(props_t *props, char* getKey);

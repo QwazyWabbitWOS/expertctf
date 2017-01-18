@@ -58,7 +58,7 @@ char gsCauseTable[35][20] =
 // Start/Stop logging functions
 // Note gsStartLogging is safe to call repeatedly
 //
-qboolean gsStartLogging()
+qboolean gsStartLogging(void)
 {
 	char filename[1000];
 	time_t curTime;
@@ -106,7 +106,7 @@ qboolean gsStartLogging()
 	return true;
 }
 
-qboolean gsStopLogging()
+qboolean gsStopLogging(void)
 {
 
 	if (gsFile == NULL)
@@ -122,7 +122,7 @@ qboolean gsStopLogging()
 	return true;
 }
 
-void gsLogDate()
+void gsLogDate(void)
 {
 	time_t curTime;
 	struct tm *now;
@@ -146,7 +146,7 @@ void gsLogDate()
 // Game Start/Game End logs
 //
 
-void gsEnumConnectedClients()
+void gsEnumConnectedClients(void)
 {
 	int i = 0;
 	edict_t *ent;
@@ -190,7 +190,7 @@ void gsTeamChange(char *playerName, char *newTeamName)
 					(int)level.time);
 }
 
-void gsLogLevelStart()
+void gsLogLevelStart(void)
 {
 	if (gsFile == NULL)
 		return;

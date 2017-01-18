@@ -30,13 +30,13 @@ int edictCompare(const void *elem1, const void *elem2) {
 		return -1;
 }
 
-void arenaInitLevel() {
+void arenaInitLevel(void) {
 	waitList = ArrayNew(sizeof(edict_t *), (int)maxclients->value, edictCompare);
 	arenaList = ArrayNew(sizeof(edict_t *), (int)maxclients->value, edictCompare);
 	gArenaState = STATE_WAITING;
 }
 
-void arenaEndLevel() {
+void arenaEndLevel(void) {
 	ArrayFree(waitList);
 	ArrayFree(arenaList);
 }
@@ -139,7 +139,7 @@ void arenaSpawn(edict_t *player) {
  * Add a new player to the arena from the spectator waiting list.
  * Only here can a countdown start.
  */
-void cycleArena() {
+void cycleArena(void) {
 
 	edict_t *newChallenger;
 
@@ -236,7 +236,7 @@ void arenaKilled(edict_t *victim) {
  * Plays sounds, etc, during the countdown to fighting
  * This is the only place actual fighting is allowed to begin
  */ 
-void arenaCountdown() {
+void arenaCountdown(void) {
 
 	int elapsed;
 

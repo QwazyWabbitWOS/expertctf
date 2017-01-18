@@ -12,7 +12,7 @@
  */
 
 // Version of the Expert modification
-#define	EXPERT_VERSION "4.0.3"
+#define	EXPERT_VERSION "4.0.4"
 
 // additional DM Flags
 #define DF_ARMOR_PROTECT						(1 << 18) 	// 262144
@@ -344,9 +344,9 @@ qboolean checkReconnectList(char *username);
 // of code changes in the main game source, to make merging with new
 // versions easier.
 //
-void ExpertGameInits();
-void ExpertLevelScripting();
-void ExpertLevelInits();
+void ExpertGameInits(void);
+void ExpertLevelScripting(char *mapname);
+void ExpertLevelInits(void);
 void ExpertPlayerDelayedInits(edict_t *player);
 void ExpertPlayerLevelInits(edict_t *player);
 
@@ -354,7 +354,7 @@ void InitCmds(edict_t *player);
 void ClientLeavePlay(edict_t *player);
 void ExpertPlayerDisconnect(edict_t *player);
 qboolean ExpertInhibit(edict_t *ent);
-void ExpertItemListChanges();
+void ExpertItemListChanges(void);
 void LoadCustomEntmap(char *mapname, char **entities);
 
 void ExpertBotDetect(edict_t *player);

@@ -112,7 +112,7 @@ int main(int argc, char *argv[]) { return 0; }
 /**
  * Called from InitGame at game DLL load time.  Set up cvars used by Expert, etc
  */
-void ExpertGameInits() {
+void ExpertGameInits(void) {
 
 	// Expert: Custom cvars
 	
@@ -238,7 +238,7 @@ void ExpertLevelScripting(char *mapname)
  * tagmalloc'd memory from the previous level has been freed.
  * SpawnEntities is called by the engine.
  */
-void ExpertLevelInits() {
+void ExpertLevelInits(void) {
 
 	int i;
 
@@ -550,7 +550,7 @@ qboolean ExpertInhibit(edict_t *ent) {
  * this once, immediately before "worldspawn" is spawned, since worldspawn
  * sets up configstrings using the itemlist.
  */
-void ExpertItemListChanges() {
+void ExpertItemListChanges(void) {
 
 	// Expert: Switch pickup names when Expert powerups are used
 	if (expflags & EXPERT_POWERUPS)

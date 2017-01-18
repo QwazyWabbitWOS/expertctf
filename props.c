@@ -14,7 +14,7 @@ int p_stricmp(const void *elem1, const void *elem2) {
 	}
 }
 
-props_t *newProps()
+props_t *newProps(void)
 {
 	// allocate a new properties struct
 	props_t *props = malloc(sizeof(props_t));
