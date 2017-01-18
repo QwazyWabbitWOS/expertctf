@@ -146,4 +146,4 @@ int listContains(list_t list, void *entry, int isSorted);
  */
 void listIterate(list_t list, listIteratorFn fn, void *clientData);
 
-#endif _REFLIST_H
+#endif /* _REFLIST_H */
