@@ -241,7 +241,7 @@ void DisplayBestObituaryMessage(int cause, unsigned int context,
 		{
 			mask = (unsigned int)1 << j;	// Set bit mask
 			if (mask & contextFlags) { // mask matches a bit set in contextFlags
-				//gi.dprintf("Masking flag %s\n", o_Contexts[log2(mask)]);
+				//gi.dprintf("Masking flag %s\n", o_Contexts[int_log2(mask)]);
 				ob = messagesForContext(cause, contextFlags & ~mask);
 				if (ob != NULL) {
 					//gi.dprintf("Found near match on context: dropped %d flag(s)\nFinal context was ",
@@ -254,7 +254,7 @@ void DisplayBestObituaryMessage(int cause, unsigned int context,
 		}
 		// no match for any combination of bitsSet - 1 flags.  
 		// Remove the lowest order flag and try again
-		//gi.dprintf("Dropping flag %s\n", o_Contexts[log2(lowestOrderBit(contextFlags))]);
+		//gi.dprintf("Dropping flag %s\n", o_Contexts[int_log2(lowestOrderBit(contextFlags))]);
 		contextFlags &= ~lowestOrderBit(contextFlags); 
 	}
 
@@ -1040,7 +1040,7 @@ void printContext(unsigned int context)
 	while (i != 0)
 	{
 		mask = lowestOrderBit(i);
-		gi.dprintf("%s[%d], ", o_Contexts[log2(mask)], log2(mask));
+		gi.dprintf("%s[%d], ", o_Contexts[int_log2(mask)], int_log2(mask));
 		i = i & ~mask;
 	}
 	if (context == 0) {

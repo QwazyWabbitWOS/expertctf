@@ -26,7 +26,7 @@ void trimWhitespace(char *szString);
 char *stringForBitField(unsigned int field);
 int numberOfBitsSet(unsigned int bitField);
 int lowestOrderBit(unsigned int bitField);
-int log2(unsigned int);
+int int_log2(unsigned int);
 
 // network
 void StuffCmd(edict_t *player, char *cmd);

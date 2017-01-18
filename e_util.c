@@ -81,7 +81,7 @@ void unicastSound(edict_t *player, int soundIndex, float volume)
           }
 */
 
-int log2(unsigned int num)
+int int_log2(unsigned int num)
 {
 	int i = 0;
 	while (num > 1)
