@@ -14,6 +14,7 @@
 
 ### Contribution guidelines ###
 
+* Guidelines are undefined at this time
 * Writing tests
 * Code review
 * Other guidelines
