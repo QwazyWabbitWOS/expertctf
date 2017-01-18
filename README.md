@@ -11,6 +11,7 @@
 * On Linux, make clean, then make.
 * Dependencies: Visual Studio 2010 on Windows, or gcc/clang and GNU make on Linux
 * On Windows with VS2010, use git clone per above, then open the .sln file with VS.
+* This version compiles cleanly on Debian Linux GCC 4.3.2 and probably others but still has issues on OS X 10.12.2 with Clang 8.0.0
 
 ### Contribution guidelines ###
 
