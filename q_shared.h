@@ -3,14 +3,10 @@
 // q_shared.h -- included first by ALL program modules
 
 	#ifdef _WIN32
-	// unknown pragmas are SUPPOSED to be ignored, but....
-	#pragma warning(disable : 4244)     // MIPS
-	#pragma warning(disable : 4136)     // X86
-	#pragma warning(disable : 4051)     // ALPHA
-
+	#pragma warning(disable : 4244)    // Implicit conversion, possible loss of data
 	#pragma warning(disable : 4018)     // signed/unsigned mismatch
 	#pragma warning(disable : 4305)		// truncation from const double to float
-	//#define WIN32_LEAN_AND_MEAN
+	#define WIN32_LEAN_AND_MEAN
 	#endif
 
 	#include <assert.h>
