@@ -1,21 +1,15 @@
-# README #
+### Expert CTF DLL code for Windows and Linux ###
 
-This README would normally document whatever steps are necessary to get your application up and running.
-
-### What is this repository for? ###
-
-* Quick summary
-* Version
+* This is Expert CTF for Quake 2
+* Version 4.0.4
+* This code is forked from V4.0.3 code originally downloaded from http://expertctf.net/index.php?linkid=11&SELOPT=5
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
-### How do I get set up? ###
+### How to set up? ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+* git clone https://QwazyWabbit@bitbucket.org/QwazyWabbit/expertctf.git
+* make clean, then make.
+* Dependencies: Visual Studio 2010 on Windows, gcc/clang on Linux, GNU make
 
 ### Contribution guidelines ###
 
@@ -25,5 +19,4 @@ This README would normally document whatever steps are necessary to get your app
 
 ### Who do I talk to? ###
 
-* Repo owner or admin
-* Other community or team contact
+* This repository is maintained by QwazyWabbit[WOS], www.clanwos.org
