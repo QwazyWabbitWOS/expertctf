@@ -594,3 +594,75 @@ qboolean loc_CanSee (edict_t *targ, edict_t *inflictor)
 
 	return false;
 }
+
+//QW//
+/**
+ Replace characters in destination string.
+ Parameter 'add' is added to each character 
+ found in source and result is placed in dest.
+ Parameters 'start' and 'end' specify character range to replace.
+ Source text must be a valid C string.
+ */
+//QwazyWabbit// A pointer version to eliminate undefined behavior.
+void convert_string(char *src, char start, char end, char add, char *dest)
+{
+	while ((*dest = *src))
+	{
+		if ((*dest >= start) && (*dest <= end) && (*dest != '\n'))
+			*dest += add;
+		src++, dest++;
+	}
+}
+
+/**
+ Set msb in specified string characters, copying them to destination. 
+ Text must be a valid C string.
+ Source and destination can be the same.
+ If dest == NULL the action occurs in-place.
+ */
+void highlight_text (char *src, char *dest)
+{
+	if (dest == NULL)
+		dest = src;
+	convert_string(src, 0, 127, 128, dest); // white -> green
+}
+
+/**
+ Clear msb in specified string characters, copying them to destination.
+ Text must be a valid C string.
+ Source and destination can be the same.
+ If dest == NULL the action occurs in-place.
+ */
+void white_text (char *src, char *dest)
+{
+	if (dest == NULL)
+		dest = src;
+	convert_string(src, 128, 255, -128, dest); // green -> white
+}
+
+/**
+ Make text uppercase.
+ Text must be a valid C string.
+ Source and destination can be the same.
+ If dest == NULL the action occurs in-place.
+ */
+void toupper_text(char *src, char *dest)
+{
+	if (dest == NULL)
+		dest = src;
+	convert_string(src, 'a', 'z', ('A'-'a'), dest); // a -> A
+}
+
+/**
+ Make text lowercase.
+ Text must be a valid C string.
+ Source and destination can be the same string.
+ If dest == NULL the action occurs in-place.
+ */
+void tolower_text(char *src, char *dest)
+{
+	if (dest == NULL)
+		dest = src;
+	convert_string(src, 'A', 'Z', ('a'-'A'), dest); // A -> a
+}
+

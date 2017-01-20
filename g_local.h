@@ -637,6 +637,13 @@ void vectoangles (vec3_t vec, vec3_t angles);
 qboolean loc_CanSee (edict_t *targ, edict_t *inflictor);
 void loc_buildboxpoints(vec3_t p[8], vec3_t org, vec3_t mins, vec3_t maxs);
 
+//QW//
+void convert_string(char *src, char start, char end, char add, char *dest);
+void highlight_text (char *src, char *dest);
+void white_text (char *src, char *dest);
+void toupper_text(char *src, char *dest);
+void tolower_text(char *src, char *dest);
+
 //
 // g_combat.c
 //
