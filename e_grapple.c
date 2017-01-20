@@ -134,8 +134,8 @@ void Grapple_Touch(edict_t *hook, edict_t *other, cplane_t *plane, csurface_t *s
 		Pull_Grapple(hook->owner);
 		Release_Grapple(hook);
 		
-		if(isCarrier(other) && sv_damagedropflags->value || 
-			CTFOWNTEAMisCarrier(other) && sv_damagedropflags->value)
+		if((isCarrier(other) && sv_damagedropflags->value) || 
+			(CTFOWNTEAMisCarrier(other) && sv_damagedropflags->value))
 		{
 			CTFOWNTEAM_Cmd_Drop_Flag(other);
 			//CTFOWNTEAMTouchFlag(CTFOWNTEAMwhatflag(other),hook->owner);
