@@ -342,7 +342,7 @@ void gsLogMisc(char *logEvent)
 	if (gsFile == NULL)
 		return;
 
-	fprintf(gsFile, logEvent);
+	fprintf(gsFile, "%s", logEvent);
 }
 
 
