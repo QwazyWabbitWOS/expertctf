@@ -1297,8 +1297,9 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 
 //CTF
 //Don't spawn the flags unless enabled
-	if (!ctf->value && (strcmp(ent->classname, "item_flag_team1") == 0 ||
-		 !ctf->value && strcmp(ent->classname, "item_flag_team2") == 0)) 
+	if (!ctf->value && 
+		((strcmp(ent->classname, "item_flag_team1") == 0 ||
+		 strcmp(ent->classname, "item_flag_team2") == 0))) 
 	{
 		gi.dprintf("Flags Not Loaded\n");
 		G_FreeEdict(ent);
