@@ -3,6 +3,7 @@
 * This is Expert CTF for Quake 2
 * Version 4.0.4
 * This code is forked from V4.0.3 code originally downloaded from http://expertctf.net/index.php?linkid=11&SELOPT=5
+* Client side files are available from the expertctf.net site above.
 
 ### How to set up? ###
 
