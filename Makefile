@@ -4,7 +4,7 @@
 
 ARCH=i386
 CC=gcc
-BASE_CFLAGS=-Dstricmp=strcasecmp -D__linux__
+BASE_CFLAGS=-D__linux__
 
 # The optimization flags below cause a crash immediately after connect 
 # with slackware. You might try adding flags one by one and recompiling 
