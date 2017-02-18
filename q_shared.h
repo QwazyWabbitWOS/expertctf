@@ -17,7 +17,7 @@
 	#include <stdlib.h>
 	#include <time.h>
 
-	#if (defined _M_IX86 || defined __i386__) && !defined C_ONLY && !defined __sun__
+#if defined _M_IX86 && !defined C_ONLY
 	#define id386	1
 	#else
 	#define id386	0
