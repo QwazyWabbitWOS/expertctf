@@ -4,7 +4,7 @@
 
 ARCH=i386
 CC=gcc
-BASE_CFLAGS=-D__linux__
+BASE_CFLAGS=
 
 # The optimization flags below cause a crash immediately after connect 
 # with slackware. You might try adding flags one by one and recompiling 
@@ -12,7 +12,7 @@ BASE_CFLAGS=-D__linux__
 # -funroll-loops
 
 #use these cflags to optimize it
-CFLAGS=$(BASE_CFLAGS) -m32 -O3 -ffast-math
+CFLAGS=$(BASE_CFLAGS)-m32 -O3 -ffast-math
 
 #use these when debugging 
 #CFLAGS=$(BASE_CFLAGS) -g
@@ -53,3 +53,13 @@ game$(ARCH).$(SHLIBEXT) : $(GAME_OBJS)
 clean:
 	-rm -f $(GAME_OBJS)
 	-rm -f game$(ARCH).$(SHLIBEXT)
+
+depends:
+	$(CC) $(CFLAGS) -MM *.c > dependencies
+
+all:
+	make clean
+	make depends
+	make
+
+-include dependencies
