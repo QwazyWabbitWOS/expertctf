@@ -127,10 +127,10 @@ void printContext(unsigned int context);
 void ExpertClientObituary (edict_t *victim, edict_t *inflictor, edict_t *attacker, int cod, vec3_t point)
 {
 
-	char			*aName = NULL;
-	char			*vName = NULL;
+	//char			*aName = NULL;
+	//char			*vName = NULL;
 
-	char			*szCause = NULL;
+	//char			*szCause = NULL;
 	unsigned int	context = 0;		// Context of death. 0 is nothing special.
 	int 			cause = 0;
 	int				aGender = 0;
@@ -273,7 +273,7 @@ void PrintRandObitMsg(char *aName, char *vName,
 	char *atkName;
 	char *vicName;
 
-	int vicSeparator = 156;
+	//int vicSeparator = 156;
 	char *pronouns[3][2] =	{	{OBIT_HE, OBIT_SHE},
 								{OBIT_HIM, OBIT_HER},
 								{OBIT_HIS, OBIT_HER}
@@ -579,8 +579,6 @@ unsigned int getCauseNumber(char *szCause)
 
 void InitExpertObituary(void)
 {
-	int i = 0;
-
 	// global info on number of obits and memory
 	gMemAllocated = 0;
 	gMsgCount = 0;

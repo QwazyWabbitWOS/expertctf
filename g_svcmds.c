@@ -389,8 +389,8 @@ void SVCmd_AddIP_f (void)
 	int		i, iplen; //, j; 
 //	byte	b[4];
 	
-	char num[15]={0};
-	char arggot[15] ={0};
+	//char num[15]={0};
+	//char arggot[15] ={0};
 	char argval[15]={0};
 	//char *loc;
 	if (filterban->value == 2){
@@ -635,7 +635,7 @@ void SVCmd_LoadMap_f (void)
 	edict_t	*ent;
 	char	command [256];
 	char mapname[64]={0};
-	char filename[MAX_QPATH]={0};
+	//char filename[MAX_QPATH]={0};
 	qboolean mapexists;
 	
 	mapexists = false;

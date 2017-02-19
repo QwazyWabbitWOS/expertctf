@@ -531,7 +531,6 @@ qboolean ValidOverlayCommand (edict_t *pedPlayer)
 void OverlayUpdate(edict_t *pedViewer)
 {
 	char szLayout[1400] = "";
-	qboolean hasChanged = false;
 	
 	pedViewer->client->updateFrame = level.framenum + EXPERT_UPDATE_FRAMES;
 	mpedCur = pedViewer;

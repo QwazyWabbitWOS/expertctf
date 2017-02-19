@@ -468,7 +468,7 @@ void FlagTrackScoring(edict_t *targ, edict_t *inflictor, edict_t *attacker)
 	int i;
 	edict_t *ent;
 */
-	qboolean gotCarrierDefenseBonus = false;
+	//qboolean gotCarrierDefenseBonus = false;
 
 	if (!targ || !attacker) {
 		gi.dprintf("Expert CTF scoring passed NULL attacker or targ\n");

@@ -377,7 +377,7 @@ void Release_Grapple (edict_t *hook)
 {
 	edict_t *owner = hook->owner;
 	gclient_t *client = hook->owner->client;
-	edict_t *link = hook->teamchain;
+	//edict_t *link = hook->teamchain;
 
 	client->on_hook = false;
 	client->hook_touch = NULL;

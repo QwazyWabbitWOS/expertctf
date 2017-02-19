@@ -779,7 +779,7 @@ void loadTeams(void)
 {
 	FILE *teamfile;
 	char readString[1000] = {0};
-	int i = 0, currentTeam = 0;
+	int currentTeam = 0;
 
 	// If teamplay is disabled, return.
 	if (!teamplayEnabled()) { 

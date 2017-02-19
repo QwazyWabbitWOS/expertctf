@@ -475,11 +475,9 @@ edict_t* SelectFarthestCTFSpawnPoint (edict_t* player)
 edict_t* SelectRandomCTFSpawnPoint (edict_t* player)
 {
 	edict_t	*spot, *spot1, *spot2;
-	int		count = 0, selection, spawnCount, i;
+	int		selection, spawnCount, i;
 	float	range, range1, range2;
 	list_t  spawns = ctfgame.teamSpawns[player->client->resp.team];
-
-	int nearFlag = 0;
 
 	spot = NULL;
 	range1 = range2 = 99999;
