@@ -1796,7 +1796,7 @@ void flag_sanity (edict_t *flag) {
 */
 
 
-static void CTFFlagThink(edict_t *ent)
+void CTFFlagThink(edict_t *ent)
 {
 	if (ent->solid != SOLID_NOT)
 		ent->s.frame = 173 + (((ent->s.frame - 173) + 1) % 16);

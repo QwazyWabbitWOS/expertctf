@@ -180,7 +180,7 @@ void CTFOpenJoinMenu(edict_t *ent);
 void CTFMenuObserve(edict_t *ent, pmenu_t *p);
 void CTF_MenuHelp(edict_t *ent, pmenu_t *p);
 
-static void CTFFlagThink(edict_t *ent);
+void CTFFlagThink(edict_t *ent);
 
 int CarrierName(int teamnum);
 
