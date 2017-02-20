@@ -487,7 +487,7 @@ unsigned int DiscoverContexts(edict_t *vict, edict_t *infl, edict_t *attk, vec3_
 	// Check if attacker was airborne at the time of shooting
 	if (Q_stricmp(infl->classname, "player") == 0)
 	{	// It's an instant effect weapon.
-		if (!CON_ATTACKER_ONGROUND && !nearToGround(attk))
+		if (!nearToGround(attk))
 			c |= CON_ATTACKER_AIRBORNE;
 	} else {
 		if (infl->firedFromAir)
