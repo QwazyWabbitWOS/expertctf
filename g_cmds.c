@@ -907,8 +907,11 @@ void Cmd_Say_f (edict_t *ent, qboolean team, qboolean arg0)
 				// Expert: in teamplay, prefix normal say commands with
 				// "TEAM" if a teammate is speaking
 
-				gi.cprintf(other, PRINT_HIGH, "TEAM ");
-				gi.cprintf(other, PRINT_CHAT, "%s", text);
+				//QW// 
+				// fix bug where Q2Pro clients don't highlight
+				// chat text with the TEAM tag.
+				//gi.cprintf(other, PRINT_HIGH, "TEAM ");
+				gi.cprintf(other, PRINT_CHAT, "TEAM %s", text);
 			} else {
 				gi.cprintf(other, PRINT_CHAT, "%s", text);
 			}
