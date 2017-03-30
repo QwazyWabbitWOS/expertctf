@@ -5,20 +5,14 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gamex86", "expert43.vcxproj
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug Alpha|Win32 = Debug Alpha|Win32
 		Debug|Win32 = Debug|Win32
-		Release Alpha|Win32 = Release Alpha|Win32
 		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{7C257D89-8C3B-1F34-20DB-58BDBBEC3B95}.Debug Alpha|Win32.ActiveCfg = Debug|Win32
-		{7C257D89-8C3B-1F34-20DB-58BDBBEC3B95}.Debug Alpha|Win32.Build.0 = Debug|Win32
 		{7C257D89-8C3B-1F34-20DB-58BDBBEC3B95}.Debug|Win32.ActiveCfg = Debug|Win32
 		{7C257D89-8C3B-1F34-20DB-58BDBBEC3B95}.Debug|Win32.Build.0 = Debug|Win32
-		{7C257D89-8C3B-1F34-20DB-58BDBBEC3B95}.Release Alpha|Win32.ActiveCfg = Release|Win32
-		{7C257D89-8C3B-1F34-20DB-58BDBBEC3B95}.Release Alpha|Win32.Build.0 = Release|Win32
-		{7C257D89-8C3B-1F34-20DB-58BDBBEC3B95}.Release|Win32.ActiveCfg = Debug|Win32
-		{7C257D89-8C3B-1F34-20DB-58BDBBEC3B95}.Release|Win32.Build.0 = Debug|Win32
+		{7C257D89-8C3B-1F34-20DB-58BDBBEC3B95}.Release|Win32.ActiveCfg = Release|Win32
+		{7C257D89-8C3B-1F34-20DB-58BDBBEC3B95}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
