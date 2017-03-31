@@ -1,6 +1,12 @@
 
 #include "g_local.h"
 
+#ifndef WIN32
+/* Silence GCC on Ubuntu about usage of fread() */
+#pragma GCC diagnostic push
+#pragma GCC diagnostic warning "-Wno-unused-result"
+#endif
+
 field_t fields[] = {
 	{"classname", FOFS(classname), F_LSTRING},
 	{"origin", FOFS(s.origin), F_VECTOR},
@@ -724,3 +730,7 @@ void ReadLevel (char *filename)
 				ent->nextthink = level.time + ent->delay;
 	}
 }
+
+#ifndef WIN32
+#pragma GCC diagnostic pop
+#endif
