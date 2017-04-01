@@ -17,6 +17,22 @@ CFLAGS=$(BASE_CFLAGS)-m32 -O3 -ffast-math
 #use these when debugging 
 #CFLAGS=$(BASE_CFLAGS) -g
 
+# flavors of Linux
+ifeq ($(shell uname),Linux)
+#SVNDEV := -D'SVN_REV="$(shell svnversion -n .)"'
+#CFLAGS += $(SVNDEV)
+CFLAGS += -DLINUX
+LIBTOOL = ldd
+endif
+
+# OS X wants to be Linux and FreeBSD too.
+ifeq ($(shell uname),Darwin)
+#SVNDEV := -D'SVN_REV="$(shell svnversion -n .)"'
+#CFLAGS += $(SVNDEV)
+CFLAGS += -DLINUX
+LIBTOOL = otool
+endif
+
 LDFLAGS=-ldl -lm
 SHLIBEXT=so
 SHLIBCFLAGS=-fPIC
