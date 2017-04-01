@@ -44,6 +44,7 @@ GAME_OBJS = \
 
 game$(ARCH).$(SHLIBEXT) : $(GAME_OBJS)
 	$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(GAME_OBJS)
+	$(LIBTOOL) -r $@
 
 
 #############################################################################
