@@ -2,20 +2,32 @@
 # Quake2 gamei386.so Makefile for Linux 
 #
 
-ARCH=i386
-CC=gcc
-BASE_CFLAGS=
+# this nice line comes from the linux kernel makefile
+ARCH := $(shell uname -m | sed -e s/i.86/i386/ -e s/sun4u/sparc64/ -e s/arm.*/arm/ -e s/sa110/arm/ -e s/alpha/axp/)
+
+#ARCH = i386
+CC = gcc -std=gnu99
+
+# on x64 machines do this preparation:
+# sudo apt-get install ia32-libs
+# sudo apt-get install libc6-dev-i386
+# On Ubuntu 16.x use sudo apt install libc6-dev-i386
+# this will let you build 32-bits on ia64 systems
+#
+# This is for native build
+CFLAGS=-O3 -DARCH="$(ARCH)"
+# This is for 32-bit build on 64-bit host
+ifeq ($(ARCH),i386)
+CFLAGS =-m32 -O3 -fPIC -DARCH="$(ARCH)" -DSTDC_HEADERS -I/usr/include
+endif
+
+# use this when debugging
+#CFLAGS=-g -Og -DEBUG -DARCH="$(ARCH)" -Wall -pedantic
 
 # The optimization flags below cause a crash immediately after connect 
 # with slackware. You might try adding flags one by one and recompiling 
 # for some extra speed.
 # -funroll-loops
-
-#use these cflags to optimize it
-CFLAGS=$(BASE_CFLAGS)-m32 -O3 -ffast-math
-
-#use these when debugging 
-#CFLAGS=$(BASE_CFLAGS) -g
 
 # flavors of Linux
 ifeq ($(shell uname),Linux)
