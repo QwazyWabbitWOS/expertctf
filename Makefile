@@ -71,7 +71,7 @@ GAME_OBJS = \
 	g_observe.o
 
 game$(ARCH).$(SHLIBEXT) : $(GAME_OBJS)
-	$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(GAME_OBJS)
+	$(CC) $(CFLAGS) $(SHLIBLDFLAGS) -o $@ $(GAME_OBJS) $(LDFLAGS)
 	$(LIBTOOL) -r $@
 
 
