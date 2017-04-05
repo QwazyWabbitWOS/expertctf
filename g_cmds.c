@@ -903,7 +903,7 @@ void Cmd_Say_f (edict_t *ent, qboolean team, qboolean arg0)
 				continue;
 			gi.cprintf(other, PRINT_CHAT, "%s", text);
 		} else {
-			if (teamplayEnabled() && onSameTeam(ent, other)) {
+			if (teamplayEnabled() && onSameTeam(ent, other) && ent->client->resp.team != NOTEAM) {
 				// Expert: in teamplay, prefix normal say commands with
 				// "TEAM" if a teammate is speaking
 
