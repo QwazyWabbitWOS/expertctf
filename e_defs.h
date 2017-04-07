@@ -12,7 +12,7 @@
  */
 
 // Version of the Expert modification
-#define	EXPERT_VERSION "4.0.5"
+#define	EXPERT_VERSION "4.0.6"
 
 // additional DM Flags
 #define DF_ARMOR_PROTECT						(1 << 18) 	// 262144
