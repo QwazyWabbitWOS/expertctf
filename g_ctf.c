@@ -2094,9 +2094,10 @@ int carrierName(int teamnum)
 void CTFOWNTEAMSetStats(edict_t *ent)
 {
 	// Expert: TeamDistribution
-	int team;
+	int team = NOTEAM;
 	//edict_t *flag; // this was removed for not being used
-	gitem_t *flag_item, *enemy_flag_item;
+	gitem_t *flag_item;
+	gitem_t *enemy_flag_item;
 	
 	//if (flag->flagTeam == TEAM1)
 	//{
