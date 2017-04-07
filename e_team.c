@@ -537,7 +537,7 @@ void Cmd_Examine_Teams(edict_t *player)
 
 	entry = atoi (gi.argv(1));
 
-	if (entry < 0 || entry >= (int)sv_numteams)
+	if (entry < 0 || entry >= (int)sv_numteams->value)
 	{
 		gi.cprintf(player, PRINT_HIGH, "Invalid team number.\n");
 		return;
