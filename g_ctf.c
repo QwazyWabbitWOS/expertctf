@@ -232,7 +232,7 @@ static edict_t *loc_findradius (edict_t *from, vec3_t org, float rad)
 			continue;
 #endif
 		for (j=0 ; j<3 ; j++)
-			eorg[j] = org[j] - (from->s.origin[j] + (from->mins[j] + from->maxs[j])*0.5);
+			eorg[j] = org[j] - (from->s.origin[j] + (from->mins[j] + from->maxs[j]) * 0.5f);
 		if (VectorLength(eorg) > rad)
 			continue;
 		return from;

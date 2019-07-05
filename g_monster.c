@@ -212,7 +212,7 @@ void M_WorldEffects (edict_t *ent)
 			{	// drown!
 				if (ent->pain_debounce_time < level.time)
 				{
-					dmg = 2 + 2 * floor(level.time - ent->air_finished);
+					dmg = 2 + 2 * floorf(level.time - ent->air_finished);
 					if (dmg > 15)
 						dmg = 15;
 					T_Damage (ent, world, world, vec3_origin, ent->s.origin, vec3_origin, dmg, 0, DAMAGE_NO_ARMOR, MOD_WATER);
@@ -230,7 +230,7 @@ void M_WorldEffects (edict_t *ent)
 			{	// suffocate!
 				if (ent->pain_debounce_time < level.time)
 				{
-					dmg = 2 + 2 * floor(level.time - ent->air_finished);
+					dmg = 2 + 2 * floorf(level.time - ent->air_finished);
 					if (dmg > 15)
 						dmg = 15;
 					T_Damage (ent, world, world, vec3_origin, ent->s.origin, vec3_origin, dmg, 0, DAMAGE_NO_ARMOR, MOD_WATER);

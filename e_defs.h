@@ -163,10 +163,10 @@ typedef enum res_t {
 // less time to throw and are thrown at higher speed,
 // but do less damage.  The damage done drops off
 // slowly from the center of the explosion.
-#define EXPERT_HG_EXPLODE_TIMER					0.5
-#define EXPERT_HG_SPEED_TIMER					1.5
-#define EXPERT_HG_MINSPEED						400
-#define EXPERT_HG_MAXSPEED						1200
+#define EXPERT_HG_EXPLODE_TIMER					0.5f
+#define EXPERT_HG_SPEED_TIMER					1.5f
+#define EXPERT_HG_MINSPEED						400.0f
+#define EXPERT_HG_MAXSPEED						1200.0f
 #define EXPERT_HG_DAMAGE						85		// Spider: expert default: 85
 #define EXPERT_HG_RADIUS						120		// Spider: expert default: 120
 #define EXPERT_HG_DROPOFF						.3		// Spider: expert default: 0.3

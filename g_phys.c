@@ -74,20 +74,21 @@ SV_RunThink
 Runs thinking code for this frame if necessary
 =============
 */
-qboolean SV_RunThink (edict_t *ent)
+qboolean SV_RunThink(edict_t* ent)
 {
 	float	thinktime;
 
 	thinktime = ent->nextthink;
 	if (thinktime <= 0)
 		return true;
-	if (thinktime > level.time+0.001)
+	if (thinktime > level.time + 0.001)
 		return true;
-	
+
 	ent->nextthink = 0;
 	if (!ent->think)
-		gi.error ("NULL ent->think");
-	ent->think (ent);
+		gi.error("NULL ent->think");
+	else
+		ent->think(ent);
 
 	return false;
 }
@@ -903,7 +904,7 @@ void SV_Physics_Step (edict_t *ent)
 			if (!(ent->health <= 0.0 && !M_CheckBottom(ent)))
 			{
 				vel = ent->velocity;
-				speed = sqrt(vel[0]*vel[0] +vel[1]*vel[1]);
+				speed = sqrtf(vel[0]*vel[0] +vel[1]*vel[1]);
 				if (speed)
 				{
 					friction = sv_friction;

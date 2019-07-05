@@ -973,7 +973,7 @@ void regen(edict_t *player) {
 	// the more injured you are, the faster you regenerate
 	rate = 1.0 - (float)player->health/(float)player->max_health;
 	if (rate <= 0) return;
-	healthAmount = ceil(rate * REGEN_HEALTH);
+	healthAmount = ceilf(rate * REGEN_HEALTH);
 
 	// give health
 	if (player->health < player->max_health) {
@@ -1251,7 +1251,7 @@ void Cmd_SwitchFire_f (edict_t *player)
 	int weaponNum;
 	gitem_t *weaponItem;
 
-	if (!expflags & EXPERT_WEAPONS) {
+	if (!(expflags & EXPERT_WEAPONS)) {
 		gi.cprintf(player, PRINT_HIGH, "Expert Weapons must be enabled for SwitchFire to be used\n");
 		return;
 	}

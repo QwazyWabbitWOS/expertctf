@@ -154,9 +154,9 @@ qboolean searchForMapInPakFiles(char *mapName)
 		{
 			if (fread(pFile, PAK_file_SIZE, 1, fPak) != 1)
 			{
+				i = pPak->dir.nfiles;
 				fclose(fPak);
 				free(pPak);
-				i = pPak->dir.nfiles;
 				continue;
 			}
 		}

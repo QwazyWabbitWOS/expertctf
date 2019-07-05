@@ -431,7 +431,10 @@ void WriteGame (char *filename, qboolean autosave)
 
 	f = fopen (filename, "wb");
 	if (!f)
-		gi.error ("Couldn't open %s", filename);
+	{
+		gi.error("Couldn't open %s", filename);
+		return;
+	}
 
 	memset (str, 0, sizeof(str));
 	strcpy (str, __DATE__);
@@ -451,16 +454,21 @@ void ReadGame (char *filename)
 {
 	FILE	*f;
 	int		i;
-	char	str[16];
+	char	str[16] = { 0 };
 	size_t	count;
 
 	gi.FreeTags (TAG_GAME);
 
 	f = fopen (filename, "rb");
 	if (!f)
-		gi.error ("Couldn't open %s", filename);
+	{
+		gi.error("Couldn't open %s", filename);
+		return;
+	}
 
 	count = fread (str, sizeof(str), 1, f);
+	if (count)
+		; // don't worry, be happy
 	if (strcmp (str, __DATE__))
 	{
 		fclose (f);
@@ -600,7 +608,10 @@ void WriteLevel (char *filename)
 
 	f = fopen (filename, "wb");
 	if (!f)
-		gi.error ("Couldn't open %s", filename);
+	{
+		gi.error("Couldn't open %s", filename);
+		return;
+	}
 
 	// write out edict size for checking
 	i = sizeof(edict_t);
@@ -688,22 +699,23 @@ void ReadLevel (char *filename)
 	// load all the entities
 	while (1)
 	{
-		if ((count = fread (&entnum, sizeof(entnum), 1, f) != 1))
+		count = fread(&entnum, sizeof(entnum), 1, f);
+		if (count != 1)
 		{
-			fclose (f);
-			gi.error ("ReadLevel: failed to read entnum");
+			fclose(f);
+			gi.error("ReadLevel: failed to read entnum");
 		}
 		if (entnum == -1)
 			break;
 		if (entnum >= globals.num_edicts)
-			globals.num_edicts = entnum+1;
+			globals.num_edicts = entnum + 1;
 
 		ent = &g_edicts[entnum];
-		ReadEdict (f, ent);
+		ReadEdict(f, ent);
 
 		// let the server rebuild world links for this ent
-		memset (&ent->area, 0, sizeof(ent->area));
-		gi.linkentity (ent);
+		memset(&ent->area, 0, sizeof(ent->area));
+		gi.linkentity(ent);
 	}
 
 	fclose (f);

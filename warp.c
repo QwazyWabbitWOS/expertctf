@@ -28,8 +28,7 @@ void printelection(void)
     gi.bprintf(PRINT_HIGH, "Type YES or NO to vote on this request.\n");
 
     voteTimeLeft = voteEndTime - (int)level.time;
-    neededVotes = ceil(sv_electpercentage->value/100.*(numplayers - 1) - 
-		       yesVotes);
+    neededVotes = ceilf(sv_electpercentage->value/100.0f * (numplayers - 1) - yesVotes);
     gi.bprintf(PRINT_HIGH, "Votes: %d  Needed: %d  Time left: %ds\n", 
 	       yesVotes, neededVotes, voteTimeLeft);
 }

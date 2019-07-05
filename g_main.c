@@ -468,7 +468,7 @@ void G_RunFrame (void)
 
 	int	i = 0;
 	int	count = 0;				// Spider: Number of connected players
-	int	teamcount[2];			// Spider: Number of player in each team
+	int	teamcount[2] = { 0 };	// Spider: Number of player in each team
 	int	minutes, seconds;		// Spider: Info for the timer indicator
 	char	ch[4];					// Spider: String with player id
 	static char	team1list[40];	// Spider: String with player id list

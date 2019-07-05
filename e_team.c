@@ -50,6 +50,7 @@ qboolean onSameTeam(edict_t *player1, edict_t *player2)
 
 	if (!player1 || !player2) {
 		gi.dprintf("onSameTeam passed null player\n");
+		return false;
 	}
 
 	// non-clients never on same team
@@ -1130,7 +1131,7 @@ void Cmd_TeamAudio_f(edict_t *player) {
 	}
 
 	// it's the name of a sound, send it
-	if (level.time - player->client->lastTeamAudio >= 1.0) {
+	if (level.time - player->client->lastTeamAudio >= 1.0f) {
 		sendRadio(player, audioCmd);
 	} else {
 		// spam prevention
