@@ -178,60 +178,61 @@ void Cmd_No(edict_t *ent)
     printelection();
 }
 
+/*
+ g_cmds.c:ClientCommand()
 
-// g_cmds.c:ClientCommand()
+           begin warp
+	  else if (Q_stricmp(cmd, "warp") == 0)
+	      Cmd_Warp(ent);
+	  else if (Q_stricmp(cmd, "yes") == 0)
+	      Cmd_Yes(ent);
+	  else if (Q_stricmp(cmd, "no") == 0)
+	      Cmd_No(ent);
+	   end warp
 
-          // begin warp
-//	  else if (Q_stricmp(cmd, "warp") == 0)
-//	      Cmd_Warp(ent);
-//	  else if (Q_stricmp(cmd, "yes") == 0)
-//	      Cmd_Yes(ent);
-//	  else if (Q_stricmp(cmd, "no") == 0)
-//	      Cmd_No(ent);
+	  else    // anything that doesn't match a command will be a chat
+		  Cmd_Say_f (ent, false, true);
+
+ in g_main.c:G_RunFrame()
+
+	  edict_t	*ent; 
+
+	  // begin warp
+	  extern qboolean electionInProgress;
 	  // end warp
 
-//	  else    // anything that doesn't match a command will be a chat
-//		  Cmd_Say_f (ent, false, true);
+	  level.framenum++;
 
-// in g_main.c:G_RunFrame()
-//
-//	  edict_t	*ent; 
-//
-//	  // begin warp
-//	  extern qboolean electionInProgress;
-//	  // end warp
-//
-//	  level.framenum++;
+ in same function:
 
-// in same function:
-//
-//	  if ((int)sv_arenaflags->value & EXPERT_ENABLE_ARENA) {
-//		  arenaCountdown();
-//	  }
-//
-//
-//	  // begin warp
-//	  if (electionInProgress)
-//	      checkElectionTime();
-//	  // end warp
-//
-//	  //
-//	  // treat each object in turn
-	
+	  if ((int)sv_arenaflags->value & EXPERT_ENABLE_ARENA) {
+		  arenaCountdown();
+	  }
+
+
+	  // begin warp
+	  if (electionInProgress)
+	      checkElectionTime();
+	  // end warp
+
+	  //
+	  // treat each object in turn
+*/	
 //add warp.o to the makefile:
-//
-//GAME_OBJS = \
-//	  g_ai.o p_client.o g_cmds.o g_combat.o g_func.o g_items.o \
-//	  g_main.o g_misc.o g_monster.o g_phys.o g_save.o g_spawn.o \
-//	  g_target.o g_trigger.o g_utils.o g_weapon.o m_move.o p_hud.o \
-//	  p_trail.o p_view.o p_weapon.o q_shared.o \
-//	  e_arena.o e_game.o e_gbstat.o e_grapple.o e_id.o e_ftrack.o \
-//	  e_matrix.o e_motd.o e_obit.o e_overlay.o e_team.o e_util.o \
-//	  darray.o list.o props.o g_ctf.o p_menu.o g_svcmds.o \
-//	  g_observe.o joe.o warp.o
+/*
+GAME_OBJS = \
+	  g_ai.o p_client.o g_cmds.o g_combat.o g_func.o g_items.o \
+	  g_main.o g_misc.o g_monster.o g_phys.o g_save.o g_spawn.o \
+	  g_target.o g_trigger.o g_utils.o g_weapon.o m_move.o p_hud.o \
+	  p_trail.o p_view.o p_weapon.o q_shared.o \
+	  e_arena.o e_game.o e_gbstat.o e_grapple.o e_id.o e_ftrack.o \
+	  e_matrix.o e_motd.o e_obit.o e_overlay.o e_team.o e_util.o \
+	  darray.o list.o props.o g_ctf.o p_menu.o g_svcmds.o \
+	  g_observe.o joe.o warp.o
 
-// include warp.h in g_cmd.c:
-//
-//void Cmd_Warp(edict_t *ent);   
-//void Cmd_Yes(edict_t *ent);
-//void Cmd_No(edict_t *ent);
+ include warp.h in g_cmd.c:
+
+void Cmd_Warp(edict_t *ent);   
+void Cmd_Yes(edict_t *ent);
+void Cmd_No(edict_t *ent);
+*/
