@@ -128,6 +128,11 @@ is loaded.
 
 void InitGame (void)
 {
+
+#ifdef	_WIN32
+	_CrtMemCheckpoint(&startup1);
+#endif
+
 	gi.dprintf ("==== InitGame ECTF "EXPERT_VERSION" ====\n");
 
 	gun_x = gi.cvar ("gun_x", "0", 0);

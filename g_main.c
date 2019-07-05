@@ -85,10 +85,7 @@ void G_RunFrame (void);
 void ShutdownGame (void)
 {	
 	
-	//edict_t *player;
 	char command[64] = {0};
-	//int i;
-	//i = 0;
 
 	// Expert: stop gibstats logging
 	if ( (int)sv_utilflags->value & EXPERT_ENABLE_GIBSTAT_LOGGING)
@@ -99,7 +96,7 @@ void ShutdownGame (void)
 			shutdownTeamplay();
 	
 	gi.cprintf(NULL, PRINT_HIGH,"==== ShutdownGame ====\n");
-//}
+
 	if(sv_autorestart->value == 1 && Q_stricmp(restartcfg->string, ""))
 	{
 		gi.FreeTags (TAG_LEVEL);
@@ -118,6 +115,14 @@ void ShutdownGame (void)
 		gi.FreeTags (TAG_LEVEL);
 		gi.FreeTags (TAG_GAME);
 	}
+
+#ifdef _WIN32
+	OutputDebugString("ShutdownGame() was called.\n");
+	OutputDebugString("Memory stats since startup.\n");
+	_CrtMemDumpStatistics(&startup1);
+	_CrtDumpMemoryLeaks();
+#endif
+
 }
 
 /*

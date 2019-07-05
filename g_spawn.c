@@ -329,7 +329,7 @@ void ED_ParseField (char *key, char *value, edict_t *ent)
 	field_t	*f;
 	byte	*b;
 	float	v;
-	vec3_t	vec;
+	vec3_t	vec = { 0 };
 
 	for (f=fields ; f->name ; f++)
 	{
@@ -346,10 +346,16 @@ void ED_ParseField (char *key, char *value, edict_t *ent)
 				*(char **)(b+f->ofs) = ED_NewString (value);
 				break;
 			case F_VECTOR:
-				if (sscanf(value, "%f %f %f", &vec[0], &vec[1], &vec[2]) == 3) {
+				if (sscanf(value, "%f %f %f", &vec[0], &vec[1], &vec[2]) != 0) {
 					((float*)(b + f->ofs))[0] = vec[0];
 					((float*)(b + f->ofs))[1] = vec[1];
 					((float*)(b + f->ofs))[2] = vec[2];
+				}
+				else {
+					((float*)(b + f->ofs))[0] = vec[0];	// if we get here, it's an error in the map
+					((float*)(b + f->ofs))[1] = vec[1]; // set all zeroes and log warning.
+					((float*)(b + f->ofs))[2] = vec[2];
+					gi.dprintf("WARNING: Vector field incomplete in %s, map: %s, field: %s\n", __func__, level.mapname, f->name);
 				}
 				break;
 			case F_INT:
@@ -539,6 +545,8 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 			ent = g_edicts;
 		else
 			ent = G_Spawn ();
+		
+		assert(ent != NULL);
 		entities = ED_ParseEdict (entities, ent);
 		
 		// yet another map hack
