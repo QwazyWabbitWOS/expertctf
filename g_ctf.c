@@ -2210,12 +2210,12 @@ void CTFOWNTEAMSetStats(edict_t *ent)
 	ent->client->ps.stats[STAT_CTF_JOINED_TEAM2_PIC] = 0;
 
 	if (ent->client->resp.team == TEAM1)
-		ent->client->ps.stats[STAT_CTF_JOINED_TEAM1_PIC] = gi.imageindex ("i_ctfj");
+		ent->client->ps.stats[STAT_CTF_JOINED_TEAM1_PIC] = gi.imageindex("i_ctfj");
 	else if (ent->client->resp.team == TEAM2)
-		ent->client->ps.stats[STAT_CTF_JOINED_TEAM2_PIC] = gi.imageindex ("i_ctfj");
+		ent->client->ps.stats[STAT_CTF_JOINED_TEAM2_PIC] = gi.imageindex("i_ctfj");
 
-		ent->client->ps.stats[STAT_CTF_CARRIER1] = carrierName(TEAM1);
-		ent->client->ps.stats[STAT_CTF_CARRIER2] = carrierName(TEAM2);
+	ent->client->ps.stats[STAT_CTF_CARRIER1] = carrierName(TEAM1);
+	ent->client->ps.stats[STAT_CTF_CARRIER2] = carrierName(TEAM2);
 }
 
 void SetCTFStats(edict_t *ent)
