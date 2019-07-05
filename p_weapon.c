@@ -992,16 +992,18 @@ void Blaster_Fire (edict_t *ent, vec3_t g_offset, int damage, qboolean hyper, in
 
 }
 
-void Weapon_Blaster_Fire (edict_t *ent)
+void Weapon_Blaster_Fire(edict_t* ent)
 {
-	int		damage,speed = 0;
+	int damage;
+	int speed = 0;
 
 	if (deathmatch->value)
 		// Expert: Smaller damage per blast, but more blasts for Expert weapons
 		if (expflags & EXPERT_WEAPONS)
-			if(weaponflags & EXPERT_ALT_BL){
+			if (weaponflags & EXPERT_ALT_BL) {
 				damage = 12;
-				speed = 650;}
+				speed = 650;
+			}
 			else
 				damage = EXPERT_SPREAD_BLASTER_DAMAGE;
 		else
@@ -1013,14 +1015,15 @@ void Weapon_Blaster_Fire (edict_t *ent)
 	// effect instead of particle trail
 	if (expflags & EXPERT_WEAPONS)
 	{
-		if(weaponflags & EXPERT_ALT_BL)
-			Blaster_Fire (ent, vec3_origin, damage, false, EF_HYPERBLASTER, speed);
+		if (weaponflags & EXPERT_ALT_BL)
+			Blaster_Fire(ent, vec3_origin, damage, false, EF_HYPERBLASTER, speed);
 		else
-			Blaster_Fire (ent, vec3_origin, damage, false, EF_HYPERBLASTER, 1000);
+			Blaster_Fire(ent, vec3_origin, damage, false, EF_HYPERBLASTER, 1000);
 	}
 	else
-		Blaster_Fire (ent, vec3_origin, damage, false, EF_BLASTER, 1000);
-		ent->client->ps.gunframe++;
+		Blaster_Fire(ent, vec3_origin, damage, false, EF_BLASTER, 1000);
+
+	ent->client->ps.gunframe++;
 }
 
 void Weapon_Blaster (edict_t *ent)
