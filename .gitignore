@@ -1,6 +1,7 @@
 Release/
 Debug/
 ipch/
+.vs/
 .svn
 *.manifest
 *.lastbuildstate
