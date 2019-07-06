@@ -105,6 +105,7 @@ gitem_t	*FindItem (char *pickup_name)
 
 void DoRespawn (edict_t *ent)
 {
+	assert(ent != NULL);
 	if (ent->team)
 	{
 		edict_t	*master;
@@ -126,13 +127,16 @@ void DoRespawn (edict_t *ent)
 			for (count = 0, ent = master; ent; ent = ent->chain, count++)
 				;
 
+			assert(count != 0);
 			choice = rand() % count;
 
+			assert(ent != NULL);
 			for (count = 0, ent = master; count < choice; ent = ent->chain, count++)
 				;
 		}
 	}
 
+	assert(ent != NULL);
 	ent->svflags &= ~SVF_NOCLIENT;
 	ent->solid = SOLID_TRIGGER;
 	gi.linkentity (ent);
@@ -861,7 +865,7 @@ Touch_Item
 */
 void Touch_Item (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
-	qboolean	taken;
+	qboolean	taken = false;
 
 	if (!other->client)
 		return;
@@ -874,8 +878,11 @@ void Touch_Item (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf
 		if (strcmp(ent->item->pickup_name, "Blaster"))
 			return;		// not a grabbable item?
 	}
-	
-	taken = ent->item->pickup(ent, other);
+	else 
+	{
+		if (ent->item->pickup(ent, other))
+			taken = true;
+	}
 
 	if (taken)
 	{
@@ -1204,7 +1211,7 @@ void PrecacheItem (gitem_t *it)
 			s++;
 
 		len = s-start;
-		if (len >= MAX_QPATH || len < 5)
+		if (len >= MAX_QPATH - 1 || len < 5)
 			gi.error ("PrecacheItem: %s has bad precache string", it->classname);
 		memcpy (data, start, len);
 		data[len] = 0;
