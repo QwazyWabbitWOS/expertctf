@@ -739,10 +739,10 @@ void fire_rail (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick
 	vec3_t		end;
 	trace_t		tr;
 	edict_t		*ignore;
-//	edict_t		*bolt;
 	int			mask;
 	qboolean	water;
 
+	assert(self != NULL);
 	VectorMA (start, 8192, aimdir, end);
 	VectorCopy (start, from);
 	ignore = self;

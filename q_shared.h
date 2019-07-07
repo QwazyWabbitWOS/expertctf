@@ -37,6 +37,13 @@
 	#define NULL ((void *)0)
 	#endif
 
+	//terminating strncpy
+#define Q_strncpy(dst, src, len) \
+do { \
+	strncpy ((dst), (src), (len)); \
+	(dst)[(len)] = 0; \
+} while (0)
+
 
 	// angle indexes
 	#define	PITCH					0		// up / down

@@ -1045,8 +1045,10 @@ void	SelectSpawnPoint (edict_t *ent, vec3_t origin, vec3_t angles)
 			{	// there wasn't a spawnpoint without a target, so use any
 				spot = G_Find (spot, FOFS(classname), "info_player_start");
 			}
-			if (!spot)
-				gi.error ("Couldn't find spawn point %s\n", game.spawnpoint);
+			if (!spot) {
+				gi.error("Couldn't find spawn point %s\n", game.spawnpoint);
+				exit(EXIT_FAILURE); // Never executed but silences compiler warnings
+			}
 		}
 	}
 
@@ -1901,7 +1903,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 
 	// Expert: Observer fire toggles Chase Cam
 	if (IsObserver(ent) && ucmd->buttons & BUTTON_ATTACK &&
-		level.time - ent->client->lastChaseCommand > 0.3) 
+		level.time - ent->client->lastChaseCommand > 0.3f) 
 	{
 		ToggleChaseCam(ent);
 		ent->client->lastChaseCommand = level.time;
@@ -1915,7 +1917,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		client->resp.cmd_angles[1] = SHORT2ANGLE(ucmd->angles[1]);
 		client->resp.cmd_angles[2] = SHORT2ANGLE(ucmd->angles[2]);
 		// When observers using Chasecam press jump switch to next chase target
-		if (ucmd->upmove >= 10 && level.time - ent->client->lastChaseCommand > 0.3) 
+		if (ucmd->upmove >= 10 && level.time - ent->client->lastChaseCommand > 0.3f) 
 		{
 			ChaseNext(ent);
 			ent->client->lastChaseCommand = level.time;
