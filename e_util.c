@@ -163,26 +163,22 @@ void BootPlayer(edict_t *player, char *error, char *global)
 	char *buf;
 
 	// Create command buffer and stuff it
-	buf = malloc(strlen(error) + 11);
+	buf = gi.TagMalloc(strlen(error) + 32, TAG_LEVEL);
 	buf = strcpy(buf, "\nerror \"");
 	buf = strcat(buf, error);
 	buf = strcat(buf, "\"\n");
 
 	StuffCmd(player, buf);
-	free(buf);
+	gi.TagFree(buf);
+
+	// Kick the player for good measure
+	buf = gi.TagMalloc(7 + strlen(player->client->pers.netname), TAG_LEVEL);
+	buf = strcpy(buf, va("kick %d\n", player - g_edicts - 1));
+	gi.AddCommandString(buf);
+	gi.TagFree(buf);
 
 	// Make an announcement
 	gi.bprintf(PRINT_HIGH, "%s kicked: %s\n", player->client->pers.netname, global);
-
-	// Kick the player for good measure
-	buf = malloc(7 + strlen(player->client->pers.netname));
-	buf = strcpy(buf, va("kick %d\n", player - g_edicts - 1));
-/*
-	buf = strcat(buf, player->client->pers.netname);
-	buf = strcat(buf, "\n");
-*/
-	gi.AddCommandString(buf);
-	free(buf);
 }
 
 void E_LogAppend(char *desc, char *fmt, ...)
@@ -198,12 +194,6 @@ void E_LogAppend(char *desc, char *fmt, ...)
 			gi.dprintf("ERROR: Unable to open log file. Log message cancelled.\n");
 			return;
 		}
-
-//		char filename[256];
-//		strcpy(filename, gamedir->string);
-//		strcat(filename, "/");
-//		strcat(filename, LOG_FILENAME);
-//		logfile = fopen(filename, "a");
 	}
 
 	fprintf(logfile, "Log message at time %.2f, frame %d. Description: %s\n"
