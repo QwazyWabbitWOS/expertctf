@@ -81,7 +81,6 @@ game$(ARCH).$(SHLIBEXT) : $(GAME_OBJS)
 
 clean:
 	-rm -f $(GAME_OBJS)
-	-rm -f game$(ARCH).$(SHLIBEXT)
 
 depends:
 	$(CC) $(CFLAGS) -MM *.c > dependencies
