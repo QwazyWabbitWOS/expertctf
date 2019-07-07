@@ -5,7 +5,7 @@
 #define MAX_FILES_IN_PACK 4096
 #define IDPAKHEADER 0x4b434150 //(('K'<<24)+('C'<<16)+('A'<<8)+'P')
 #define PAK_HEADER_SIZE 12
-#define PAK_file_SIZE 64 
+#define PAK_FILE_SIZE 64 
 
 typedef struct
 {

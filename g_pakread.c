@@ -5,7 +5,7 @@
 //qboolean searchForMapInPakFile(PAK *pak, char *mapName);
 //void PakClose(PAK *pak);
 
-// Main function to be called.  Enter a map name as a paramter
+// Main function to be called.  Enter a map name as a parameter
 // and this function will return "true" if any pak files have
 // that map...  otherwise it will return false
 qboolean searchForMapInPakFiles(char *mapName)
@@ -13,13 +13,13 @@ qboolean searchForMapInPakFiles(char *mapName)
 	FILE *fPak;
 	PAK *pPak;
 	dpackfile_t *pFile;
-	int i; 
+	size_t i; 
 	int count;
 	
 	//char *fileNameExt;
 	char filename[MAX_QPATH]={0};
 	char currentPakName[9];
-	char currentFullPakName[2048];
+	char currentFullPakName[MAX_QPATH];
 	
 	sprintf(filename,"%s.bsp",mapName);
 	
@@ -67,13 +67,13 @@ qboolean searchForMapInPakFiles(char *mapName)
 		}
 		
 		// Determine the number of files in the pak file
-		pPak->dir.nfiles = pPak->header.dirlen/PAK_file_SIZE;
+		pPak->dir.nfiles = pPak->header.dirlen/PAK_FILE_SIZE;
 		pFile = pPak->dir.file; 
 		
 		for (i=0; i < pPak->dir.nfiles; i++, pFile++)
 		{
 			//gi.dprintf("Count loop - %i files %d\n", i, pPak->dir.nfiles);
-			if (fread(pFile, PAK_file_SIZE, 1, fPak) != 1)
+			if (fread(pFile, PAK_FILE_SIZE, 1, fPak) != 1)
 			{
 				fclose(fPak);
 				free(pPak);
@@ -147,12 +147,12 @@ qboolean searchForMapInPakFiles(char *mapName)
 		}
 		
 		// Determine the number of files in the pak file
-		pPak->dir.nfiles = pPak->header.dirlen/PAK_file_SIZE;
+		pPak->dir.nfiles = pPak->header.dirlen / PAK_FILE_SIZE;
 		pFile = pPak->dir.file; 
 		
 		for (i=0; i < pPak->dir.nfiles; i++, pFile++)
 		{
-			if (fread(pFile, PAK_file_SIZE, 1, fPak) != 1)
+			if (fread(pFile, PAK_FILE_SIZE, 1, fPak) != 1)
 			{
 				i = pPak->dir.nfiles;
 				fclose(fPak);
