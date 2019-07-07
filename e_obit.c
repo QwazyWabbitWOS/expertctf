@@ -213,7 +213,7 @@ void DisplayBestObituaryMessage(int cause, unsigned int context,
 	unsigned int	mask = 0;
 	unsigned int	contextFlags = context;
 
-	int 			bitsSet;
+	unsigned int	bitsSet;
 
 	//gi.dprintf("Cause is %s[%d], contexts are ", o_Causes[cause], cause);
 	//printContext(context);

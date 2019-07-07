@@ -1,5 +1,10 @@
 #include "g_local.h"
 
+#ifdef _WIN32
+#pragma warning(push)
+#pragma warning(disable : 4706) // assignment within conditional expression
+#endif
+
 /*
 =========================================================
 
@@ -146,7 +151,7 @@ void AngleMove_Final (edict_t *ent)
 		return;
 	}
 
-	VectorScale (move, 1.0/FRAMETIME, ent->avelocity);
+	VectorScale (move, 1.0f/FRAMETIME, ent->avelocity);
 
 	ent->think = AngleMove_Done;
 	ent->nextthink = level.time + FRAMETIME;
@@ -504,17 +509,17 @@ void SP_func_plat (edict_t *ent)
 	if (!ent->speed)
 		ent->speed = 20;
 	else
-		ent->speed *= 0.1;
+		ent->speed *= 0.1f;
 
 	if (!ent->accel)
 		ent->accel = 5;
 	else
-		ent->accel *= 0.1;
+		ent->accel *= 0.1f;
 
 	if (!ent->decel)
 		ent->decel = 5;
 	else
-		ent->decel *= 0.1;
+		ent->decel *= 0.1f;
 
 	if (!ent->dmg)
 		ent->dmg = 2;

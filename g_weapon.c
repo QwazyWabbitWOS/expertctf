@@ -416,7 +416,7 @@ static void Grenade_Explode (edict_t *ent)
 		T_RadiusDamage(ent, ent->owner, ent->dmg, ent->enemy, ent->dmg_radius, mod);
 	}
 
-	VectorMA (ent->s.origin, -0.02, ent->velocity, origin);
+	VectorMA (ent->s.origin, -0.02f, ent->velocity, origin);
 /*
 	// Expert: With Expert Weapons, make an explosion
 	// that doesn't seriously impair vision
@@ -633,7 +633,7 @@ void rocket_touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *su
 		PlayerNoise(ent->owner, ent->s.origin, PNOISE_IMPACT);
 
 	// calculate position for the explosion entity
-	VectorMA (ent->s.origin, -0.02, ent->velocity, origin);
+	VectorMA (ent->s.origin, -0.02f, ent->velocity, origin);
 
 	if (other->takedamage)
 	{

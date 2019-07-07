@@ -10,10 +10,10 @@ rocket jump with no damage.
 
 #include "g_local.h"
 
-#define HOOK_TIME				4		// Number of seconds that hook can live
+#define HOOK_TIME				4	// Number of seconds that hook can live
 #define HOOK_SPEED			1900	// Velocity of the hook itself
-#define SLOW_HOOK_SPEED		550	// Velocity of the hook itself in slow mode
-#define THINK_TIME			0.3	// Time between hook thinks
+#define SLOW_HOOK_SPEED		550		// Velocity of the hook itself in slow mode
+#define THINK_TIME			0.3f	// Time between hook thinks
 #define HOOK_DAMAGE			3		// Damage done by hook
 #define GRAPPLE_REFIRE		5		// Refire delay for grapple, in frames
 

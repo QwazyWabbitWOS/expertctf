@@ -2,12 +2,15 @@
 #define _Q_SHARED_H_
 // q_shared.h -- included first by ALL program modules
 
-	#ifdef _WIN32
-	#pragma warning(disable : 4244)    // Implicit conversion, possible loss of data
-	#pragma warning(disable : 4018)     // signed/unsigned mismatch
-	#pragma warning(disable : 4305)		// truncation from const double to float
-	#define WIN32_LEAN_AND_MEAN
-	#endif
+#ifdef _WIN32
+#pragma warning(disable : 4244)     // conversion from 'type1' to 'type2', possible loss of data
+#pragma warning(disable : 4100)		// unreferenced formal parameter
+#pragma warning(disable : 4127)		// conditional expression is constant
+#if _MSC_VER > 1500
+#pragma warning(disable : 4996)		// unsafe CRT functions (_CRT_SECURE_NO_WARNINGS).
+#pragma warning(disable : 4459)		// declaration of 'var' hides global declaration.
+#endif
+#endif
 
 	#include <assert.h>
 	#include <math.h>

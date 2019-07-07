@@ -169,7 +169,7 @@ typedef enum res_t {
 #define EXPERT_HG_MAXSPEED						1200.0f
 #define EXPERT_HG_DAMAGE						85		// Spider: expert default: 85
 #define EXPERT_HG_RADIUS						120		// Spider: expert default: 120
-#define EXPERT_HG_DROPOFF						.3		// Spider: expert default: 0.3
+#define EXPERT_HG_DROPOFF						0.3f	// Spider: expert default: 0.3
 
 #define EXPERT_GRENADELAUNCHER_DAMAGE		100
 

@@ -606,7 +606,7 @@ void ExpertBotDetect(edict_t *player)
 {
 	unsigned int bits;
 	unsigned int checkBit;
-	int i;
+	size_t i;
 
 	// passed all tests
 	if (player->client->resp.botflags & BOT_CHECK_FLAGS_MASK)

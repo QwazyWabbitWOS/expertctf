@@ -2,6 +2,10 @@
 
 #include "g_local.h"
 
+#ifdef _WIN32
+#pragma warning(push)
+#pragma warning(disable : 4706) // assignment within conditional expression
+#endif
 
 void G_ProjectSource (vec3_t point, vec3_t distance, vec3_t forward, vec3_t right, vec3_t result)
 {

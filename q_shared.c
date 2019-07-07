@@ -229,19 +229,6 @@ void R_ConcatTransforms (float in1[3][4], float in2[3][4], float out[3][4])
 //============================================================================
 
 
-float Q_fabs (float f)
-{
-#if 0
-	if (f >= 0)
-		return f;
-	return -f;
-#else
-	int tmp = * ( int * ) &f;
-	tmp &= 0x7FFFFFFF;
-	return * ( float * ) &tmp;
-#endif
-}
-
 #if defined _M_IX86 && !defined C_ONLY
 #pragma warning (disable:4035)
 __declspec( naked ) long Q_ftol( float f )
@@ -664,7 +651,7 @@ vec_t VectorNormalize (vec3_t v)
 	float	length, ilength;
 
 	length = v[0]*v[0] + v[1]*v[1] + v[2]*v[2];
-	length = sqrt (length);		// FIXME
+	length = sqrtf (length);
 
 	if (length)
 	{
@@ -683,7 +670,7 @@ vec_t VectorNormalize2 (vec3_t v, vec3_t out)
 	float	length, ilength;
 
 	length = v[0]*v[0] + v[1]*v[1] + v[2]*v[2];
-	length = sqrt (length);		// FIXME
+	length = sqrtf (length);
 
 	if (length)
 	{
@@ -1342,7 +1329,7 @@ void Info_SetValueForKey (char *s, char *key, char *value)
 {
 	char	newi[MAX_INFO_STRING], *v;
 	int		c;
-	int		maxsize = MAX_INFO_STRING;
+	size_t	maxsize = MAX_INFO_STRING;
 
 	if (strstr (key, "\\") || strstr (value, "\\") )
 	{

@@ -380,7 +380,7 @@ int insertValue(char *mess, char *format_str, char *field, char *value, int max_
 	{
 		if (strBeginsWith(field, format_str + x))
 		{
-			if (x + strlen(value) < max_size)
+			if (x + strlen(value) < (size_t)max_size)
 			{
 				//PRINT2("Found match on '%s' for field '%s\n", format_str, field);
 				matches++;
@@ -486,7 +486,7 @@ FILE *OpenGamedirFile(const char *basedir, const char *filename, char *mode)
 unsigned int getSettingBit(char *setting)
 {
 	int settingNum = getSettingNumber(setting);
-	if (settingNum == -1) return -1; // error
+	if (settingNum == -1) return UINT_MAX; // error
 	return (1 << settingNum);
 }
 

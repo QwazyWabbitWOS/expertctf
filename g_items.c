@@ -17,14 +17,14 @@ void Weapon_GrenadeLauncher (edict_t *ent);
 void Weapon_Railgun (edict_t *ent);
 void Weapon_BFG (edict_t *ent);
 
-gitem_armor_t jacketarmor_info	= { 25,  50, .30, .00, ARMOR_JACKET};
-gitem_armor_t combatarmor_info	= { 50, 100, .60, .30, ARMOR_COMBAT};
-gitem_armor_t bodyarmor_info	= {100, 200, .80, .60, ARMOR_BODY};
+gitem_armor_t jacketarmor_info	= { 25,  50, .30f, .00f, ARMOR_JACKET};
+gitem_armor_t combatarmor_info	= { 50, 100, .60f, .30f, ARMOR_COMBAT};
+gitem_armor_t bodyarmor_info	= {100, 200, .80f, .60f, ARMOR_BODY};
 
 // Expert - Balanced armor stats
-gitem_armor_t balanced_jacketarmor_info	= {160, 160, .30, .30, ARMOR_JACKET};
-gitem_armor_t balanced_combatarmor_info	= { 96,  96, .50, .50, ARMOR_COMBAT};
-gitem_armor_t balanced_bodyarmor_info	= { 80,  80, .60, .60, ARMOR_BODY};
+gitem_armor_t balanced_jacketarmor_info	= {160, 160, .30f, .30f, ARMOR_JACKET};
+gitem_armor_t balanced_combatarmor_info	= { 96,  96, .50f, .50f, ARMOR_COMBAT};
+gitem_armor_t balanced_bodyarmor_info	= { 80,  80, .60f, .60f, ARMOR_BODY};
 
 // Expert: These vars need to be trans-file now
 int	jacket_armor_index;
@@ -1009,7 +1009,7 @@ edict_t *Drop_Item (edict_t *ent, gitem_t *item)
 	if (expflags & EXPERT_BALANCED_ITEMS)
 	{
 		vec3_t dest;
-		float *offset;
+		float *expoffset;
 		trace_t tr;
 
 		VectorSet (dropped->mins, -20, -20, -15);
@@ -1020,8 +1020,8 @@ edict_t *Drop_Item (edict_t *ent, gitem_t *item)
 		// to be created partly in a solid wall and thus fall out of world.
 		// Check for starting in a solid, and revert to normal bounding box
 		// if this happens
-		offset = tv(0,0,1);
-		VectorAdd (ent->s.origin, offset, dest);
+		expoffset = tv(0,0,1);
+		VectorAdd (ent->s.origin, expoffset, dest);
 
 		tr = gi.trace (dropped->s.origin, dropped->mins, dropped->maxs, dest, dropped, MASK_SOLID);
 

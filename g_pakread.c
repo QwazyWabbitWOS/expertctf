@@ -13,7 +13,7 @@ qboolean searchForMapInPakFiles(char *mapName)
 	FILE *fPak;
 	PAK *pPak;
 	dpackfile_t *pFile;
-	size_t i; 
+	int i; 
 	int count;
 	
 	//char *fileNameExt;
