@@ -493,6 +493,7 @@ SpawnEntities
 
 Creates a server's entity / program execution context by
 parsing textual entity definitions out of an ent file.
+Called by engine at the beginning of every level.
 ==============
 */
 void SpawnEntities (char *mapname, char *entities, char *spawnpoint)

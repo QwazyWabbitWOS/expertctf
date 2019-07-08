@@ -130,7 +130,8 @@ void ShutdownGame (void)
 GetGameAPI
 
 Returns a pointer to the structure with all entry points
-and global variables
+and global variables.
+These are the exports by the DLL to the engine.
 =================
 */
 game_export_t *GetGameAPI (game_import_t *import)

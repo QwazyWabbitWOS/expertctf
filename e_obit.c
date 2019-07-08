@@ -1,7 +1,7 @@
 /*
 	e_obit.c
 
-	Implementation of Expert Obituary Functions ansilary functions. e.g. Init, Parsing
+	Implementation of Expert Obituary Functions ancillary functions. e.g. Init, Parsing
 
 	Credit is due to "SteQve" for ServObits 1.1 
 		Some of the functionality within this module was modeled after the 
@@ -103,8 +103,6 @@ char o_Contexts[NUM_CONTEXTS][20] =
 int GetEntityGender(edict_t *ent);
 void PrintRandObitMsg(char *aName, char *vName, int aGender, int vGender, obits_t *ob);
 unsigned int DiscoverContexts(edict_t *vict, edict_t *infl, edict_t *attk, vec3_t point);
-int StrBeginsWith (char *s1, char *s2);
-int InsertValue(char *mess, char *format_str, char *field, char *value, int max_size);
 void DisplayBestObituaryMessage(int cause, unsigned int context, int aGender, int vGender, char *aName, char *vName);
 obits_t* messagesForContext(unsigned int cause, unsigned int cFlag);
 qboolean ReTagObitData();
@@ -114,8 +112,6 @@ unsigned int getCauseNumber(char *szCause);
 int getContextNumber(char *szContext);
 unsigned int getContextBit(char *szContext);
 obitContainer_t **LoadMessageTree(const char *szFilename);
-void ConsoleKill (edict_t *self);
-void DumpChars(void);
 void MacroAddAll(unsigned int cFlag, const char* message);
 
 // debug
@@ -268,29 +264,39 @@ void PrintRandObitMsg(char *aName, char *vName,
 						int aGender, int vGender, obits_t *ob)
 {
 	int iRnd = 0;
-	char *szObit;
-	char *szTemp;
-	char *atkName;
-	char *vicName;
+	char szObit[sizeof(char) * OBIT_BUFF_SIZE] = { 0 };
+	char szTemp[sizeof(char) * OBIT_BUFF_SIZE] = { 0 };
+	char atkName[sizeof(char) * 20] = { 0 };
+	char vicName[sizeof(char) * 20] = { 0 };
+	/* QwazyWabbit:
+	 * This function originally allocated these buffers with calloc() but it did
+	 * a silly thing by allocating them constant spaces of 512 and 100 characters.
+	 * It also ignored the OBIT_BUF_SIZE constant. I didn't see much point to
+	 * calling malloc and free every time a player dies just to fill fix-sized
+	 * buffers for the messages so I'm setting them up here. Attacker and victim
+	 * names are fixed and limited size as well and 100 chars was WAY over-committed.
+	 * FIXME: Another remedy might be to allocate the buffers at GameInit
+	 * with gi.TagMalloc to accommodate user-defined variable length obituary
+	 * strings but I see no reason to go to the trouble at this time.
+	 */
 
 	//int vicSeparator = 156;
-	char *pronouns[3][2] =	{	{OBIT_HE, OBIT_SHE},
-								{OBIT_HIM, OBIT_HER},
-								{OBIT_HIS, OBIT_HER}
-							};
+	char *pronouns[3][2] =
+	{
+		{OBIT_HE, OBIT_SHE},
+		{OBIT_HIM, OBIT_HER},
+		{OBIT_HIS, OBIT_HER}
+	};
 
+	assert(vName != NULL); //QW// bug check
 	if (ob == NULL)
 	{	// No message passed in.
 		gi.bprintf (PRINT_MEDIUM,"%s died and nobody wrote an obituary.\n", vName);
 		return;
 	}
 
-	szTemp = calloc(sizeof(char), 512);
-	szObit = calloc(sizeof(char), 512);
-
-	atkName= calloc(sizeof(char), 100);
-	vicName= calloc(sizeof(char), 100);
 	// Make the attacker's name green if name ! null
+	assert(aName != NULL); //QW// bug check
 	if (aName != NULL)
 		greenCopy(atkName, aName);
 
@@ -329,8 +335,6 @@ void PrintRandObitMsg(char *aName, char *vName,
 	strcpy(szObit, szTemp);
 
 	gi.bprintf (PRINT_MEDIUM,"%s\n",szObit);
-	free(szTemp);
-	free(szObit);
 }
 
 void DisplayObituaryInfo(edict_t *ent)
@@ -687,7 +691,7 @@ obitContainer_t **LoadMessageTree(const char *szFilename)
 	char *filename;
 
 	// Create the filename.
-	filename = malloc(strlen(gamedir->string) + strlen(szFilename) + 2);
+	filename = gi.TagMalloc(strlen(gamedir->string) + strlen(szFilename) + 2, TAG_LEVEL);
 	strcpy(filename, gamedir->string);
 	strcat(filename, "/");
 	strcat(filename, szFilename);
@@ -697,7 +701,7 @@ obitContainer_t **LoadMessageTree(const char *szFilename)
 	// First, let's open the file.
 	if ( (f=fopen(filename, "r")) == NULL)
 	{	// Error opening the file.
-		free(filename);
+		gi.TagFree(filename);
 		gi.dprintf(ERR_OBIT_FILEOPEN, szFilename);
 		return (NULL);
 	}
@@ -709,7 +713,7 @@ obitContainer_t **LoadMessageTree(const char *szFilename)
 
 	if (gCauseTable == NULL)
 	{	// malloc error...
-		free(filename);
+		gi.TagFree(filename);
 		gi.dprintf(ERR_OBIT_MALLOC);
 		return (NULL);
 	}
@@ -804,9 +808,6 @@ obitContainer_t **LoadMessageTree(const char *szFilename)
 
 			default:					// Normal handeling
 */
-					
-
-			
 		}
 	}
 
