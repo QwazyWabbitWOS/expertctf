@@ -53,11 +53,6 @@ void InitMOTD(void)
 				gi.dprintf("MOTD error: off by %d characters", motdChars);
 		}
 	}
-	else
-	{
-		gi.dprintf("Didn't find %s\n", EXPERT_MOTD_FILENAME);
-		motd = NULL;
-	}
 }
 
 // DisplayMOTD: Display the MOTD to the client
