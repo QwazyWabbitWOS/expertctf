@@ -205,7 +205,8 @@ void ExpertGameInits(void) {
 	//crashes server witout mischta installed
 	sv_mishteamaudio = gi.cvar("mishteamaudio","0",CVAR_LATCH);	// enable - disable Mishta sv props on the server
 
-	//ExpertTeamAudioInit();
+	if (!(utilflags & EXPERT_DISABLE_MOTD))
+		InitMOTD();
 
 	// global properties table
 	gProperties = newProps();
@@ -287,10 +288,6 @@ void ExpertLevelInits(void) {
 	// Initialize the teamplay system
 	if (teamplayEnabled())
 		loadTeams();
-
-	// Initialize MOTD. (can't be called from InitGame because tags are freed above)
-	if ( !(utilflags & EXPERT_DISABLE_MOTD) )
-		InitMOTD();
 
 	// Initialize Obituary (can't be called from InitGame for same reason)
 	if ( !(utilflags & EXPERT_DISABLE_CLIENT_OBITUARIES) )

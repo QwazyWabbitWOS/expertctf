@@ -1,59 +1,61 @@
 #include <stdio.h>
 #include "g_local.h"
 
-char *motd;
+char *motd = NULL; // initialized at startup
 
-// InitMOTD: Initializes the MOTD on each level start
+// InitMOTD: Initializes the MOTD during InitGame from ExpertGameInits
 void InitMOTD(void)
 {
-	FILE *motdfile;
+	FILE* motdfile;
+	int motdChars;
+	char* here;
+	int c;
 
-	// Open the MOTD
-	motdfile = OpenGamedirFile(gamedir->string, va("%s/%s", levelCycle->string, EXPERT_MOTD_FILENAME), "r");
-
-	// If a file was found, copy it over
-	if (motdfile)
+	if (motd == NULL)
 	{
-		char line[256];				// more columns than ever possible
-		char *motdbuf = NULL;
-		int motdlen = 1, linelen = 0;
+		motdfile = OpenGamedirFile(gamedir->string, va("%s/%s", levelCycle->string, EXPERT_MOTD_FILENAME), "r");
 
-//		gi.dprintf("Reading %s..\n", MOTD_FILENAME);
-
-		motdbuf = calloc(1, 1);
-		if (motdbuf == NULL)			// Ran out of memory... uh oh
+		if (motdfile)
 		{
-			gi.dprintf("ERROR: Ran out of memory while initializing MOTD. Continuting execution.\n");
-			fclose(motdfile);
-			return;
-		}
-
-		// FIXME: This is probably a terribly inefficient way to set this up, but it works
-		while (fgets(line, 256, motdfile))
-		{
-			linelen = strlen(line);
-			motdlen += linelen;
-			motdbuf = realloc(motdbuf, motdlen);		// Tagged allocation doesn't have realloc
-			if (motdbuf == NULL)			// Ran out of memory... uh oh
+			motdChars = 0;
+			if (motdfile != NULL)
 			{
-				gi.dprintf("ERROR: Ran out of memory while initializing MOTD. Continuting execution.\n");
-				if (motdbuf)
-					free(motdbuf);
-				fclose(motdfile);
+				while ((c = fgetc(motdfile)) != EOF)
+					motdChars++;
+			}
+			else
+			{
+				gi.dprintf("Unable to open MOTD file.\n");
+				motd = NULL;
 				return;
 			}
-			strncat(motdbuf, line, linelen);
+
+			motd = gi.TagMalloc(motdChars + 1, TAG_GAME);
+			gi.dprintf("Allocating %i bytes for MOTD\n", motdChars + 1);
+			here = motd;
+
+			// Now load in the MOTD file.  Nul-terminate the string.
+			if (motdfile)
+			{
+				rewind(motdfile);
+				while ((c = fgetc(motdfile)) != EOF)
+				{
+					*here = c;
+					here++;
+					motdChars--;
+				}
+				fclose(motdfile);
+			}
+
+			*here = '\0';
+
+			if (motdChars != 0)
+				gi.dprintf("MOTD error: off by %d characters", motdChars);
 		}
-		
-		motd = gi.TagMalloc(motdlen, TAG_LEVEL);
-		strncpy(motd, motdbuf, motdlen);
-
-		fclose(motdfile);
-		free(motdbuf);
-	} else {
-		// Didn't find the file
-
-//		gi.dprintf("Didn't find %s\n", MOTD_FILENAME);
+	}
+	else
+	{
+		gi.dprintf("Didn't find %s\n", EXPERT_MOTD_FILENAME);
 		motd = NULL;
 	}
 }
@@ -61,17 +63,6 @@ void InitMOTD(void)
 // DisplayMOTD: Display the MOTD to the client
 void DisplayMOTD(edict_t *client)
 {
-	/*
-	if (motd)
-		gi.centerprintf(client, "Expert Quake2 v%s\n"
-			"http://www.planetquake.com/expert/\n\n"
-			"\"settings\" for settings\n\n%s",
-			EXPERT_VERSION, motd);
-	else
-		gi.centerprintf(client, "Expert Quake2 v%s\n"
-			"http://www.planetquake.com/expert/\n",
-			EXPERT_VERSION);
-	*/
 	if (motd)
 		gi.centerprintf(client, "Quake 2 Expert v%s\n\n%s", EXPERT_VERSION, motd);
 	else
