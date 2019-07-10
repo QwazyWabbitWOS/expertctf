@@ -36,6 +36,7 @@ typedef struct
 } PAK;
 
 qboolean searchForMapInPakFiles(char *mapName);
+qboolean searchFormedPathPakFiles(char* mapName, char* path);
 qboolean searchForMapInPakFile(PAK *pak, char *mapName);
 void PakClose(PAK *pak);
 

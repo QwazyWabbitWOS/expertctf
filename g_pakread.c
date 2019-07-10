@@ -1,194 +1,117 @@
 #include "g_local.h"
 #include "g_pakread.h"
 
-//qboolean searchForMapInPakFiles(char *mapName);
-//qboolean searchForMapInPakFile(PAK *pak, char *mapName);
-//void PakClose(PAK *pak);
-
-// Main function to be called.  Enter a map name as a parameter
-// and this function will return "true" if any pak files have
-// that map...  otherwise it will return false
-qboolean searchForMapInPakFiles(char *mapName)
+// Primary map search function. This drives the pak searches
+// by passing the path and map name to the pak search function.
+qboolean searchForMapInPakFiles(char* mapName)
 {
-	FILE *fPak;
-	PAK *pPak;
-	dpackfile_t *pFile;
-	int i; 
+	char Pakpath[MAX_QPATH];
+	qboolean stat = false;
+
+	// Search first in mod directory, then in baseq2.
+	sprintf(Pakpath, "%s", gamedir->string);
+	stat = searchFormedPathPakFiles(mapName, Pakpath);
+	if (stat)
+		return stat;
+	else {
+		sprintf(Pakpath, "%s/../baseq2", gamedir->string);
+		return searchFormedPathPakFiles(mapName, Pakpath);
+	}
+}
+
+qboolean searchFormedPathPakFiles(char* mapName, char* path)
+{
+	FILE* fPak = NULL;
+	PAK* pPak = { 0 };
+	dpackfile_t* pFile;
+	int i;
 	int count;
-	
-	//char *fileNameExt;
-	char filename[MAX_QPATH]={0};
+	qboolean stat = false;
+
+	char filename[MAX_QPATH] = { 0 };
 	char currentPakName[9];
 	char currentFullPakName[MAX_QPATH];
-	
-	sprintf(filename,"%s.bsp",mapName);
-	
+
+	sprintf(filename, "%s.bsp", mapName);
+
 	for (count = 0; count < 10; count++)
 	{
 		sprintf(currentPakName, "pak%i.pak", count);
-		//sprintf(currentPakName, "pak%i.pak", count);
-		sprintf(currentFullPakName, "%s/%s", gamedir->string, currentPakName);
-		
+		sprintf(currentFullPakName, "%s/%s", path, currentPakName);
+
 		// Open the pak file for reading
 		if ((fPak = fopen(currentFullPakName, "rb")) == NULL)
 		{
-			continue; 
+			continue;
 		}
-		
+
 		// Allocate a PAK struct
-		if ((pPak = (PAK *) calloc(1, sizeof(PAK))) == NULL)
+		if ((pPak = (PAK*)gi.TagMalloc(sizeof(PAK), TAG_LEVEL)) == NULL)
 		{
 			fclose(fPak);
 			continue;
 		}
-		
+
 		// Read the header from the pak file
-		if (fread(&pPak->header, PAK_HEADER_SIZE,1,fPak) != 1)
+		if (fread(&pPak->header, PAK_HEADER_SIZE, 1, fPak) != 1)
 		{
 			fclose(fPak);
-			free(pPak);
+			gi.TagFree(pPak);
 			continue;
 		}
-		
+
 		// Check and make sure we got a proper header
 		if (pPak->header.ident != IDPAKHEADER)
 		{
 			fclose(fPak);
-			free(pPak);
+			gi.TagFree(pPak);
 			continue;
 		}
-		
+
 		// fseek past all of the file data
-		if (fseek(fPak, pPak->header.dirofs-PAK_HEADER_SIZE,SEEK_CUR))
+		if (fseek(fPak, pPak->header.dirofs - PAK_HEADER_SIZE, SEEK_CUR))
 		{
 			fclose(fPak);
-			free(pPak);
+			gi.TagFree(pPak);
 			continue;
 		}
-		
+
 		// Determine the number of files in the pak file
-		pPak->dir.nfiles = pPak->header.dirlen/PAK_FILE_SIZE;
-		pFile = pPak->dir.file; 
-		
-		for (i=0; i < pPak->dir.nfiles; i++, pFile++)
+		pPak->dir.nfiles = pPak->header.dirlen / PAK_FILE_SIZE;
+		pFile = pPak->dir.file;
+
+		for (i = 0; i < pPak->dir.nfiles; i++, pFile++)
 		{
 			//gi.dprintf("Count loop - %i files %d\n", i, pPak->dir.nfiles);
 			if (fread(pFile, PAK_FILE_SIZE, 1, fPak) != 1)
 			{
-				fclose(fPak);
-				free(pPak);
 				i = pPak->dir.nfiles;
+				fclose(fPak);
+				gi.TagFree(pPak);
 				continue;
 			}
 		}
-		
+
 		fseek(fPak, 0L, SEEK_SET);
 		pPak->fp = fPak;
-		pPak->name = (char *) strdup(currentPakName); 
-		//DEBUG CHECK
-		//gi.dprintf("Pak name = %s\n", pPak->name);
-		// Check to see if the map is in the current pak file.  If it is,
-		// return "true", we are done.
-		if (searchForMapInPakFile(pPak, filename) == true)
-		{
-			PakClose(pPak);
-			//gi.dprintf("Map found in Pak %s\n", pPak->name);
-			return(true);
-		}
-		else
-		{
-			PakClose(pPak);
-		}
+		pPak->name = (char*)strdup(currentPakName);
+		//gi.dprintf("Checking pak name = %s\n", pPak->name);
+		stat = searchForMapInPakFile(pPak, filename);
+		PakClose(pPak);
+		if (stat)
+			return stat; // we found one
 	}
-	
-	for (count = 0; count < 10; count++)
-	{
-		sprintf(currentPakName, "pak%i.pak", count);
-		//sprintf(currentPakName, "pak%d.pak", count);
-		
-		sprintf(currentFullPakName, "%s/../baseq2/%s", gamedir->string,currentPakName);
-		//DEBUG CHECKING
-		//gi.dprintf("Current pakname - %s\n", currentFullPakName);
-		// Open the pak file for reading
-		if ((fPak = fopen(currentFullPakName, "rb")) == NULL)
-		{
-			continue; 
-		}
-		
-		// Allocate a PAK struct
-		if ((pPak = (PAK *) calloc(1, sizeof(PAK))) == NULL)
-		{
-			fclose(fPak);
-			continue;
-		}
-		
-		// Read the header from the pak file
-		if (fread(&pPak->header, PAK_HEADER_SIZE,1,fPak) != 1)
-		{
-			fclose(fPak);
-			free(pPak);
-			continue;
-		}
-		
-		// Check and make sure we got a proper header
-		if (pPak->header.ident != IDPAKHEADER)
-		{
-			fclose(fPak);
-			free(pPak);
-			continue;
-		}
-		
-		// fseek past all of the file data
-		if (fseek(fPak, pPak->header.dirofs-PAK_HEADER_SIZE,SEEK_CUR))
-		{
-			fclose(fPak);
-			free(pPak);
-			continue;
-		}
-		
-		// Determine the number of files in the pak file
-		pPak->dir.nfiles = pPak->header.dirlen / PAK_FILE_SIZE;
-		pFile = pPak->dir.file; 
-		
-		for (i=0; i < pPak->dir.nfiles; i++, pFile++)
-		{
-			if (fread(pFile, PAK_FILE_SIZE, 1, fPak) != 1)
-			{
-				i = pPak->dir.nfiles;
-				fclose(fPak);
-				free(pPak);
-				continue;
-			}
-		}
-		
-		fseek(fPak, 0L, SEEK_SET);
-		pPak->fp = fPak;
-		pPak->name = (char *) strdup(currentPakName); 
-		
-		// Check to see if the map is in the current pak file.  If it is,
-		// return "true", we are done.
-		if (searchForMapInPakFile(pPak, filename) == true)
-		{
-			PakClose(pPak);
-			//gi.dprintf("Map found in Pak %s\n", pPak->name);
-			return(true);
-		}
-		else
-		{
-			PakClose(pPak);
-		}
-	}
-	return(false);
-} 
+	return stat;
+}
 
 // Search for the mapName in the current pak file
 // Return "true" if it is in there, otherwise "false"
-qboolean searchForMapInPakFile(PAK *pak, char *mapName)
+qboolean searchForMapInPakFile(PAK* pak, char* mapName)
 {
-	int i; 
-	
+	int i;
+
 	// Loop through the maps in the pak file, comparing the names
-	for (i=0; i < pak->dir.nfiles; i++)
+	for (i = 0; i < pak->dir.nfiles; i++)
 	{
 		// Make sure the current item in the pak file starts with "maps/",
 		// and if so, check to see if it's the map we are looking for
@@ -205,17 +128,17 @@ qboolean searchForMapInPakFile(PAK *pak, char *mapName)
 			strncmp(pak->dir.file[i].name + 5, mapName, strlen(pak->dir.file[i].name) - 5) == 0)
 		{
 			// Found the map in the pak file
-			return(true);
+			return true;
 		}
 	}
 	// Did not find the map in the pak file
-	return(false);
-} 
+	return false;
+}
 
 //========================================
 // Close PAK file. Free memory.
 //========================================
-void PakClose(PAK *pak)
+void PakClose(PAK* pak)
 {
 	if (pak)
 	{
@@ -223,7 +146,6 @@ void PakClose(PAK *pak)
 		{
 			fclose(pak->fp);
 		}
-		free(pak->name);
-		free(pak);
+		gi.TagFree(pak);
 	}
-} 
+}
