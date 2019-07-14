@@ -1143,16 +1143,39 @@ void Com_PageInMemory (byte *buffer, int size)
 ============================================================================
 */
 
-// FIXME: replace all Q_stricmp with Q_strcasecmp
-int Q_stricmp (char *s1, char *s2)
+/** Case independent string compare.
+ If s1 is contained within s2 then return 0, they are "equal".
+ else return the lexicographic difference between them.
+*/
+int Q_stricmp(const char* s1, const char* s2)
 {
-#if defined(WIN32)
-	return _stricmp (s1, s2);
-#else
-	return strcasecmp (s1, s2);
-#endif
+	const unsigned char
+		* uc1 = (const unsigned char*)s1,
+		* uc2 = (const unsigned char*)s2;
+
+	while (tolower(*uc1) == tolower(*uc2++))
+		if (*uc1++ == '\0')
+			return (0);
+	return (tolower(*uc1) - tolower(*--uc2));
 }
 
+int Q_strnicmp(const char* s1, const char* s2, size_t count)
+{
+	if (count == 0)
+		return 0;
+	else
+	{
+		while (count-- != 0 && tolower(*s1) == tolower(*s2))
+		{
+			if (count == 0 || *s1 == '\0' || *s2 == '\0')
+				break;
+			s1++;
+			s2++;
+		}
+
+		return tolower(*(unsigned char*)s1) - tolower(*(unsigned char*)s2);
+	}
+}
 
 int Q_strncasecmp (char *s1, char *s2, int n)
 {
@@ -1178,11 +1201,6 @@ int Q_strncasecmp (char *s1, char *s2, int n)
 	} while (c1);
 	
 	return 0;		// strings are equal
-}
-
-int Q_strcasecmp (char *s1, char *s2)
-{
-	return Q_strncasecmp (s1, s2, 99999);
 }
 
 static char bigbuffer[0x10000];

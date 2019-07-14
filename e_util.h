@@ -13,7 +13,7 @@
 // strings
 
 //cuts through 3 layers of calls
-#define StrMatch(left, right) (Q_strncasecmp((left), (right), 99999) == 0)
+#define StrMatch(left, right) (Q_strnicmp((left), (right), 99999) == 0)
 
 int StrToInt(char *pszFrom, int Default);
 int numchr(char *str, int c);

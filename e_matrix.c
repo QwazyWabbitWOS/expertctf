@@ -143,9 +143,9 @@ void DrawMatrix (edict_t* pedViewer, char* pszLayout, byte flags)
 		}
 
 		if (iRank == pedViewer->client->resp.iRank) {
-			strncpy(szEntry, va("yv %d string2 \"%s\" ", ypos, szSubEntry), ENTRYCHARS);
+			Q_strncpy(szEntry, va("yv %d string2 \"%s\" ", ypos, szSubEntry), ENTRYCHARS);
 		} else {
-			strncpy(szEntry, va("yv %d string \"%s\" ", ypos, szSubEntry), ENTRYCHARS);
+			Q_strncpy(szEntry, va("yv %d string \"%s\" ", ypos, szSubEntry), ENTRYCHARS);
 		}
 
 		if (strlen(szEntry) + strlen(pszLayout) > 1399) 
@@ -260,7 +260,7 @@ void ExpandMatrix (edict_t* pedJoining)
 	for (iClient = 0; iClient < game.maxclients; iClient++) {
 		pedPlayer = g_edicts + iClient + 1;
 		//if the names match, it's him
-		if (pedPlayer->inuse && StrMatch(pedJoining->client->pers.netname, pedPlayer->client->pers.netname)) {
+		if (pedPlayer->inuse && Q_stricmp(pedJoining->client->pers.netname, pedPlayer->client->pers.netname)) {
 			mpaTranslateRank[iNewRank] = iClient; 
 			break;
 		}
