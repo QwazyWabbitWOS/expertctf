@@ -6,7 +6,10 @@
 qboolean searchForMapInPakFiles(char* mapName)
 {
 	char Pakpath[MAX_QPATH];
-	qboolean stat = false;
+	qboolean stat;
+
+	if (!mapName)
+		return false;
 
 	// Search first in mod directory, then in baseq2.
 	sprintf(Pakpath, "%s", gamedir->string);
