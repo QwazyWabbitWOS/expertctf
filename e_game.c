@@ -134,7 +134,7 @@ void ExpertGameInits(void) {
 	sv_maxsjspeed = gi.cvar("maxsjspeed","0",0);
 	
 	restartcfg = gi.cvar("restartcfg","",0);
-	sv_autorestart = gi.cvar("autorestart","1",0);
+	sv_autorestart = gi.cvar("autorestart","0",0);
 
 	// pace: scales the speeds of the player, projectiles, and other velocities
 	sv_pace = gi.cvar("pace", "1", 0);
