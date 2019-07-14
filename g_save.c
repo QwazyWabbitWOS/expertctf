@@ -50,7 +50,10 @@ field_t fields[] = {
 	{"maxyaw", STOFS(maxyaw), F_FLOAT, FFL_SPAWNTEMP},
 	{"minpitch", STOFS(minpitch), F_FLOAT, FFL_SPAWNTEMP},
 	{"maxpitch", STOFS(maxpitch), F_FLOAT, FFL_SPAWNTEMP},
-	{"nextmap", STOFS(nextmap), F_LSTRING, FFL_SPAWNTEMP}
+	{"nextmap", STOFS(nextmap), F_LSTRING, FFL_SPAWNTEMP},
+
+	{0, 0, 0, 0}
+
 };
 
 // -------- just for savegames ----------
@@ -181,6 +184,8 @@ void InitGame (void)
 	dmflags = gi.cvar ("dmflags", "0", CVAR_SERVERINFO);
 	fraglimit = gi.cvar ("fraglimit", "0", CVAR_SERVERINFO);
 	timelimit = gi.cvar ("timelimit", "0", CVAR_SERVERINFO);
+	if (timelimit->value == 1)	//QW// setting 1 will crash server.
+		gi.cvar_set("timelimit", "2");
 
   	run_pitch = gi.cvar ("run_pitch", "0.002", 0);
   	run_roll = gi.cvar ("run_roll", "0.005", 0);
