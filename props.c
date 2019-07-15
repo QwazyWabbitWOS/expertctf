@@ -14,14 +14,16 @@ int p_stricmp(const void *elem1, const void *elem2) {
 	}
 }
 
-props_t *newProps(void)
+props_t* newProps(void)
 {
 	// allocate a new properties struct
-	props_t *props = malloc(sizeof(props_t));
-
+	props_t* props = malloc(sizeof(props_t));
+	if (!props){
+		gi.error("ECTF Error allocating properties\n", ERR_FATAL);
+		return NULL;
+	}
 	props->keys = listNew(0, p_stricmp);
 	props->values = listNew(0, p_stricmp);
-
 	return props;
 }
 
@@ -49,11 +51,23 @@ void addProp(props_t *props, char *newKey, char *newValue)
 		listDeleteAt(props->values, keyPos);
 		// and replace with new
 		storedValue = malloc(strlen(newValue) + 1);
+		if (!storedValue) {
+			gi.error("ECTF Error allocating value %s\n", newValue, ERR_FATAL);
+			return;
+		}
 		listInsertAt(props->values, strcpy(storedValue, newValue), keyPos);
 	} else {
 		// append new key and value pair
 		storedKey = malloc(strlen(newKey) + 1);
+		if (!storedKey) {
+			gi.error("ECTF Error allocating properties for %s\n", newKey, ERR_FATAL);
+			return;
+		}
 		storedValue = malloc(strlen(newValue) + 1);
+		if (!storedValue) {
+			gi.error("ECTF Error allocating value %s\n", newValue, ERR_FATAL);
+			return;
+		}
 		listAppend(props->keys, strcpy(storedKey, newKey));
 		listAppend(props->values, strcpy(storedValue, newValue));
 	}
