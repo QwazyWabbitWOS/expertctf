@@ -2,6 +2,7 @@
  * Implementation of Dynamic Array ADT
  */
 #include "darray.h"
+#include "g_local.h"
 #include <string.h>
 #include <assert.h>
 #include <stdlib.h>
@@ -32,7 +33,7 @@ DArray ArrayNew(int elemSize, int allocNum, ArrayCompareFn comparator)
 	assert(elemSize>0);
 
 	// allocate the struct that holds all DArray info
-	arr = malloc(sizeof(struct DArrayImplementation)); // size of
+	arr = gi.TagMalloc(sizeof(struct DArrayImplementation), TAG_LEVEL); // size of
 	assert(arr != NULL);
 
 	// set up constants in the struct
@@ -45,7 +46,7 @@ DArray ArrayNew(int elemSize, int allocNum, ArrayCompareFn comparator)
 
 	// allocate an initial array
 	arr->allocSize = allocNum;
-	arr->content = malloc(elemSize*allocNum);
+	arr->content = gi.TagMalloc(elemSize*allocNum, TAG_LEVEL);
 	assert(arr->content != NULL);
 
 	// return a pointer to the struct to the client
@@ -64,8 +65,8 @@ void ArrayReplaceComparator(DArray darray, ArrayCompareFn newComparator) {
  */
 void ArrayFree(DArray darray)
 {
-	free(darray->content);
-	free(darray);
+	gi.TagFree(darray->content);
+	gi.TagFree(darray);
 }
 
 /** 
@@ -105,7 +106,13 @@ void ArrayDeleteAt(DArray darray, int n)
 	if (darray->allocSize > darray->curSize*2 &&
 	    darray->allocSize > NO_REALLOC_FLOOR) { // never realloc if sufficiently small
 		darray->allocSize = (int)ceil(darray->allocSize * 0.5);
-		darray->content = realloc(darray->content, darray->allocSize*darray->elemSize);
+		void* tmp = darray->content;
+		void* tp;
+		tp = gi.TagMalloc(darray->allocSize*darray->elemSize, TAG_LEVEL);
+		if (tp) {
+			darray->content = tp;
+			gi.TagFree(tmp);
+		}
 		assert(darray->content != NULL);
 	}
 
@@ -140,7 +147,13 @@ void ArrayInsertAt(DArray darray, const void *newElem, int n)
 
 	// realloc to double size if we need more room to store this new element
 	if (darray->allocSize<=darray->curSize) {
-		darray->content = realloc(darray->content,darray->allocSize*2*darray->elemSize);
+		void* tmp = darray->content;
+		void* tp;
+		tp = gi.TagMalloc(darray->allocSize*2*darray->elemSize, TAG_LEVEL);
+		if (tp) {
+			darray->content = tp;
+			gi.TagFree(tmp);
+		}
 		assert(darray->content != NULL);
 		darray->allocSize = darray->allocSize*2;
 	}
@@ -165,7 +178,13 @@ void ArrayAppend(DArray darray, const void *newElem)
 {
 	// realloc to double size if we need more room to store this new element
 	if (!(darray->allocSize>darray->curSize)) {
-		darray->content = realloc(darray->content,darray->allocSize*2*darray->elemSize);
+		void* tmp = darray->content;
+		void* tp;
+		tp = gi.TagMalloc(darray->allocSize * 2 * darray->elemSize, TAG_LEVEL);
+		if (tp) {
+			darray->content = tp;
+			gi.TagFree(tmp);
+		}
 		darray->allocSize = darray->allocSize*2;
 	}
 	// append the new element at the end of the array
