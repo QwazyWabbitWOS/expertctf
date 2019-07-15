@@ -1,5 +1,5 @@
-#ifndef _REFLIST_H
-#define _REFLIST_H
+#ifndef REFLIST_H
+#define REFLIST_H
 
 /* File: dlist.h
  * --------------
@@ -146,4 +146,4 @@ int listContains(list_t list, void *entry, int isSorted);
  */
 void listIterate(list_t list, listIteratorFn fn, void *clientData);
 
-#endif /* _REFLIST_H */
+#endif /* REFLIST_H */

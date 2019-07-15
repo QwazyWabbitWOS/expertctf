@@ -1,6 +1,6 @@
 //g_pakread.c
-#ifndef _G_PAKREAD_H_
-#define	_G_PAKREAD_H_
+#ifndef G_PAKREAD_H
+#define	G_PAKREAD_H
 
 #define MAX_FILES_IN_PACK 4096
 #define IDPAKHEADER 0x4b434150 //(('K'<<24)+('C'<<16)+('A'<<8)+'P')

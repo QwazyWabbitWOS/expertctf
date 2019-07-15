@@ -1,5 +1,5 @@
-#ifndef _G_OBSERVE_H_
-#define _G_OBSERVE_H_
+#ifndef G_OBSERVE_H
+#define G_OBSERVE_H
 
 void Cmd_Observe(edict_t *player);
 void ToggleChaseCam(edict_t *player);
