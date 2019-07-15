@@ -4,14 +4,6 @@
 #include "warp.h"
 #include "props.h"
 
-/*
-#ifdef WIN32   // Needed for non-Winblows compatibility
-   #include <windows.h>
-   #ifdef __GL__   // If OpenGL is enabled, then include the GL header file
-      #include <gl.h>
-   #endif
-#endif
-*/
 game_locals_t	game;
 level_locals_t	level;
 game_import_t	gi;
