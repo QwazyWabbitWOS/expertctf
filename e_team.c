@@ -187,7 +187,7 @@ char *modelFromString(char *modelSkin) {
 	// length of string before /
 	modelLength = strcspn(modelSkin, "/");
 	// copy just up to the /
-	strncpy(model[whichModel], modelSkin, modelLength);
+	Q_strncpy(model[whichModel], modelSkin, modelLength);
 	// add null terminator
 	model[whichModel][modelLength] = '\0';
 
@@ -333,10 +333,10 @@ void addPlayerToTeam(edict_t *player, int newTeam)
 	gTeams[player->client->resp.team].memberCount++;
 } 
 
-void removePlayerFromTeam(edict_t *player)
+void removePlayerFromTeam(edict_t* player)
 {
 	int i, playersLeft, playerGap, oldTeam;
-	char *oldTeamName;
+	char* oldTeamName;
 
 	if (!(expflags & EXPERT_ENFORCED_TEAMS)) {
 		return;
@@ -365,25 +365,25 @@ void removePlayerFromTeam(edict_t *player)
 			teamSound(i, gi.soundindex("misc/comp_up.wav"), 1);
 			// prominent printout
 			teamPrint(i, PRINT_HIGH, greenText(va(
-                                    ":::: Your team now has %d more\n" 
-			                        "players than Team %s. ::::\n", 
-			                        playerGap,
-			                        oldTeamName)));
-			
+				":::: Your team now has %d more\n"
+				"players than Team %s. ::::\n",
+				playerGap,
+				oldTeamName)));
+
 		}
 	}
 }
 
 // Player disconnected.  Remove from team.
-void teamDisconnect(edict_t *player)
+void teamDisconnect(edict_t* player)
 {
 	if (!(expflags & EXPERT_ENFORCED_TEAMS)) {
 		return;
 	}
 
 	if (playerIsOnATeam(player)) {
-		gi.bprintf(PRINT_HIGH, "%s has left team %s\n", 
-   	        	player->client->pers.netname, nameForTeam(player->client->resp.team));
+		gi.bprintf(PRINT_HIGH, "%s has left team %s\n",
+			player->client->pers.netname, nameForTeam(player->client->resp.team));
 		removePlayerFromTeam(player);
 	}
 }
@@ -625,7 +625,7 @@ void enforceTeamModelSkin(edict_t *player)
 		return;
 	}
 
-	strncpy(allowedSkins, gTeams[player->client->resp.team].skinPaths, 
+	Q_strncpy(allowedSkins, gTeams[player->client->resp.team].skinPaths, 
 			gTeams[player->client->resp.team].skinPathLength);
 
 	// of all the model/skin paths allowed for this team, pick
@@ -725,7 +725,7 @@ static qboolean setTeamEntry(char *inputString, int currentTeam)
 	teamName = strtok(inputString, "=");
 
 	// Store the teamName to the global gTeams array
-	gTeams[currentTeam].teamName = malloc(strlen(teamName) + 1);
+	gTeams[currentTeam].teamName = gi.TagMalloc(strlen(teamName) + 1, TAG_LEVEL);
 	strcpy(gTeams[currentTeam].teamName, teamName);
 	trimWhitespace(gTeams[currentTeam].teamName);
 
@@ -741,17 +741,21 @@ static qboolean setTeamEntry(char *inputString, int currentTeam)
 		{
 			if (gTeams[currentTeam].skinPaths == NULL) {
 				int skinPathLength = strlen(teamPath) + 2;
-				gTeams[currentTeam].skinPaths = malloc(skinPathLength);
+				gTeams[currentTeam].skinPaths = gi.TagMalloc(skinPathLength, TAG_LEVEL);
+				assert(gTeams[currentTeam].skinPaths != 0);
 				strcpy(gTeams[currentTeam].skinPaths, teamPath);
 				gTeams[currentTeam].skinPathLength = skinPathLength;
 			}
 			else {
-				int skinPathLength = strlen(gTeams[currentTeam].skinPaths) +
-									strlen(teamPath) + 2;
-				gTeams[currentTeam].skinPaths = realloc(gTeams[currentTeam].skinPaths, skinPathLength);
+				int newskinPathlength = strlen(gTeams[currentTeam].skinPaths) + strlen(teamPath) + 2;
+				char* tmp = gi.TagMalloc(newskinPathlength, TAG_LEVEL);
+				strcpy(tmp, gTeams[currentTeam].skinPaths); // copy the old string
+				char* p = gTeams[currentTeam].skinPaths;	// don't lose the pointer
+				gTeams[currentTeam].skinPaths = tmp;	// struct now points to new string location
 				strcat(gTeams[currentTeam].skinPaths, ";");
 				strcat(gTeams[currentTeam].skinPaths, teamPath);
-				gTeams[currentTeam].skinPathLength = skinPathLength;
+				gTeams[currentTeam].skinPathLength = newskinPathlength;
+				gi.TagFree(p);
 			}
 			hackPrecacheModelSkin(teamPath);
 		}
@@ -763,7 +767,7 @@ static qboolean setTeamEntry(char *inputString, int currentTeam)
 
 	// If no valid paths were actually found, return false
 	if (gTeams[currentTeam].skinPaths == NULL) {
-		free(gTeams[currentTeam].teamName);
+		gi.TagFree(gTeams[currentTeam].teamName);
 		return false;
 	}
 
@@ -868,25 +872,25 @@ void loadTeams(void)
 		   (int)sv_numteams->value, currentTeam, TEAM_FILENAME);
 }
 
+// QwazyWabbit deleted because we're using 
+// Quake2's memory allocator for these
 // Deallocates any used memory for the teamplay code.
-void shutdownTeamplay(void)
-{
-	int i;
-
-	// gTeams is only set up in ENFORCED_TEAMS
-	if (!(expflags & EXPERT_ENFORCED_TEAMS)) {
-		return;
-	}
-
-	for (i=0; i<MAX_TEAMS; i++) {
-		if (gTeams[i].teamName)
-			free(gTeams[i].teamName);
-		if (gTeams[i].skinPaths)
-			free(gTeams[i].skinPaths);
-		if (gTeams[i].teamList)
-			free(gTeams[i].teamList);
-	}
-}
+//void shutdownTeamplay(void)
+//{
+//	// gTeams is only set up in ENFORCED_TEAMS
+//	if (!(expflags & EXPERT_ENFORCED_TEAMS)) {
+//		return;
+//	}
+//
+//	for (i=0; i<MAX_TEAMS; i++) {
+//		if (gTeams[i].teamName)
+//			free(gTeams[i].teamName);
+//		if (gTeams[i].skinPaths)
+//			free(gTeams[i].skinPaths);
+//		if (gTeams[i].teamList)
+//			free(gTeams[i].teamList);
+//	}
+//}
 
 /*
  * TeamAudio code

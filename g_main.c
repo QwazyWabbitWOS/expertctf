@@ -2,6 +2,8 @@
 #include "g_local.h"
 #include "g_pakread.h"
 #include "warp.h"
+#include "props.h"
+
 /*
 #ifdef WIN32   // Needed for non-Winblows compatibility
    #include <windows.h>
@@ -91,11 +93,13 @@ void ShutdownGame (void)
 	if ( (int)sv_utilflags->value & EXPERT_ENABLE_GIBSTAT_LOGGING)
 			gsStopLogging();
 	
-	// Expert: Deallocate the teamplay stuff
-	if (expflags & EXPERT_ENFORCED_TEAMS)
-			shutdownTeamplay();
-	
+	//// Expert: Deallocate the teamplay stuff
+	//if (expflags & EXPERT_ENFORCED_TEAMS)
+	//		shutdownTeamplay();
+
 	gi.cprintf(NULL, PRINT_HIGH,"==== ShutdownGame ====\n");
+	freeProps(gProperties);
+	gi.cprintf(NULL, PRINT_HIGH, "==== Properties freed ====\n");
 
 	if(sv_autorestart->value == 1 && Q_stricmp(restartcfg->string, ""))
 	{
