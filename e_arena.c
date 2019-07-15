@@ -1,8 +1,4 @@
 #include "g_local.h"
-//#include <string.h>
-//#include <assert.h>
-//#include <stdlib.h>
-//#include <stdio.h>
 
 DArray waitList;
 DArray arenaList;
