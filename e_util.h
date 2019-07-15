@@ -1,5 +1,5 @@
-#ifndef _E_UTIL_H_
-#define _E_UTIL_H_
+#ifndef E_UTIL_H
+#define E_UTIL_H
 /**
  * e_util.h
  *
@@ -13,7 +13,7 @@
 // strings
 
 //cuts through 3 layers of calls
-#define StrMatch(left, right) (Q_strnicmp((left), (right), 99999) == 0)
+#define StrMatch(left, right) (Q_stricmp((left), (right)) == 0)
 
 int StrToInt(char *pszFrom, int Default);
 int numchr(char *str, int c);

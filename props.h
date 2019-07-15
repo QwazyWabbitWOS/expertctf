@@ -8,8 +8,8 @@
  * This subsystem defines a struct for holding a set of
  * properties, and various operation on that set of properties.
  */
-#ifndef _PROPS_H_
-#define _PROPS_H_
+#ifndef PROPS_H
+#define PROPS_H
 
 typedef struct {
 	list_t keys;

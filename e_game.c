@@ -307,8 +307,6 @@ void ExpertLevelInits(void) {
 		gsLogLevelStart();
 		gsEnumConnectedClients();
 	}
-	//sv_autorestart = gi.cvar("autorestart", "0", 0);
-	//gi.dprintf("exp lvl inits restart value = %i\n", sv_autorestart->value);
 	gi.AddCommandString("status\r\n");//admin console convenience
 }
 
@@ -1347,7 +1345,6 @@ void wave(edict_t *ent, int waveNum) {
 /*
  * Entmap loading code
  */
-
 void LoadCustomEntmap(char *mapname, char **entities)
 {
 	FILE *fp;

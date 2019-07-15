@@ -1,5 +1,5 @@
-#ifndef _E_OBIT_H_
-#define _E_OBIT_H_
+#ifndef E_OBIT_H
+#define E_OBIT_H
 /*
   e_obit.h
 

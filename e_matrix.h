@@ -1,5 +1,5 @@
-#ifndef _E_MATRIX_H_
-#define _E_MATRIX_H_
+#ifndef E_MATRIX_H
+#define E_MATRIX_H
 //
 // e_matrix.c
 //

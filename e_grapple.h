@@ -1,5 +1,5 @@
-#ifndef _E_GRAPPLE_H_
-#define _E_GRAPPLE_H_
+#ifndef E_GRAPPLE_H
+#define E_GRAPPLE_H
 /**
  * e_grapple.h
  *

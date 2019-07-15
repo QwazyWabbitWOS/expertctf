@@ -1,5 +1,5 @@
-#ifndef _P_MENU_H_
-#define _P_MENU_H_
+#ifndef P_MENU_H
+#define P_MENU_H
 
 enum {
 	PMENU_ALIGN_LEFT,

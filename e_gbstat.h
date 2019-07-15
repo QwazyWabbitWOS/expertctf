@@ -1,5 +1,5 @@
-#ifndef _E_GBSTAT_H_
-#define _E_GBSTAT_H_
+#ifndef E_GBSTAT_H
+#define E_GBSTAT_H
 /*
 	e_gbstat.h
 

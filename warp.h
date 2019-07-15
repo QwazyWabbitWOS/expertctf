@@ -1,5 +1,5 @@
-#ifndef _WARP_H_
-#define _WARP_H_
+#ifndef WARP_H
+#define WARP_H
 
 void Cmd_Warp(edict_t *ent);   
 void Cmd_Yes(edict_t *ent);

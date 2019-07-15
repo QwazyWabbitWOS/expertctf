@@ -1,5 +1,5 @@
-#ifndef _E_IOVR_H_
-#define _E_IOVR_H_
+#ifndef E_IOVR_H
+#define E_IOVR_H
 //==============================
 //Expert Quake Overlay Constants
 //==============================

@@ -1,5 +1,5 @@
-#ifndef _E_DEFS_H_
-#define _E_DEFS_H_
+#ifndef E_DEFS_H
+#define E_DEFS_H
 /**
  * e_defs.h
  * Used for definitions used by Expert code primarily

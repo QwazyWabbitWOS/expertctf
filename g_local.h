@@ -1,6 +1,9 @@
-#ifndef _G_LOCAL_H_
-#define _G_LOCAL_H_
+#ifndef G_LOCAL_H
+#define G_LOCAL_H
+
+//
 // g_local.h -- local definitions for game module
+//
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN	//non-MFC
@@ -1252,4 +1255,4 @@ struct edict_s
 // Expert
 #include "e_defs.h"
 
-#endif
+#endif /* G_LOCAL_H */

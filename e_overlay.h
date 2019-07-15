@@ -1,5 +1,5 @@
-#ifndef _E_OVERLAY_H_
-#define _E_OVERLAY_H_
+#ifndef E_OVERLAY_H
+#define E_OVERLAY_H
 //
 // e_overlay.c
 //

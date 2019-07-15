@@ -1,5 +1,5 @@
-#ifndef _E_FTRACK_H_
-#define _E_FTRACK_H_
+#ifndef E_FTRACK_H
+#define E_FTRACK_H
 
 
 list_t flags;

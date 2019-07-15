@@ -1,6 +1,5 @@
-#ifndef _G_CTF_H_
-#define _G_CTF_H_
-// FIXME: Change because this is an Expert version?
+#ifndef G_CTF_H
+#define G_CTF_H
 
 #define CTF_VERSION			1.02
 #define CTF_VSTRING2(x) #x
@@ -189,4 +188,4 @@ void CTFOWNTEAMFlagSetup(edict_t *ent);
 static void CTFStandTouch(edict_t *stand, edict_t *player, cplane_t *plane, csurface_t *surf);
 static void CTFFlagThink(edict_t *ent);
 */
-#endif
+#endif	/* G_CTF_H */

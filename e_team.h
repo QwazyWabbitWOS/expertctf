@@ -1,5 +1,5 @@
-#ifndef _E_TEAM_H_
-#define _E_TEAM_H_
+#ifndef E_TEAM_H
+#define E_TEAM_H
 /*
  * Expert Quake2 Teamplay code.
  */
@@ -35,7 +35,7 @@ void assignToTeam(edict_t *player, int teamToAssign);
 void addPlayerToTeam(edict_t *player, int team);
 void removePlayerFromTeam(edict_t *player);
 void teamDisconnect(edict_t *player);
-void shutdownTeamplay(void);
+//void shutdownTeamplay(void);
 
 void killAndSwitchTeam(edict_t *player, int desiredTeam);
 void enforceTeamModelSkin(edict_t *player);

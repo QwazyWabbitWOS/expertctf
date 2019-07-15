@@ -1,5 +1,5 @@
-#ifndef _E_ARENA_H_
-#define _E_ARENA_H_
+#ifndef E_ARENA_H
+#define E_ARENA_H
 /**
  * e_arena.h
  *
