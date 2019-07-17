@@ -873,7 +873,7 @@ void loadTeams(void)
 }
 
 // QwazyWabbit deleted because we're using 
-// Quake2's memory allocator for these
+// Quake2's memory allocator for these.
 // Deallocates any used memory for the teamplay code.
 //void shutdownTeamplay(void)
 //{

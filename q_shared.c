@@ -1236,8 +1236,8 @@ key and returns the associated value, or an empty string.
 */
 char *Info_ValueForKey (char *s, char *key)
 {
-	char	pkey[512];
-	static	char value[2][512];	// use two buffers so compares
+	char	pkey[MAX_INFO_STRING];
+	static	char value[2][MAX_INFO_STRING];	// use two buffers so compares
 								// work without stomping on each other
 	static	int	valueindex;
 	char	*o;
@@ -1279,8 +1279,8 @@ char *Info_ValueForKey (char *s, char *key)
 void Info_RemoveKey (char *s, char *key)
 {
 	char	*start;
-	char	pkey[512];
-	char	value[512];
+	char	pkey[MAX_INFO_STRING];
+	char	value[MAX_INFO_STRING];
 	char	*o;
 
 	if (strstr (key, "\\"))

@@ -14,12 +14,17 @@ qboolean searchForMapInPakFiles(char* mapName)
 	// Search first in mod directory, then in baseq2.
 	sprintf(Pakpath, "%s", gamedir->string);
 	stat = searchFormedPathPakFiles(mapName, Pakpath);
-	if (stat)
-		return stat;
+	if (stat) {
+		gi.dprintf("Found %s in %s\n", mapName, Pakpath);
+	}
 	else {
 		sprintf(Pakpath, "%s/../baseq2", gamedir->string);
-		return searchFormedPathPakFiles(mapName, Pakpath);
+		stat = searchFormedPathPakFiles(mapName, Pakpath);
+		if (stat) {
+			gi.dprintf("Found %s in %s\n", mapName, Pakpath);
+		}
 	}
+	return stat;
 }
 
 qboolean searchFormedPathPakFiles(char* mapName, char* path)
@@ -97,12 +102,11 @@ qboolean searchFormedPathPakFiles(char* mapName, char* path)
 
 		fseek(fPak, 0L, SEEK_SET);
 		pPak->fp = fPak;
-		pPak->name = (char*)strdup(currentPakName);
-		//gi.dprintf("Checking pak name = %s\n", pPak->name);
+		Q_strncpy(pPak->name, currentPakName, sizeof pPak->name - 1);
 		stat = searchForMapInPakFile(pPak, filename);
 		PakClose(pPak);
-		if (stat)
-			return stat; // we found one
+		if (stat) 
+			return stat;
 	}
 	return stat;
 }
@@ -113,28 +117,14 @@ qboolean searchForMapInPakFile(PAK* pak, char* mapName)
 {
 	int i;
 
-	// Loop through the maps in the pak file, comparing the names
 	for (i = 0; i < pak->dir.nfiles; i++)
 	{
-		// Make sure the current item in the pak file starts with "maps/",
-		// and if so, check to see if it's the map we are looking for
-		/*
-		//DEBUG CHECKING
-		if ((strncmp(pak->dir.file[i].name, "maps/", 5) == 0))
-		{
-			gi.dprintf("file %s Maprequest %s\n", pak->dir.file[i].name, mapName);
-			gi.dprintf("file5 %s Maprequest %s\n", pak->dir.file[i].name + 5, mapName);
-			//gi.dprintf("%i\n" strncmp(pak->dir.file[i].name + 5, mapName, strlen(pak->dir.file[i].name) - 5) == 0));
-		}
-		*/
 		if ((strncmp(pak->dir.file[i].name, "maps/", 5) == 0) &&
 			strncmp(pak->dir.file[i].name + 5, mapName, strlen(pak->dir.file[i].name) - 5) == 0)
 		{
-			// Found the map in the pak file
 			return true;
 		}
 	}
-	// Did not find the map in the pak file
 	return false;
 }
 

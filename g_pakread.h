@@ -30,7 +30,7 @@ typedef struct
 typedef struct
 {
   FILE *fp;
-  char *name;
+  char name[MAX_QPATH]; // Path musn't be longer than this.
   dpackheader_t header;
   dpackdir_t dir;
 } PAK;
