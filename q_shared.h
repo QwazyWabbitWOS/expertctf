@@ -238,9 +238,9 @@ do { \
 	//
 	// key / value info strings
 	//
-	#define	MAX_INFO_KEY		64		//64
-	#define	MAX_INFO_VALUE		64		//64
-	#define	MAX_INFO_STRING	512	//512
+	#define	MAX_INFO_KEY		64
+	#define	MAX_INFO_VALUE		64
+	#define	MAX_INFO_STRING		512
 
 	char *Info_ValueForKey (char *s, char *key);
 	void Info_RemoveKey (char *s, char *key);
