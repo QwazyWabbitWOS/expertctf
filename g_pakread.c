@@ -15,14 +15,11 @@ qboolean searchForMapInPakFiles(char* mapName)
 	sprintf(Pakpath, "%s", gamedir->string);
 	stat = searchFormedPathPakFiles(mapName, Pakpath);
 	if (stat) {
-		gi.dprintf("Found %s in %s\n", mapName, Pakpath);
+		return stat;
 	}
 	else {
 		sprintf(Pakpath, "%s/../baseq2", gamedir->string);
 		stat = searchFormedPathPakFiles(mapName, Pakpath);
-		if (stat) {
-			gi.dprintf("Found %s in %s\n", mapName, Pakpath);
-		}
 	}
 	return stat;
 }
@@ -42,7 +39,9 @@ qboolean searchFormedPathPakFiles(char* mapName, char* path)
 
 	sprintf(filename, "%s.bsp", mapName);
 
-	for (count = 0; count < 10; count++)
+	// Search pak0.pak to pak99.pak, skipping where
+	// they don't exist or don't open properly.
+	for (count = 0; count < 100; count++)
 	{
 		sprintf(currentPakName, "pak%i.pak", count);
 		sprintf(currentFullPakName, "%s/%s", path, currentPakName);
@@ -50,15 +49,11 @@ qboolean searchFormedPathPakFiles(char* mapName, char* path)
 		// Open the pak file for reading
 		if ((fPak = fopen(currentFullPakName, "rb")) == NULL)
 		{
-			continue;
+			continue;	// no pak%i.pak here, check next pak
 		}
 
-		// Allocate a PAK struct
-		if ((pPak = (PAK*)gi.TagMalloc(sizeof(PAK), TAG_LEVEL)) == NULL)
-		{
-			fclose(fPak);
-			continue;
-		}
+		// Allocate a PAK struct or server fatal error
+		pPak = (PAK*)gi.TagMalloc(sizeof(PAK), TAG_LEVEL);
 
 		// Read the header from the pak file
 		if (fread(&pPak->header, PAK_HEADER_SIZE, 1, fPak) != 1)
@@ -105,10 +100,12 @@ qboolean searchFormedPathPakFiles(char* mapName, char* path)
 		Q_strncpy(pPak->name, currentPakName, sizeof pPak->name - 1);
 		stat = searchForMapInPakFile(pPak, filename);
 		PakClose(pPak);
-		if (stat) 
+		if (stat) {
+			gi.dprintf("Found %s in %s\n", mapName, currentFullPakName);
 			return stat;
+		}
 	}
-	return stat;
+	return stat;	// not found
 }
 
 // Search for the mapName in the current pak file
@@ -136,9 +133,7 @@ void PakClose(PAK* pak)
 	if (pak)
 	{
 		if (pak->fp)
-		{
 			fclose(pak->fp);
-		}
 		gi.TagFree(pak);
 	}
 }
