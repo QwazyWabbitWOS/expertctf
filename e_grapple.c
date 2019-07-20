@@ -93,6 +93,9 @@ If it is a solid object: anchor to it and pull the player.
 */
 void Grapple_Touch(edict_t *hook, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
+	if (other == NULL)
+		return;
+
 	// Release if hitting its owner
 	if (other == hook->owner)
 		return;
@@ -114,17 +117,12 @@ void Grapple_Touch(edict_t *hook, edict_t *other, cplane_t *plane, csurface_t *s
 
 	gi.sound(hook, CHAN_ITEM, gi.soundindex("world/land.wav"), 1, ATTN_NORM, 0);
 
-	if (other != NULL)
+	// Do damage to those that need it
+	if (sv_lethalmode->value)
 	{
-		// Do damage to those that need it
-		if(sv_lethalmode->value) 
-		{
-		}
-		else
-			T_Damage(other, hook, hook->owner, hook->velocity, hook->s.origin, plane->normal, HOOK_DAMAGE, 0, 0, MOD_GRAPPLE);
-		
 	}
-	
+	else
+		T_Damage(other, hook, hook->owner, hook->velocity, hook->s.origin, plane->normal, HOOK_DAMAGE, 0, 0, MOD_GRAPPLE);
 
 
 	// The hook hit a hook/monster/maybe explobox. 
