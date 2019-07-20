@@ -90,8 +90,8 @@ void ShutdownGame (void)
 	//		shutdownTeamplay();
 
 	gi.cprintf(NULL, PRINT_HIGH,"==== ShutdownGame ====\n");
-	freeProps(gProperties);
-	gi.cprintf(NULL, PRINT_HIGH, "==== Properties freed ====\n");
+	//freeProps(gProperties);
+	//gi.cprintf(NULL, PRINT_HIGH, "==== Properties freed ====\n");
 
 	if(sv_autorestart->value == 1 && Q_stricmp(restartcfg->string, ""))
 	{
@@ -425,13 +425,13 @@ qboolean MapExists(char *mapname)
 		// Try to open the bsp file
 		if ((mfile = fopen(filename, "rb")) == NULL) 
 		{
-			gi.cprintf(NULL,PRINT_HIGH,"Bsp File doesn't exist in baseq2/maps, trying %s/maps!\n", gamedir->string);
+			gi.cprintf(NULL,PRINT_HIGH,"Map File doesn't exist in baseq2/maps, trying %s/maps!\n", gamedir->string);
 			//gi.dprintf("gamedir str %s \n",gamedir->string);
 			
 			sprintf(filename,"%s/maps/%s.bsp",gamedir->string,mapname);
 			if ((mfile = fopen(filename, "rb")) == NULL) 
 			{
-				gi.cprintf(NULL,PRINT_HIGH,"Bsp File doesn't exist in %s/maps!\n", gamedir->string);
+				gi.cprintf(NULL,PRINT_HIGH,"Map File doesn't exist in %s/maps!\n", gamedir->string);
 				return false;
 			}
 			else 
