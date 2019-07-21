@@ -6,6 +6,7 @@
  */
 
 #include "list.h"
+#include "g_local.h"
 #include <string.h>
 #include <assert.h>
 #include <stdlib.h>
@@ -59,7 +60,7 @@ list_t listNew(int allocNum, listCompareFn comparator)
 	list_t list;
 	
 	// allocate the struct that holds all list_t info
-	list = malloc(sizeof(struct listImplementation)); 
+	list = gi.TagMalloc(sizeof(struct listImplementation), TAG_GAME); 
 	assert(list != NULL);
 
 	// set up constants in the struct
@@ -71,7 +72,7 @@ list_t listNew(int allocNum, listCompareFn comparator)
 
 	// allocate an initial list
 	list->allocSize = allocNum;
-	list->content = malloc(sizeof(char *)*allocNum);
+	list->content = gi.TagMalloc(sizeof(char *)*allocNum, TAG_GAME);
 	assert(list->content != NULL);
 
 	// return a pointer to the struct to the client
@@ -103,8 +104,8 @@ int listStringCompare(const void *string1, const void *string2) {
  */
 void listFree(list_t list)
 {
-	free(list->content);
-	free(list);
+	gi.TagFree(list->content);
+	gi.TagFree(list);
 }
 
 /** 
@@ -158,11 +159,19 @@ void listDeleteAt(list_t list, int n)
 
 	// check whether we have more than double the space we need
 	// to store the current elements and realloc to half size if so
-	if (list->allocSize > list->curSize*2 &&
-	    list->allocSize > NO_REALLOC_FLOOR) { // never realloc if sufficiently small
+	if (list->allocSize > list->curSize * 2 &&
+		list->allocSize > NO_REALLOC_FLOOR) { // never realloc if sufficiently small
 		list->allocSize = (int)ceil(list->allocSize * 0.5);
-		list->content = realloc(list->content, list->allocSize*sizeof(char *));
-		assert(list->content != NULL);
+		char** tmp = list->content;
+		int newsize = list->allocSize * sizeof(char*);
+		char** tp = gi.TagMalloc(newsize, TAG_GAME);
+		if (tp) {
+			list->content = tp;
+			memcpy(list->content, tmp, newsize);
+			gi.TagFree(tmp);
+		}
+		else
+			gi.error("Reallocation failed in %s\n", __func__, ERR_DROP);
 	}
 
 	// remove the element
@@ -196,8 +205,17 @@ void listInsertAt(list_t list, void *newElem, int n)
 
 	// realloc to double size if we need more room to store this new element
 	if (list->allocSize<=list->curSize) {
-		list->content = realloc(list->content,list->allocSize*2*sizeof(char *));
-		assert(list->content != NULL);
+		char** tmp = list->content;
+		int newsize = list->allocSize * 2 * sizeof(char*);
+		char** tp = gi.TagMalloc(newsize, TAG_GAME);
+		if (tp) {
+			list->content = tp;
+			memcpy(list->content, tmp, newsize);
+			gi.TagFree(tmp);
+		}
+		else
+			gi.error("Reallocation failed in %s\n", __func__, ERR_DROP);
+
 		list->allocSize = list->allocSize*2;
 	}
 
@@ -217,13 +235,22 @@ void listInsertAt(list_t list, void *newElem, int n)
 /**
  * Append an element at the end of the list.  Will realloc if necessary.
  */
-void listAppend(list_t list, void *newElem)
+void listAppend(list_t list, void* newElem)
 {
 	// realloc to double size if we need more room to store this new element
-	if (!(list->allocSize>list->curSize)) {
-		list->content = realloc(list->content,list->allocSize*2*sizeof(char *));
-		assert(list->content != NULL);
-		list->allocSize = list->allocSize*2;
+	if (!(list->allocSize > list->curSize)) {
+		char** tmp = list->content;
+		int newsize = list->allocSize * 2 * sizeof(char*);
+		char** tp = gi.TagMalloc(newsize, TAG_GAME);
+		if (tp) {
+			list->content = tp;
+			memcpy(list->content, tmp, newsize);
+			gi.TagFree(tmp);
+		}
+		else
+			gi.error("Reallocation failed in %s\n", __func__, ERR_DROP);
+
+		list->allocSize = list->allocSize * 2;
 	}
 	// append the new element at the end of the list
 	*(list->content + list->curSize) = newElem;

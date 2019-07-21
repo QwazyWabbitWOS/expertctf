@@ -17,11 +17,7 @@ int p_stricmp(const void *elem1, const void *elem2) {
 props_t* newProps(void)
 {
 	// allocate a new properties struct
-	props_t* props = malloc(sizeof(props_t));
-	if (!props){
-		gi.error("ECTF Error allocating properties\n", ERR_FATAL);
-		return NULL;
-	}
+	props_t* props = gi.TagMalloc(sizeof(props_t), TAG_GAME);
 	props->keys = listNew(0, p_stricmp);
 	props->values = listNew(0, p_stricmp);
 	return props;
@@ -33,7 +29,7 @@ props_t* newProps(void)
 void freeProps(props_t *props) {
 	listFree(props->keys);
 	listFree(props->values);
-	free(props);
+	gi.TagFree(props);
 }
 
 /**
@@ -47,27 +43,15 @@ void addProp(props_t *props, char *newKey, char *newValue)
 	if (keyPos != -1) {
 		// property already exists.  free and delete old value (key stays the same)
 		storedValue = (char *)listElementAt(props->values, keyPos);
-		free(storedValue);
+		gi.TagFree(storedValue);
 		listDeleteAt(props->values, keyPos);
 		// and replace with new
-		storedValue = malloc(strlen(newValue) + 1);
-		if (!storedValue) {
-			gi.error("ECTF Error allocating value %s\n", newValue, ERR_FATAL);
-			return;
-		}
+		storedValue = gi.TagMalloc(strlen(newValue) + 1, TAG_GAME);
 		listInsertAt(props->values, strcpy(storedValue, newValue), keyPos);
 	} else {
 		// append new key and value pair
-		storedKey = malloc(strlen(newKey) + 1);
-		if (!storedKey) {
-			gi.error("ECTF Error allocating properties for %s\n", newKey, ERR_FATAL);
-			return;
-		}
-		storedValue = malloc(strlen(newValue) + 1);
-		if (!storedValue) {
-			gi.error("ECTF Error allocating value %s\n", newValue, ERR_FATAL);
-			return;
-		}
+		storedKey = gi.TagMalloc(strlen(newKey) + 1, TAG_GAME);
+		storedValue = gi.TagMalloc(strlen(newValue) + 1, TAG_GAME);
 		listAppend(props->keys, strcpy(storedKey, newKey));
 		listAppend(props->values, strcpy(storedValue, newValue));
 	}
@@ -83,9 +67,9 @@ void removeProp(props_t *props, char *removeKey)
 
 	if (keyPos != -1) {
 		storedString = (char *)listElementAt(props->keys, keyPos);
-		free(storedString);
+		gi.TagFree(storedString);
 		storedString = (char *)listElementAt(props->values, keyPos);
-		free(storedString);
+		gi.TagFree(storedString);
 		listDeleteAt(props->keys, keyPos);
 		listDeleteAt(props->values, keyPos);
 	}
@@ -141,7 +125,7 @@ ini_t *loadProperties(const char *pszFileName) {
 	gi.dprintf("Loading properties from %s\n", pszFileName);
 
 	// allocate a new struct
-	iniDest = gi.TagMalloc(sizeof(ini_t), TAG_LEVEL);
+	iniDest = gi.TagMalloc(sizeof(ini_t), TAG_GAME);
 
 	// initialize the settings struct
 	iniDest->pszSettings = gi.TagMalloc(INI_INITIALSIZE, TAG_GAME);

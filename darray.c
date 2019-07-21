@@ -104,13 +104,16 @@ void ArrayDeleteAt(DArray darray, int n)
 	// check whether we have more than double the space we need
 	// to store the current elements and realloc to half size if so
 	if (darray->allocSize > darray->curSize*2 &&
-	    darray->allocSize > NO_REALLOC_FLOOR) { // never realloc if sufficiently small
+	    darray->allocSize > NO_REALLOC_FLOOR) 
+	{ // never realloc if sufficiently small
 		darray->allocSize = (int)ceil(darray->allocSize * 0.5);
+		int newsize = darray->allocSize * darray->elemSize;
 		void* tmp = darray->content;
 		void* tp;
-		tp = gi.TagMalloc(darray->allocSize*darray->elemSize, TAG_LEVEL);
+		tp = gi.TagMalloc(newsize, TAG_LEVEL);
 		if (tp) {
 			darray->content = tp;
+			memcpy(darray->content, tmp, newsize);
 			gi.TagFree(tmp);
 		}
 		assert(darray->content != NULL);
@@ -147,11 +150,13 @@ void ArrayInsertAt(DArray darray, const void *newElem, int n)
 
 	// realloc to double size if we need more room to store this new element
 	if (darray->allocSize<=darray->curSize) {
+		int newsize = darray->allocSize * 2 * darray->elemSize;
 		void* tmp = darray->content;
 		void* tp;
-		tp = gi.TagMalloc(darray->allocSize*2*darray->elemSize, TAG_LEVEL);
+		tp = gi.TagMalloc(newsize, TAG_LEVEL);
 		if (tp) {
 			darray->content = tp;
+			memcpy(darray->content, tmp, newsize);
 			gi.TagFree(tmp);
 		}
 		assert(darray->content != NULL);
@@ -178,11 +183,13 @@ void ArrayAppend(DArray darray, const void *newElem)
 {
 	// realloc to double size if we need more room to store this new element
 	if (!(darray->allocSize>darray->curSize)) {
+		int newsize = darray->allocSize * 2 * darray->elemSize;
 		void* tmp = darray->content;
 		void* tp;
-		tp = gi.TagMalloc(darray->allocSize * 2 * darray->elemSize, TAG_LEVEL);
+		tp = gi.TagMalloc(newsize, TAG_LEVEL);
 		if (tp) {
 			darray->content = tp;
+			memcpy(darray->content, tmp, newsize);
 			gi.TagFree(tmp);
 		}
 		darray->allocSize = darray->allocSize*2;

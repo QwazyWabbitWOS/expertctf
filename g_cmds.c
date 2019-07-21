@@ -7,7 +7,7 @@
 char *ClientTeam (edict_t *ent)
 {
 	char		*p;
-	static char	value[512];
+	static char	value[MAX_INFO_VALUE];
 
 	value[0] = 0;
 
@@ -31,8 +31,8 @@ char *ClientTeam (edict_t *ent)
 
 qboolean OnSameTeam (edict_t *ent1, edict_t *ent2)
 {
-	char	ent1Team [512];
-	char	ent2Team [512];
+	char	ent1Team [MAX_INFO_STRING];
+	char	ent2Team [MAX_INFO_STRING];
 
 	if (!((int)(dmflags->value) & (DF_MODELTEAMS | DF_SKINTEAMS)))
 		return false;
@@ -47,9 +47,10 @@ qboolean OnSameTeam (edict_t *ent1, edict_t *ent2)
 
 void SelectNextItem (edict_t *ent, int itflags)
 {
+	int		i;
+	int		index;
+	gitem_t	*it;
 	gclient_t	*cl;
-	int			i, index;
-	gitem_t		*it;
 
 	cl = ent->client;
 
@@ -133,6 +134,16 @@ void ValidateSelectedItem (edict_t *ent)
 
 
 //=================================================================================
+static void MustSetCheats(edict_t *ent)
+{
+	gi.cprintf (ent, PRINT_HIGH,
+	"You must run the server with '+set cheats 1' to enable this command.\n");
+}
+static void NoAccess(edict_t *ent)
+{
+	gi.cprintf(ent, PRINT_HIGH,
+				 "You do not have access to this command.\n");
+}
 
 /*
 ==================
@@ -152,7 +163,7 @@ void Cmd_Give_f (edict_t *ent)
 
 	if (deathmatch->value && !sv_cheats->value)
 	{
-		gi.cprintf (ent, PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
+		MustSetCheats(ent);
 		return;
 	}
 
@@ -303,7 +314,7 @@ void Cmd_God_f (edict_t *ent)
 
 	if (deathmatch->value && !sv_cheats->value)
 	{
-		gi.cprintf (ent, PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
+		MustSetCheats(ent);
 		return;
 	}
 
@@ -332,7 +343,7 @@ void Cmd_Notarget_f (edict_t *ent)
 
 	if (deathmatch->value && !sv_cheats->value)
 	{
-		gi.cprintf (ent, PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
+		MustSetCheats(ent);
 		return;
 	}
 
@@ -359,7 +370,7 @@ void Cmd_Noclip_f (edict_t *ent)
 
 	if (deathmatch->value && !sv_cheats->value)
 	{
-		gi.cprintf (ent, PRINT_HIGH, "You must run the server with '+set cheats 1' to enable this command.\n");
+		MustSetCheats(ent);
 		return;
 	}
 

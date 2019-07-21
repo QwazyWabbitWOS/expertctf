@@ -602,6 +602,7 @@ extern	gitem_t	itemlist[];
 //
 void Cmd_Help_f (edict_t *ent);
 void Cmd_Score_f (edict_t *ent);
+void ClientCommand(edict_t* ent);
 
 //
 // g_items.c
@@ -819,11 +820,34 @@ void G_RunEntity (edict_t *ent);
 //
 // g_main.c
 //
-void SaveClientData (void);
-void FetchClientEntData (edict_t *ent);
 qboolean MapExists(char *mapname);
 void ClientEndServerFrames (void);
 
+//
+// g_save.c
+//
+void WriteGame(char* filename, qboolean autosave);
+void ReadGame(char* filename);
+void WriteLevel(char* filename);
+void ReadLevel(char* filename);
+void InitGame(void);
+void G_RunFrame(void);
+
+//
+// g_spawn.c
+//
+void SpawnEntities(char* mapname, char* entities, char* spawnpoint);
+
+//
+// p_client.c
+//
+void SaveClientData(void);
+void FetchClientEntData(edict_t* ent);
+void ClientBegin(edict_t* ent);
+void ClientThink(edict_t* ent, usercmd_t* cmd);
+qboolean ClientConnect(edict_t* ent, char* userinfo);
+void ClientUserinfoChanged(edict_t* ent, char* userinfo);
+void ClientDisconnect(edict_t* ent);
 
 
 // Expert : additional prototypes

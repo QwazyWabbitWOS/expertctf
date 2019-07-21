@@ -272,7 +272,7 @@ void PrintRandObitMsg(char *aName, char *vName,
 	 * This function originally allocated these buffers with calloc() but it did
 	 * a silly thing by allocating them constant spaces of 512 and 100 characters.
 	 * It also ignored the OBIT_BUF_SIZE constant. I didn't see much point to
-	 * calling malloc and free every time a player dies just to fill fix-sized
+	 * calling reallocating and freeing every time a player dies just to fill fix-sized
 	 * buffers for the messages so I'm setting them up here. Attacker and victim
 	 * names are fixed and limited size as well and 100 chars was WAY over-committed.
 	 * FIXME: Another remedy might be to allocate the buffers at GameInit
@@ -280,6 +280,10 @@ void PrintRandObitMsg(char *aName, char *vName,
 	 * strings but I see no reason to go to the trouble at this time.
 	 */
 
+	if (aName == NULL || vName == NULL) {
+		gi.dprintf("Null player names passed to %s\n", __func__);
+		return;
+	}
 	//int vicSeparator = 156;
 	char *pronouns[3][2] =
 	{
@@ -288,15 +292,12 @@ void PrintRandObitMsg(char *aName, char *vName,
 		{OBIT_HIS, OBIT_HER}
 	};
 
-	assert(vName != NULL); //QW// bug check
 	if (ob == NULL)
 	{	// No message passed in.
 		gi.bprintf (PRINT_MEDIUM,"%s died and nobody wrote an obituary.\n", vName);
 		return;
 	}
 
-	// Make the attacker's name green if name ! null
-	assert(aName != NULL); //QW// bug check
 	if (aName != NULL)
 		greenCopy(atkName, aName);
 
@@ -317,21 +318,21 @@ void PrintRandObitMsg(char *aName, char *vName,
 	}
 
 	// substitute the proper strings for the gender pronoun placeholders
-	insertValue(szTemp, szObit, OTOK_ATTACKER_NAME, atkName, 512);
+	insertValue(szTemp, szObit, OTOK_ATTACKER_NAME, atkName, OBIT_BUFF_SIZE);
 	strcpy(szObit, szTemp);
-	insertValue(szTemp, szObit, OTOK_ATTACKER_HE, pronouns[0][aGender], 512);
+	insertValue(szTemp, szObit, OTOK_ATTACKER_HE, pronouns[0][aGender], OBIT_BUFF_SIZE);
 	strcpy(szObit, szTemp);
-	insertValue(szTemp, szObit, OTOK_ATTACKER_HIM, pronouns[1][aGender], 512);
+	insertValue(szTemp, szObit, OTOK_ATTACKER_HIM, pronouns[1][aGender], OBIT_BUFF_SIZE);
 	strcpy(szObit, szTemp);
-	insertValue(szTemp, szObit, OTOK_ATTACKER_HIS, pronouns[2][aGender], 512);
+	insertValue(szTemp, szObit, OTOK_ATTACKER_HIS, pronouns[2][aGender], OBIT_BUFF_SIZE);
 	strcpy(szObit, szTemp);
-	insertValue(szTemp, szObit, OTOK_VICTIM_NAME, vicName, 512);
+	insertValue(szTemp, szObit, OTOK_VICTIM_NAME, vicName, OBIT_BUFF_SIZE);
 	strcpy(szObit, szTemp);
-	insertValue(szTemp, szObit, OTOK_VICTIM_HE, pronouns[0][vGender], 512);
+	insertValue(szTemp, szObit, OTOK_VICTIM_HE, pronouns[0][vGender], OBIT_BUFF_SIZE);
 	strcpy(szObit, szTemp);
-	insertValue(szTemp, szObit, OTOK_VICTIM_HIM, pronouns[1][vGender], 512);
+	insertValue(szTemp, szObit, OTOK_VICTIM_HIM, pronouns[1][vGender], OBIT_BUFF_SIZE);
 	strcpy(szObit, szTemp);
-	insertValue(szTemp, szObit, OTOK_VICTIM_HIS, pronouns[2][vGender], 512);
+	insertValue(szTemp, szObit, OTOK_VICTIM_HIS, pronouns[2][vGender], OBIT_BUFF_SIZE);
 	strcpy(szObit, szTemp);
 
 	gi.bprintf (PRINT_MEDIUM,"%s\n",szObit);
@@ -625,13 +626,15 @@ void addMessageToCause(char *message, int causeInt, int cFlag)
 		// This is the first message under this context
 		// Create a container for messages of this context
 		if (gCauseTable[causeInt]->entryCount == 0) {
-			gCauseTable[causeInt]->obituary = malloc(sizeof(obits_t*));
+			gCauseTable[causeInt]->obituary = gi.TagMalloc(sizeof(obits_t*), TAG_LEVEL);
 		} else {
 
 			mallocSize = sizeof(obits_t*) * 
 					(gCauseTable[causeInt]->entryCount + 1);
-			gCauseTable[causeInt]->obituary = 
-					realloc(gCauseTable[causeInt]->obituary, mallocSize);
+			void* tmp = gCauseTable[causeInt]->obituary;
+			void* tp = gi.TagMalloc(mallocSize, TAG_LEVEL);
+			gCauseTable[causeInt]->obituary = tp;
+			gi.TagFree(tmp);
 		}
 		gCauseTable[causeInt]->entryCount++;
 
@@ -650,12 +653,14 @@ void addMessageToCause(char *message, int causeInt, int cFlag)
 	{		
 		curObit->context = cFlag;
 		curObit->msgCount++;
-		curObit->messages = malloc(sizeof(char*));
+		curObit->messages = gi.TagMalloc(sizeof(char*), TAG_LEVEL);
 	} else {
-		// The message store exists, realloc it.
+		// The message store exists, resize it.
 		curObit->msgCount++;
-		curObit->messages = realloc(curObit->messages,
-				sizeof(char*) * (curObit->msgCount));
+		char** tmp = curObit->messages;
+		char** tp = gi.TagMalloc(sizeof(char*) * (curObit->msgCount), TAG_LEVEL);
+		curObit->messages = tp;
+		gi.TagFree(tmp);
 	}
 
 	// Now, allocate the string buffer.
@@ -712,7 +717,7 @@ obitContainer_t **LoadMessageTree(const char *szFilename)
 	gMemAllocated += mallocSize;
 
 	if (gCauseTable == NULL)
-	{	// malloc error...
+	{
 		gi.TagFree(filename);
 		gi.dprintf(ERR_OBIT_MALLOC);
 		return (NULL);
@@ -724,7 +729,7 @@ obitContainer_t **LoadMessageTree(const char *szFilename)
 		mallocSize = sizeof(obitContainer_t);
 		gCauseTable[i] = gi.TagMalloc(mallocSize, TAG_LEVEL);
 		if (gCauseTable[i] == NULL)
-		{	// malloc error...
+		{
 			gi.dprintf(ERR_OBIT_MALLOC);
 			return (NULL);
 		}
@@ -952,7 +957,7 @@ void MacroAddAll(unsigned int cFlag, const char* message)
 	mallocSize = ( sizeof(char *) * (strlen(message)) ) + 2;
 	newMessage = gi.TagMalloc( mallocSize, TAG_LEVEL);
 	if (newMessage == NULL)
-	{	// malloc error...
+	{
 		gi.dprintf(ERR_OBIT_MALLOC);
 		return;
 	}
@@ -968,13 +973,15 @@ void MacroAddAll(unsigned int cFlag, const char* message)
 		{	// It's not an entry in the context list yet...
 			if (gCauseTable[i]->entryCount == 0)
 			{
-				gCauseTable[i]->obituary = malloc(sizeof(obits_t*));
-			}else {
-
-				mallocSize = sizeof(obits_t*) * 
-							(gCauseTable[i]->entryCount + 1);
-				gCauseTable[i]->obituary = 
-					realloc(gCauseTable[i]->obituary, mallocSize);
+				gCauseTable[i]->obituary = gi.TagMalloc(sizeof(obits_t*), TAG_LEVEL);
+			}
+			else
+			{
+				mallocSize = sizeof(obits_t*) * (gCauseTable[i]->entryCount + 1);
+				void* tmp = gCauseTable[i]->obituary;
+				void* tp = gi.TagMalloc(mallocSize, TAG_LEVEL);
+				gCauseTable[i]->obituary = tp;
+				gi.TagFree(tmp);
 			}
 			gCauseTable[i]->entryCount++;
 			/*
@@ -983,7 +990,7 @@ void MacroAddAll(unsigned int cFlag, const char* message)
 			tmpObitContainer->obituary = malloc(sizeof(obits_t*));
 			*/
 			if (gCauseTable[i]->obituary == NULL)
-			{	// malloc error...
+			{
 				gi.dprintf(ERR_OBIT_MALLOC);
 				return;
 			}
@@ -991,7 +998,7 @@ void MacroAddAll(unsigned int cFlag, const char* message)
 			mallocSize = sizeof(obits_t);
 			curObit = gi.TagMalloc(mallocSize, TAG_LEVEL);
 			if (curObit == NULL)
-			{	// malloc error...
+			{
 				gi.dprintf(ERR_OBIT_MALLOC);
 				return;
 			}
@@ -1007,19 +1014,23 @@ void MacroAddAll(unsigned int cFlag, const char* message)
 		{	// We have to create the message store.
 			curObit->context = cFlag;
 			curObit->msgCount++;
-			curObit->messages = malloc(sizeof(char*));
+			curObit->messages = gi.TagMalloc(sizeof(char*), TAG_LEVEL);
 			if (curObit->messages == NULL)
-			{	// malloc error...
+			{
 				gi.dprintf(ERR_OBIT_MALLOC);
 				return;
 			}
-		} else {
+		}
+		else
+		{
 			// The message store exists, realloc it.
 			curObit->msgCount++;
-			curObit->messages = realloc(curObit->messages,
-								sizeof(char*) * (curObit->msgCount));
+			void* tmp = curObit->messages;
+			void* tp = gi.TagMalloc(sizeof(char*) * (curObit->msgCount), TAG_LEVEL);
+			curObit->messages = tp;
+			gi.TagFree(tmp);
 			if (curObit->messages == NULL)
-			{	// malloc error...
+			{
 				gi.dprintf(ERR_OBIT_MALLOC);
 				return;
 			}
