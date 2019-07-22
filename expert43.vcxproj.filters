@@ -223,5 +223,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Makefile" />
+    <None Include=".travis.yml" />
   </ItemGroup>
 </Project>
