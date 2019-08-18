@@ -212,11 +212,15 @@ void InitGame (void)
 	g_edicts =  gi.TagMalloc (game.maxentities * sizeof(g_edicts[0]), TAG_GAME);
 	globals.edicts = g_edicts;
 	globals.max_edicts = game.maxentities;
+	gi.dprintf("%s entities allocated. (%i bytes)\n", maxentities->string, game.maxentities * sizeof(g_edicts[0]));
+	gi.dprintf("Size of an entity: %i bytes\n", sizeof(g_edicts[0]));
 
 	// initialize all clients for this game
 	game.maxclients = maxclients->value;
 	game.clients = gi.TagMalloc (game.maxclients * sizeof(game.clients[0]), TAG_GAME);
 	globals.num_edicts = game.maxclients+1;
+	gi.dprintf("Space for %s clients allocated. (%i bytes)\n", maxclients->string, game.maxclients * sizeof(game.clients[0]));
+	gi.dprintf("Bytes per client: %i\n", sizeof(game.clients[0]));
 	ExpertGameInits();
 }
 
