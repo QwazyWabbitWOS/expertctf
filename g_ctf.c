@@ -322,9 +322,6 @@ qboolean isCarrier(edict_t *player) {
 
 /*------------------Spawning-----------------------------------------*/
 
-edict_t *SelectDeathmatchSpawnPoint (edict_t *player);
-float	PlayersRangeFromSpot (edict_t *spot);
-
 /**
  * Returns straight line distance from "spot" to the enemy 
  * base with respect to "player"
@@ -424,7 +421,7 @@ list_t findLegalSpawns(int team) {
 
 /**
  * Find a list of spawn points for each team that are to spawn at
- * in CTF, that is, are not to near to the enemy's flag
+ * in CTF, that is, are not too near to the enemy's flag
  */
 void InitSpawnLists(void) {
 
@@ -541,7 +538,7 @@ edict_t *SelectCTFSpawnPoint (edict_t *ent)
 		{	
 			// player not on a team, or no valid spawns
 			// punt to the normal deathmatch spawn routines
-			return SelectDeathmatchSpawnPoint(ent);
+			return SelectDeathmatchSpawnPoint();
 		}
 	
 		if ( (int)(dmflags->value) & DF_SPAWN_FARTHEST)
@@ -560,7 +557,7 @@ edict_t *SelectCTFSpawnPoint (edict_t *ent)
 		cname = "info_player_team2";
 		break;
 	default:
-		return SelectDeathmatchSpawnPoint(ent);
+		return SelectDeathmatchSpawnPoint();
 	}
 
 	spot = NULL;
@@ -584,7 +581,7 @@ edict_t *SelectCTFSpawnPoint (edict_t *ent)
 	}
 
 	if (!count)
-		return SelectDeathmatchSpawnPoint(ent);
+		return SelectDeathmatchSpawnPoint();
 
 	if (count <= 2)
 	{

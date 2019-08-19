@@ -872,30 +872,10 @@ void loadTeams(void)
 		   (int)sv_numteams->value, currentTeam, TEAM_FILENAME);
 }
 
-// QwazyWabbit deleted because we're using 
-// Quake2's memory allocator for these.
-// Deallocates any used memory for the teamplay code.
-//void shutdownTeamplay(void)
-//{
-//	// gTeams is only set up in ENFORCED_TEAMS
-//	if (!(expflags & EXPERT_ENFORCED_TEAMS)) {
-//		return;
-//	}
-//
-//	for (i=0; i<MAX_TEAMS; i++) {
-//		if (gTeams[i].teamName)
-//			free(gTeams[i].teamName);
-//		if (gTeams[i].skinPaths)
-//			free(gTeams[i].skinPaths);
-//		if (gTeams[i].teamList)
-//			free(gTeams[i].teamList);
-//	}
-//}
-
 /*
  * TeamAudio code
  */
-
+// The list of phrases to be commanded
 void printAudioCmds(edict_t *player) {
 
 	gi.cprintf(player, PRINT_HIGH, "To send any message, type \n"
@@ -925,6 +905,7 @@ void printAudioCmds(edict_t *player) {
 	}
 }
 
+// Stuff the binds for the team say commands
 void audioBind(edict_t *player) {
 
 	if (ctf->value) {

@@ -848,7 +848,8 @@ void ClientThink(edict_t* ent, usercmd_t* cmd);
 qboolean ClientConnect(edict_t* ent, char* userinfo);
 void ClientUserinfoChanged(edict_t* ent, char* userinfo);
 void ClientDisconnect(edict_t* ent);
-
+edict_t* SelectDeathmatchSpawnPoint(void);
+float PlayersRangeFromSpot(edict_t* spot);
 
 // Expert : additional prototypes
 void NoAmmoWeaponChange (edict_t *ent);
