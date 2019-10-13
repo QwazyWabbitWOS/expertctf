@@ -139,11 +139,12 @@ static void MustSetCheats(edict_t *ent)
 	gi.cprintf (ent, PRINT_HIGH,
 	"You must run the server with '+set cheats 1' to enable this command.\n");
 }
-static void NoAccess(edict_t *ent)
-{
-	gi.cprintf(ent, PRINT_HIGH,
-				 "You do not have access to this command.\n");
-}
+
+//static void NoAccess(edict_t *ent)
+//{
+//	gi.cprintf(ent, PRINT_HIGH,
+//				 "You do not have access to this command.\n");
+//}
 
 /*
 ==================
