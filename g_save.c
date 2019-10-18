@@ -710,7 +710,7 @@ void ReadLevel (char *filename)
 
 	// check function pointer base address
 	count = fread (&base, sizeof(base), 1, f);
-	if (base != (void *)InitGame)
+	if (base != InitGame)
 	{
 		fclose (f);
 		gi.error ("ReadLevel: function pointers have moved");

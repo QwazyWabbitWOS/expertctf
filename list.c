@@ -75,6 +75,7 @@ list_t listNew(int allocNum, listCompareFn comparator)
 	list->content = gi.TagMalloc(sizeof(char *)*allocNum, TAG_GAME);
 	assert(list->content != NULL);
 
+	//gi.dprintf("%s allocating %d elements\n", __func__, list->allocSize);
 	// return a pointer to the struct to the client
 	return(list);
 }
@@ -104,6 +105,7 @@ int listStringCompare(const void *string1, const void *string2) {
  */
 void listFree(list_t list)
 {
+	gi.dprintf("%s freeing %d elements\n", __func__, list->allocSize);
 	gi.TagFree(list->content);
 	gi.TagFree(list);
 }
@@ -164,6 +166,7 @@ void listDeleteAt(list_t list, int n)
 		list->allocSize = (int)ceil(list->allocSize * 0.5);
 		char** tmp = list->content;
 		int newsize = list->allocSize * sizeof(char*);
+		gi.dprintf("%s reallocating to %d elements.\n", __func__, newsize);
 		char** tp = gi.TagMalloc(newsize, TAG_GAME);
 		if (tp) {
 			list->content = tp;
@@ -187,6 +190,7 @@ void listDelete(list_t list, void *deleteElem, int isSorted) {
 	int deletePos = listSearchPosition(list, deleteElem, isSorted);
 	assert(deletePos >= 0 && deletePos < list->curSize);
 	listDeleteAt(list, deletePos);
+	gi.dprintf("%s element %d deleted.\n", __func__, deletePos);
 }
 
 int listContains(list_t list, void *key, int isSorted) {
@@ -216,6 +220,7 @@ void listInsertAt(list_t list, void *newElem, int n)
 		else
 			gi.error("Reallocation failed in %s\n", __func__, ERR_DROP);
 
+		gi.dprintf("%s reallocated to %d elements.\n", __func__, newsize);
 		list->allocSize = list->allocSize*2;
 	}
 
@@ -227,6 +232,8 @@ void listInsertAt(list_t list, void *newElem, int n)
 	if (list->curSize > 0) {
 		memmove(insertPos+1, insertPos, sizeof(void *)*(list->curSize - n));
 	}
+	
+	//gi.dprintf("%s element inserted at %d.\n", __func__, n);
 	// and insert the new element
 	*insertPos = newElem;
 	list->curSize++;
@@ -250,8 +257,10 @@ void listAppend(list_t list, void* newElem)
 		else
 			gi.error("Reallocation failed in %s\n", __func__, ERR_DROP);
 
+		//gi.dprintf("%s reallocated to %d elements.\n", __func__, newsize);
 		list->allocSize = list->allocSize * 2;
 	}
+
 	// append the new element at the end of the list
 	*(list->content + list->curSize) = newElem;
 	list->curSize++;

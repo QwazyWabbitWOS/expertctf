@@ -345,21 +345,25 @@ float RangeToEnemyFlag(edict_t *spot, int team)
 
 }
 
+// declare legalSpawns here so we can free it later
+static list_t legalSpawns;
+
 /**
  * Find all spawns for team "team" that are not too near to enemy base
  */
 list_t findLegalSpawns(int team) {
 
-	list_t legalSpawns = listNew(0, NULL);
 	edict_t* spot = NULL;
-    edict_t *flag1 = ctfgame.baseFlag[TEAM1],
-        *flag2 = ctfgame.baseFlag[TEAM2];
     vec3_t v;
     float distance;
 
+	legalSpawns = listNew(0, NULL);
+	edict_t* flag1 = ctfgame.baseFlag[TEAM1];
+	edict_t* flag2 = ctfgame.baseFlag[TEAM2];
+
 	while ((spot = G_Find (spot, FOFS(classname), "info_player_deathmatch")) != NULL)
 	{
-		/*gi.dprintf("team %d: spawn %s at range %f to flag\n", team,
+		/*gi.dprintf("team %d: spawn %s at range to flag %.2f\n", team,
 				vtos(spot->s.origin),
 				RangeToEnemyFlag(spot, team));;
 		*/
@@ -369,10 +373,11 @@ list_t findLegalSpawns(int team) {
 		}
 	}
 
-	/*gi.dprintf("Requiring at least %d spawns for %d players on a team, found %d spawns\n", 
+	/*gi.dprintf("Requiring at least %d spawns for %d players on a team\nand found %d spawns more than %d distance from flag.\n", 
 			(int)floor(game.maxclients/4.0), 
 			(int)floor(game.maxclients/2.0), 
-			listSize(legalSpawns)); 
+			listSize(legalSpawns),
+			CTF_SPAWN_RANGE);
 	*/
 
 	// We found enough legal spawns by this method.
@@ -686,7 +691,7 @@ void ExpertCTFScoring(edict_t *targ, edict_t *inflictor, edict_t *attacker)
 
 	// CARRIER SAVE bonus.  Mutually exclusive with CARRIER DEFENSE;
 	// CARRIER SAVE _must_ be worth more points, since "attacker" has
-	// defended his carrier against and enemy who has not only obviously
+	// defended his carrier against an enemy who has not only obviously
 	// noticed the carrier, but has done damage to him 
 	if (level.time - targ->client->resp.ctf_lasthurtcarrier < CTF_CARRIER_DANGER_PROTECT_TIMEOUT &&
 	    !attacker->client->pers.inventory[ITEM_INDEX(flag_item)]) // attacker not the carrier
