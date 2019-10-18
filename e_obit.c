@@ -347,13 +347,12 @@ void DisplayObituaryInfo(edict_t *ent)
 			gi.cprintf (ent, PRINT_MEDIUM, "Expert Client Obituary Disabled.\n");
 		else
 			gi.cprintf (ent, PRINT_HIGH, "Expert Client Obituary failed to load.\n");
-	} else {
+	} else 
+	{
 		gi.cprintf (ent, PRINT_MEDIUM, "\nExpert Client Obituary Memory Stats\n");
 		gi.cprintf (ent, PRINT_MEDIUM, "-----------------------------------\n");
-		gi.cprintf (ent, PRINT_MEDIUM, "Total Number of Messages: %i\n",
-							gMsgCount);
-		gi.cprintf (ent, PRINT_MEDIUM, "Memory Used in bytes:     %i\n", 
-							gMemAllocated);
+		gi.cprintf (ent, PRINT_MEDIUM, "Total Number of Messages: %i\n", gMsgCount);
+		gi.cprintf (ent, PRINT_MEDIUM, "Memory Used in bytes:     %i\n", gMemAllocated);
 		gi.cprintf (ent, PRINT_MEDIUM, "\n");
 	}
 }
@@ -984,11 +983,7 @@ void MacroAddAll(unsigned int cFlag, const char* message)
 				gi.TagFree(tmp);
 			}
 			gCauseTable[i]->entryCount++;
-			/*
-			tmpObitContainers = gCauseTable;
-			tmpObitContainer = tmpObitContainers[cause];
-			tmpObitContainer->obituary = malloc(sizeof(obits_t*));
-			*/
+
 			if (gCauseTable[i]->obituary == NULL)
 			{
 				gi.dprintf(ERR_OBIT_MALLOC);
