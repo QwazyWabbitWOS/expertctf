@@ -50,6 +50,7 @@ DArray ArrayNew(int elemSize, int allocNum, ArrayCompareFn comparator)
 	assert(arr->content != NULL);
 
 	// return a pointer to the struct to the client
+	//gi.dprintf("Array initial allocation size %d\n", arr->allocSize);
 	return(arr);
 }
 
@@ -120,6 +121,7 @@ void ArrayDeleteAt(DArray darray, int n)
 	}
 
 	// remove the element
+	//gi.dprintf("Array deleting element at %d\n", n);
 	killpos = ArrayElementAt(darray,n);
 	memmove(killpos,killpos+darray->elemSize,darray->elemSize*darray->curSize - n);
 	darray->curSize--;
@@ -172,6 +174,7 @@ void ArrayInsertAt(DArray darray, const void *newElem, int n)
 		memmove(newpos+darray->elemSize,newpos,darray->elemSize*darray->curSize - n);
 	}
 	// and insert the new element
+	//gi.dprintf("Array inserting element at %d\n", n);
 	memcpy(newpos,newElem,darray->elemSize);
 	darray->curSize++;
 }
@@ -186,6 +189,7 @@ void ArrayAppend(DArray darray, const void *newElem)
 		int newsize = darray->allocSize * 2 * darray->elemSize;
 		void* tmp = darray->content;
 		void* tp;
+		//gi.dprintf("Array reallocation to size %d\n", newsize);
 		tp = gi.TagMalloc(newsize, TAG_LEVEL);
 		if (tp) {
 			darray->content = tp;
@@ -198,6 +202,8 @@ void ArrayAppend(DArray darray, const void *newElem)
 	memcpy( ((char *)darray->content) + (darray->elemSize*darray->curSize),
 			 newElem,darray->elemSize);
 	darray->curSize++;
+	//gi.dprintf("Array element appended, new size %d\n", darray->curSize);
+
 }
 
 /** 
