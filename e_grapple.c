@@ -408,11 +408,10 @@ void Release_Grapple (edict_t *hook)
 void Pull_Grapple (edict_t *player)
 {
 	vec3_t hookDir;
-	vec_t length;
 
 	// unit vector in the direction of the hook from the player
 	VectorSubtract(player->client->hook->s.origin, player->s.origin, hookDir);
-	length = VectorNormalize(hookDir);
+	VectorNormalize(hookDir);
 
 		// make the player's velocity a vector toward the hook
 	if (expflags & EXPERT_SLOW_HOOK) {
