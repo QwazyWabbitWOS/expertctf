@@ -612,7 +612,8 @@ void enforceTeamModelSkin(edict_t *player)
 	char *bestAllowedModelAndSkin, *allowedModelAndSkin;
 	int bestrating, currentrating;
 	char *chosenModelAndSkin = Info_ValueForKey (player->client->pers.userinfo, "skin");
-	char *chosenModel, *allowedModel, *chosenSkin, *allowedSkin;
+	char* chosenModel, * allowedModel;
+//	char* chosenSkin, * allowedSkin;
 	int numEqualSkins;
 
 	if (!(expflags & EXPERT_ENFORCED_TEAMS)) {
@@ -673,8 +674,8 @@ void enforceTeamModelSkin(edict_t *player)
 	chosenModel = modelFromString(chosenModelAndSkin);
 	allowedModel = modelFromString(bestAllowedModelAndSkin);
 	
-	chosenSkin = skinFromString(chosenModelAndSkin);
-	allowedSkin = skinFromString(bestAllowedModelAndSkin);
+//	chosenSkin = skinFromString(chosenModelAndSkin);
+//	allowedSkin = skinFromString(bestAllowedModelAndSkin);
 
 	if (Q_stricmp(chosenModel, allowedModel) == 0) {
 		setSkinAndModel(player, chosenModelAndSkin);
@@ -686,9 +687,9 @@ void enforceTeamModelSkin(edict_t *player)
 		// otherwise, force both model and skin to the model and skin listed 
 		// in teams.txt.  This is done just to ensure a valid model and skin pair.
 		gi.dprintf("Player %s had set skin %s.\nOverriding skin and model to %s\n"
-			   "since model %s not allowed for team\n", player->client->pers.netname,
-			   chosenModelAndSkin, bestAllowedModelAndSkin, 
-			   chosenModel);
+				"since model %s not allowed for team\n", 
+				player->client->pers.netname, chosenModelAndSkin, 
+				bestAllowedModelAndSkin, chosenModel);
 	}
 }
 
