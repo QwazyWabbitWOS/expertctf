@@ -627,7 +627,7 @@ void WriteLevel (char *filename)
 	int		i;
 	edict_t	*ent;
 	FILE	*f;
-	void	*base;
+	void	(*base)(void);
 
 	f = fopen (filename, "wb");
 	if (!f)
@@ -641,7 +641,7 @@ void WriteLevel (char *filename)
 	fwrite (&i, sizeof(i), 1, f);
 
 	// write out a function pointer for checking
-	base = (void *)InitGame;
+	base = InitGame;
 	fwrite (&base, sizeof(base), 1, f);
 
 	// write out level_locals_t
@@ -684,7 +684,7 @@ void ReadLevel (char *filename)
 	int		entnum;
 	FILE	*f;
 	int		i;
-	void	*base;
+	void	(*base)(void);
 	edict_t	*ent;
 	size_t	count;
 
