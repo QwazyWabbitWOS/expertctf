@@ -307,15 +307,9 @@ static qboolean StringToFilter (char *s, ipfilter_t *f)
 {
 	char	num[128];
 	int		i, j;
-	byte	b[4];
-	byte	m[4];
-	
-	for (i=0 ; i<4 ; i++)
-	{
-		b[i] = 0;
-		m[i] = 0;
-	}
-	
+	byte	b[4] = { 0 };
+	byte	m[4] = { 0 };
+
 	for (i=0 ; i<4 ; i++)
 	{
 		if (*s < '0' || *s > '9')
@@ -339,9 +333,9 @@ static qboolean StringToFilter (char *s, ipfilter_t *f)
 		s++;
 	}
 	
-	f->mask = *(unsigned *)m;
-	f->compare = *(unsigned *)b;
-	
+	memcpy(&f->mask, m, sizeof f->mask);
+	memcpy(&f->compare, b, sizeof f->compare);
+
 	return true;
 }
 
@@ -354,7 +348,7 @@ qboolean SV_FilterPacket (char *from)
 {
 	int		i;
 	unsigned	in;
-	byte m[4];
+	byte m[4] = { 0 };
 	char *p;
 
 	i = 0;
@@ -370,7 +364,7 @@ qboolean SV_FilterPacket (char *from)
 		i++, p++;
 	}
 	
-	in = *(unsigned *)m;
+	memcpy(&in, m, sizeof in);
 
 	for (i=0 ; i<numipfilters ; i++)
 		if ( (in & ipfilters[i].mask) == ipfilters[i].compare)
@@ -502,16 +496,19 @@ void SVCmd_RemoveIP_f (void)
 SV_ListIP_f
 =================
 */
-void SVCmd_ListIP_f (void)
+static void SVCmd_ListIP_f(void)
 {
-	int		i;
+	int		i, j;
 	byte	b[4];
 
-	gi.cprintf (NULL, PRINT_HIGH, "Filter list:\n");
-	for (i=0 ; i<numipfilters ; i++)
+	gi.cprintf(NULL, PRINT_HIGH, "Filter list:\n");
+	for (i = 0; i < numipfilters; i++)
 	{
-		*(unsigned *)b = ipfilters[i].compare;
-		gi.cprintf (NULL, PRINT_HIGH, "%3i.%3i.%3i.%3i\n", b[0], b[1], b[2], b[3]);
+		for (j = 0; j < sizeof b; j++)
+		{
+			b[j] = (ipfilters[i].compare >> (j * 8)) & 0xff;
+		}
+		gi.cprintf(NULL, PRINT_HIGH, "%3i.%3i.%3i.%3i\n", b[0], b[1], b[2], b[3]);
 	}
 }
 
@@ -525,7 +522,7 @@ void SVCmd_WriteIP_f (void)
 	FILE	*f;
 	char	name[MAX_OSPATH];
 	byte	b[4];
-	int		i;
+	int		i, j;
 	cvar_t	*game;
 
 	game = gi.cvar("game", "", 0);
@@ -546,12 +543,15 @@ void SVCmd_WriteIP_f (void)
 	
 	fprintf(f, "set filterban %d\n", (int)filterban->value);
 
-	for (i=0 ; i<numipfilters ; i++)
+	for (i = 0; i < numipfilters; i++)
 	{
-		*(unsigned *)b = ipfilters[i].compare;
-		fprintf (f, "sv addip %i.%i.%i.%i\n", b[0], b[1], b[2], b[3]);
+		for (j = 0; j < sizeof b; j++)
+		{
+			b[j] = (ipfilters[i].compare >> (j * 8)) & 0xff;
+		}
+		fprintf(f, "sv addip %u.%u.%u.%u\n", b[0], b[1], b[2], b[3]);
 	}
-	
+
 	fclose (f);
 }
 
