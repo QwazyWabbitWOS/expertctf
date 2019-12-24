@@ -555,12 +555,13 @@ void Cmd_Examine_Teams(edict_t *player)
 
 void setSkinAndModel(edict_t *player, char *modelSkin) {
 	int playernum = player - g_edicts - 1;
-	char *model = modelFromString(modelSkin);
 
 	if (modelSkin == NULL) {
 		gi.dprintf("setSkinAndModel passed null model/skin path\n");
 		return;
 	}
+
+	char* model = modelFromString(modelSkin);
 
 	// set skin and model as configstring
 	gi.configstring(CS_PLAYERSKINS + playernum,
