@@ -1,9 +1,5 @@
 #include "g_local.h"
 
-#ifdef _WIN32
-#pragma warning(push)
-#pragma warning(disable : 4706) // assignment within conditional expression
-#endif
 
 /*
 =========================================================
@@ -842,7 +838,7 @@ void door_use_areaportals (edict_t *self, qboolean open)
 	if (!self->target)
 		return;
 
-	while ((t = G_Find (t, FOFS(targetname), self->target)))
+	while ((t = G_Find (t, FOFS(targetname), self->target)) != NULL)
 	{
 		if (Q_stricmp(t->classname, "func_areaportal") == 0)
 		{
