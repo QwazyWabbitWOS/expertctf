@@ -44,7 +44,7 @@ void SetIDView(edict_t *ent)
 	if (tr.fraction < 1 && tr.ent &&
 	    tr.ent->client && !tr.ent->deadflag) {
 		ent->client->ps.stats[STAT_PLAYER_ID] = 
-			CS_PLAYERNAMES + (ent - g_edicts - 1);
+			CS_GENERAL + (ent - g_edicts - 1);
 			//CS_PLAYERSKINS + (ent - g_edicts - 1);
 		return;
 	}
@@ -72,6 +72,6 @@ void SetIDView(edict_t *ent)
 	}
 	if (bd > 0.82)
 		ent->client->ps.stats[STAT_PLAYER_ID] = 
-			CS_PLAYERNAMES + (best - g_edicts - 1);
+			CS_GENERAL + (best - g_edicts - 1);
 			//CS_PLAYERSKINS + (best - g_edicts - 1);
 }

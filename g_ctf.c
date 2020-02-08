@@ -2090,7 +2090,7 @@ int carrierName(int teamnum)
 		return 0;
 	}
 
-	return (CS_PLAYERNAMES + ctfgame.carrier[teamnum] - g_edicts - 1);
+	return (CS_GENERAL + ctfgame.carrier[teamnum] - g_edicts - 1);
 }
 
 void CTFOWNTEAMSetStats(edict_t *ent)

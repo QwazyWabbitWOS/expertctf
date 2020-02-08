@@ -1495,7 +1495,7 @@ void ClientUserinfoChanged (edict_t *ent, char *userinfo)
 		// Limit to 12 characters for consistent HUD usage
 		greenName[12] = 0;
 		// and make it green
-		gi.configstring (CS_PLAYERNAMES+playernum, greenText(greenName));
+		gi.configstring (CS_GENERAL+playernum, greenText(greenName));
 	}
 
 	// Expert: Remember the new name to check for future name changes
@@ -1709,7 +1709,7 @@ void ClientDisconnect (edict_t *ent)
 	playernum = ent-g_edicts-1;
 	gi.configstring (CS_PLAYERSKINS+playernum, "");
 	// Expert: player names array for playerid
-	gi.configstring (CS_PLAYERNAMES+playernum, "");
+	gi.configstring (CS_GENERAL+playernum, "");
 }*/
 
 void ClientDisconnect (edict_t *ent)
@@ -1741,7 +1741,7 @@ void ClientDisconnect (edict_t *ent)
 	playernum = ent-g_edicts-1;
 	gi.configstring (CS_PLAYERSKINS+playernum, "");
 	// Expert: player names array for playerid
-	gi.configstring (CS_PLAYERNAMES+playernum, "");
+	gi.configstring (CS_GENERAL+playernum, "");
 }
 
 
