@@ -240,7 +240,7 @@ void EndDMLevel (void)
 		ent->map = level.nextmap;
 	}
 	else
-	{	// search for a changeleve
+	{	// search for a changelevel
 		ent = G_Find (NULL, FOFS(classname), "target_changelevel");
 		if (!ent)
 		{	// the map designer didn't include a changelevel,
