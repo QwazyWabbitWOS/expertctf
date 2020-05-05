@@ -19,13 +19,6 @@
 * The game used to leak memory like crazy. The props commands again. The props list doesn't use the game allocator but uses malloc, realloc and calloc without freeing it properly while the game is running and it doesn't free them on shutdown. (Note: this has been fixed. All malloc calls have been converted to gi.TagMalloc per standard Q2 practice. Hopefully no more leaks and the server no longer needs periodic resets. Please report any issues.)
 * Potential null pointer dereferences in the obituary code. Possible lost pointer calling realloc. (Fixed. All reallocs have been transformed into resizes via gi.TagMalloc and gi.TagFree)
 
-### Contribution guidelines ###
-
-* Guidelines are undefined at this time
-* Writing tests
-* Code review
-* Other guidelines
-
 ### Who do I talk to? ###
 
 * This repository is maintained by QwazyWabbit[WOS], www.clanwos.org
