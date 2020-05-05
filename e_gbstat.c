@@ -344,9 +344,3 @@ void gsLogMisc(char *logEvent)
 
 	fprintf(gsFile, "%s", logEvent);
 }
-
-
-
-
-
-

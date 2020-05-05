@@ -1185,6 +1185,3 @@ void fire_bfg2 (edict_t *self, vec3_t start, vec3_t dir, vec3_t los, int damage,
 
 	gi.linkentity (bfg);
 }
-
-
-

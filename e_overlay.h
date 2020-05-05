@@ -15,4 +15,3 @@ void OverlayPrint(edict_t* pedTarget, byte flags, const char* pszEntry, byte cUp
 #define UPDATE_NOW		4
 
 #endif
-

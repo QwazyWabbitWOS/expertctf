@@ -433,4 +433,3 @@ void Pull_Grapple (edict_t *player)
 	Release_Grapple(player->client->hook);
 */
 }
-
