@@ -7,7 +7,7 @@
 
 ### How to set up? ###
 
-* git clone https://QwazyWabbit@bitbucket.org/QwazyWabbit/expertctf.git
+* git clone https://github.com/QwazyWabbitWOS/expertctf.git
 * On Linux, make clean, then make.
 * Dependencies: Visual Studio 2010 on Windows, or gcc/clang and GNU make on Linux
 * On Windows with VS2010, use git clone per above, then open the .sln file with VS.
