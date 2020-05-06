@@ -7,11 +7,11 @@
 #define CTF_STRING_VERSION  CTF_VSTRING(CTF_VERSION)
 
 // for highlighting messages
-#define GREENTEXT_ASSIST	"ассист"	//"ASSIST"
-#define GREENTEXT_CAPTURED	"цаптуред"	//"CAPTURED"
-#define GREENTEXT_RETURNED	"ретурнед"	//"RETURNED"
-#define GREENTEXT_LOST		"лост"		//"LOST"
-#define GREENTEXT_GRABBED	"граббед"	//"GRABBED"
+#define GREENTEXT_ASSIST    "\301\323\323\311\323\324"          //"ASSIST"
+#define GREENTEXT_CAPTURED  "\303\301\320\324\325\322\305\304"  //"CAPTURED"
+#define GREENTEXT_RETURNED  "\322\305\324\325\322\316\305\304"  //"RETURNED"
+#define GREENTEXT_LOST      "\314\317\323\324"                  //"LOST"
+#define GREENTEXT_GRABBED   "\307\322\301\302\302\305\304"      //"GRABBED"
 
 
 #define STAT_CTF_TEAM1_PIC				17
