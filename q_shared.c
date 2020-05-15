@@ -230,7 +230,9 @@ void R_ConcatTransforms (float in1[3][4], float in2[3][4], float out[3][4])
 
 
 #if defined _M_IX86 && !defined C_ONLY
+#pragma warning(push)
 #pragma warning (disable:4035)
+#pragma warning (disable:4100)
 __declspec( naked ) long Q_ftol( float f )
 {
 	static int tmp;
@@ -239,7 +241,7 @@ __declspec( naked ) long Q_ftol( float f )
 	__asm mov eax, tmp
 	__asm ret
 }
-#pragma warning (default:4035)
+#pragma warning (pop)
 #endif
 
 /*
@@ -270,8 +272,8 @@ float	anglemod(float a)
 	return a;
 }
 
-	int		i;
-	vec3_t	corners[2];
+//	int		i;
+//	vec3_t	corners[2];
 
 
 // this is the slow, general version
@@ -381,8 +383,9 @@ dist2 = p->normal[0]*emaxs[0] + p->normal[1]*emaxs[1] + p->normal[2]*emaxs[2];
 	return sides;
 }
 #else
-#pragma warning( disable: 4035 )
-
+#pragma warning(push)
+#pragma warning (disable:4035)
+#pragma warning (disable:4100)
 __declspec( naked ) int BoxOnPlaneSide (vec3_t emins, vec3_t emaxs, struct cplane_s *p)
 {
 	static int bops_initialized;
@@ -612,7 +615,7 @@ Lerror:
 		int 3
 	}
 }
-#pragma warning( default: 4035 )
+#pragma warning( pop )
 #endif
 
 void ClearBounds (vec3_t mins, vec3_t maxs)
