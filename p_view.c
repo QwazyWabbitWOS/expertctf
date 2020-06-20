@@ -1115,7 +1115,7 @@ void ClientEndServerFrame (edict_t *ent)
 		bobtime *= 4;
 
 	bobcycle = (int)bobtime;
-	bobfracsin = fabsf(sin(bobtime * M_PI));
+	bobfracsin = (float)fabs(sin(bobtime * M_PI));
 
 	// detect hitting the floor
 	P_FallingDamage (ent);
