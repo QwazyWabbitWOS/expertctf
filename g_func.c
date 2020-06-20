@@ -768,9 +768,9 @@ void SP_func_button (edict_t *ent)
 		st.lip = 4;
 
 	VectorCopy (ent->s.origin, ent->pos1);
-	abs_movedir[0] = fabs(ent->movedir[0]);
-	abs_movedir[1] = fabs(ent->movedir[1]);
-	abs_movedir[2] = fabs(ent->movedir[2]);
+	abs_movedir[0] = fabsf(ent->movedir[0]);
+	abs_movedir[1] = fabsf(ent->movedir[1]);
+	abs_movedir[2] = fabsf(ent->movedir[2]);
 	dist = abs_movedir[0] * ent->size[0] + abs_movedir[1] * ent->size[1] + abs_movedir[2] * ent->size[2] - st.lip;
 	VectorMA (ent->pos1, dist, ent->movedir, ent->pos2);
 
@@ -994,10 +994,10 @@ void Think_CalcMoveSpeed (edict_t *self)
 		return;		// only the team master does this
 
 	// find the smallest distance any member of the team will be moving
-	min = fabs(self->moveinfo.distance);
+	min = fabsf(self->moveinfo.distance);
 	for (ent = self->teamchain; ent; ent = ent->teamchain)
 	{
-		dist = fabs(ent->moveinfo.distance);
+		dist = fabsf(ent->moveinfo.distance);
 		if (dist < min)
 			min = dist;
 	}
@@ -1007,7 +1007,7 @@ void Think_CalcMoveSpeed (edict_t *self)
 	// adjust speeds so they will all complete at the same time
 	for (ent = self; ent; ent = ent->teamchain)
 	{
-		newspeed = fabs(ent->moveinfo.distance) / time;
+		newspeed = fabsf(ent->moveinfo.distance) / time;
 		ratio = newspeed / ent->moveinfo.speed;
 		if (ent->moveinfo.accel == ent->moveinfo.speed)
 			ent->moveinfo.accel = newspeed;
@@ -1159,9 +1159,9 @@ void SP_func_door (edict_t *ent)
 
 	// calculate second position
 	VectorCopy (ent->s.origin, ent->pos1);
-	abs_movedir[0] = fabs(ent->movedir[0]);
-	abs_movedir[1] = fabs(ent->movedir[1]);
-	abs_movedir[2] = fabs(ent->movedir[2]);
+	abs_movedir[0] = fabsf(ent->movedir[0]);
+	abs_movedir[1] = fabsf(ent->movedir[1]);
+	abs_movedir[2] = fabsf(ent->movedir[2]);
 	ent->moveinfo.distance = abs_movedir[0] * ent->size[0] + abs_movedir[1] * ent->size[1] + abs_movedir[2] * ent->size[2] - st.lip;
 	VectorMA (ent->pos1, ent->moveinfo.distance, ent->movedir, ent->pos2);
 
@@ -1388,9 +1388,9 @@ void SP_func_water (edict_t *self)
 
 	// calculate second position
 	VectorCopy (self->s.origin, self->pos1);
-	abs_movedir[0] = fabs(self->movedir[0]);
-	abs_movedir[1] = fabs(self->movedir[1]);
-	abs_movedir[2] = fabs(self->movedir[2]);
+	abs_movedir[0] = fabsf(self->movedir[0]);
+	abs_movedir[1] = fabsf(self->movedir[1]);
+	abs_movedir[2] = fabsf(self->movedir[2]);
 	self->moveinfo.distance = abs_movedir[0] * self->size[0] + abs_movedir[1] * self->size[1] + abs_movedir[2] * self->size[2] - st.lip;
 	VectorMA (self->pos1, self->moveinfo.distance, self->movedir, self->pos2);
 

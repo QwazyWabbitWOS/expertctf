@@ -95,7 +95,7 @@ qboolean fire_hit (edict_t *self, vec3_t aim, int damage, int kick)
 		return false;
 
 	// do our special form of knockback here
-	VectorMA (self->enemy->absmin, 0.5, self->enemy->size, v);
+	VectorMA (self->enemy->absmin, 0.5f, self->enemy->size, v);
 	VectorSubtract (v, point, v);
 	VectorNormalize (v);
 	VectorMA (self->enemy->velocity, kick, v, self->enemy->velocity);
@@ -236,7 +236,7 @@ static void fire_lead (edict_t *self, vec3_t start, vec3_t aimdir, int damage, i
 			tr = gi.trace (pos, NULL, NULL, water_start, tr.ent, MASK_WATER);
 
 		VectorAdd (water_start, tr.endpos, pos);
-		VectorScale (pos, 0.5, pos);
+		VectorScale (pos, 0.5f, pos);
 
 		gi.WriteByte (svc_temp_entity);
 		gi.WriteByte (TE_BUBBLETRAIL);
@@ -391,9 +391,9 @@ static void Grenade_Explode (edict_t *ent)
 		vec3_t	dir;
 
 		VectorAdd (ent->enemy->mins, ent->enemy->maxs, v);
-		VectorMA (ent->enemy->s.origin, 0.5, v, v);
+		VectorMA (ent->enemy->s.origin, 0.5f, v, v);
 		VectorSubtract (ent->s.origin, v, v);
-		points = ent->dmg - 0.5 * VectorLength (v);
+		points = ent->dmg - 0.5f * VectorLength (v);
 		VectorSubtract (ent->enemy->s.origin, ent->s.origin, dir);
 		if (ent->spawnflags & 1)
 			mod = MOD_HANDGRENADE;
@@ -462,31 +462,33 @@ static void Grenade_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurfa
 		return;
 
 	// Expert: when sky is solid, treat it like a wall
-	if (surf && (surf->flags & SURF_SKY) && !(expflags & EXPERT_SKY_SOLID)) {
+	if (surf && (surf->flags & SURF_SKY) && !(expflags & EXPERT_SKY_SOLID))
+	{
 		G_FreeEdict (ent);
 		return;
 	}
 
-	if (!other->takedamage) {
+	if (!other->takedamage)
+	{
+		if (ent->spawnflags & 1)
+		{
 
-		if (ent->spawnflags & 1) {
-
-			if (random() > 0.5)
+			if (random() > 0.5f)
 				gi.sound (ent, CHAN_VOICE, gi.soundindex ("weapons/hgrenb1a.wav"), 1, ATTN_NORM, 0);
 			else
 				gi.sound (ent, CHAN_VOICE, gi.soundindex ("weapons/hgrenb2a.wav"), 1, ATTN_NORM, 0);
 
-		} else
+		}
+		else
 			gi.sound (ent, CHAN_VOICE, gi.soundindex ("weapons/grenlb1b.wav"), 1, ATTN_NORM, 0);
 
 		// Spider: 2 bounces grenades 
-		if (surf && (weaponflags & EXPERT_ALT_GL)) {
-
+		if (surf && (weaponflags & EXPERT_ALT_GL))
+		{
 			if (ent->touchnumber == 0)
 				ent->touchnumber++;
 			else
 				Grenade_Explode (ent);
-
 		}
 
 		return;
@@ -623,7 +625,8 @@ void rocket_touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *su
 	if (surf && (surf->flags & SURF_SKY))
 	{
 		// Expert: when sky is solid, treat it like a wall
-		if (!(expflags & EXPERT_SKY_SOLID)) {
+		if (!(expflags & EXPERT_SKY_SOLID))
+		{
 			G_FreeEdict (ent);
 			return;
 		}
@@ -742,7 +745,9 @@ void fire_rail (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick
 	int			mask;
 	qboolean	water;
 
-	assert(self != NULL);
+	if (!self)
+		return;
+
 	VectorMA (start, 8192, aimdir, end);
 	VectorCopy (start, from);
 	ignore = self;
@@ -843,12 +848,12 @@ void bfg_explode (edict_t *self)
 				continue;
 
 			VectorAdd (ent->mins, ent->maxs, v);
-			VectorMA (ent->s.origin, 0.5, v, v);
+			VectorMA (ent->s.origin, 0.5f, v, v);
 			VectorSubtract (self->s.origin, v, v);
 			dist = VectorLength(v);
-			points = self->radius_dmg * (1.0 - sqrt(dist/self->dmg_radius));
+			points = self->radius_dmg * (1.0f - sqrt(dist/self->dmg_radius));
 			if (ent == self->owner)
-				points = points * 0.5;
+				points = points * 0.5f;
 
 			gi.WriteByte (svc_temp_entity);
 			gi.WriteByte (TE_BFG_EXPLOSION);
@@ -953,7 +958,7 @@ void bfg_think (edict_t *self)
 		
 		
 
-		VectorMA (ent->absmin, 0.5, ent->size, point);
+		VectorMA (ent->absmin, 0.5f, ent->size, point);
 
 		VectorSubtract (point, self->s.origin, dir);
 		VectorNormalize (dir);

@@ -36,8 +36,11 @@ void OverlayPrint(edict_t* pedTarget, byte flags, const char* pszEntry, byte cUp
 	char szAddition[TIMEDENTRY_CHARS+1];
 	qboolean Success = false;
 	qboolean Expired = false;
+
 	assert(pedTarget != NULL && cUpdates > 0);
-	
+	if (pedTarget == NULL || cUpdates < 0)
+		return;
+
 	if (pedTarget->client->cUpdatesLeft == 0) {
 		Expired = true;
 	}

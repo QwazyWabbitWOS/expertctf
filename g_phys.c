@@ -5,9 +5,12 @@
 /*
 
 
-pushmove objects do not obey gravity, and do not interact with each other or trigger fields, but block normal movement and push normal objects when they move.
+pushmove objects do not obey gravity, and do not interact with
+each other or trigger fields, but block normal movement and
+push normal objects when they move.
 
-onground is set for toss objects when they come to a complete rest.  it is set for steping or walking objects 
+onground is set for toss objects when they come to a complete rest.
+it is set for steping or walking objects
 
 doors, plats, etc are SOLID_BSP, and MOVETYPE_PUSH
 bonus items are SOLID_TRIGGER touch, and MOVETYPE_TOSS
@@ -85,9 +88,21 @@ qboolean SV_RunThink(edict_t* ent)
 		return true;
 
 	ent->nextthink = 0;
-	if (!ent->think)
-		gi.error("NULL ent->think");
+
+	//QW// report if we're asked to think about bad ents
+	if (ent->think == NULL || !strcmp(ent->classname, "freed"))
+	{
+		if (ent->classname && ent->model)
+			gi.dprintf ("%s NULL ent->think (classname %s, model %s mapname %s)\n",
+					__func__, ent->classname, ent->model, level.mapname);
+		else if (ent->classname)
+			gi.dprintf ("%s NULL ent->think (classname %s mapname %s)\n",
+						__func__, ent->classname, level.mapname);
 	else
+			gi.dprintf ("NULL ent->think (mapname %s)\n",
+						__func__, level.mapname);
+		return false;
+	}
 		ent->think(ent);
 
 	return false;
@@ -173,7 +188,7 @@ int SV_FlyMove (edict_t *ent, float time, int mask)
 	float		d;
 	int			numplanes;
 	vec3_t		planes[MAX_CLIP_PLANES];
-	vec3_t		primal_velocity, original_velocity, new_velocity;
+	vec3_t		primal_velocity, original_velocity, new_velocity = {0};
 	int			i, j;
 	trace_t		trace;
 	vec3_t		end;
@@ -183,6 +198,8 @@ int SV_FlyMove (edict_t *ent, float time, int mask)
 	numbumps = 4;
 	
 	blocked = 0;
+	if(!ent || !ent->client)
+		return blocked;
 	VectorCopy (ent->velocity, original_velocity);
 	VectorCopy (ent->velocity, primal_velocity);
 	numplanes = 0;
@@ -874,7 +891,7 @@ void SV_Physics_Step (edict_t *ent)
 	// friction for flying monsters that have been given vertical velocity
 	if ((ent->flags & FL_FLY) && (ent->velocity[2] != 0))
 	{
-		speed = fabs(ent->velocity[2]);
+		speed = fabsf(ent->velocity[2]);
 		control = speed < sv_stopspeed ? sv_stopspeed : speed;
 		friction = sv_friction/3;
 		newspeed = speed - (FRAMETIME * control * friction);
@@ -887,7 +904,7 @@ void SV_Physics_Step (edict_t *ent)
 	// friction for flying monsters that have been given vertical velocity
 	if ((ent->flags & FL_SWIM) && (ent->velocity[2] != 0))
 	{
-		speed = fabs(ent->velocity[2]);
+		speed = fabsf(ent->velocity[2]);
 		control = speed < sv_stopspeed ? sv_stopspeed : speed;
 		newspeed = speed - (FRAMETIME * control * sv_waterfriction * ent->waterlevel);
 		if (newspeed < 0)

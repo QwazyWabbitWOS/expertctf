@@ -297,8 +297,6 @@ float playerDistance(edict_t *plyr1, edict_t *plyr2)
 
 	VectorSubtract (plyr1->s.origin, plyr2->s.origin, v);
 	
-	// fabs function is HORRIBLY slow...
-
 	distance = VectorLength(v);
 
 	if (distance >= 0)
