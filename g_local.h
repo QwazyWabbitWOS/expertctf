@@ -849,6 +849,7 @@ qboolean ClientConnect(edict_t* ent, char* userinfo);
 void ClientUserinfoChanged(edict_t* ent, char* userinfo);
 void ClientDisconnect(edict_t* ent);
 edict_t* SelectDeathmatchSpawnPoint(void);
+edict_t* SelectFarthestDeathmatchSpawnPoint(void);
 float PlayersRangeFromSpot(edict_t* spot);
 
 // Expert : additional prototypes

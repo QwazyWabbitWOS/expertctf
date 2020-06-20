@@ -13,9 +13,6 @@
 
 list_t flags;
 
-// defined in p_client.c
-edict_t *SelectFarthestDeathmatchSpawnPoint(edict_t *player);
-
 char *flagtrack_statusbar =
 "yb	-24 "
 
@@ -226,7 +223,7 @@ edict_t *spawnFlag(int team)
 	flag->think = activateFlag;
 
 	// place flag on DM spawn spot furthest from players
-	spawnSpot = SelectFarthestDeathmatchSpawnPoint(flag);
+	spawnSpot = SelectFarthestDeathmatchSpawnPoint();
 	VectorCopy (spawnSpot->s.origin, flag->s.origin);
 
 	// equivalent of droptofloor() in g_items.c

@@ -105,15 +105,25 @@ gitem_t	*FindItem (char *pickup_name)
 
 void DoRespawn (edict_t *ent)
 {
-	assert(ent != NULL);
+	if (ent == NULL)
+	{
+		gi.dprintf("NULL ent passed to %s\n", __func__);
+		return;
+	}
 	if (ent->team)
 	{
 		edict_t	*master;
-		int	count;
-		int choice;
+		unsigned	count;
+		unsigned	choice;
 
+		if (ent == NULL)
+		{
+			gi.dprintf("NULL ent passed to %s\n", __func__);
+			return;
+		}
 		master = ent->teammaster;
-
+		if (master == NULL)
+			return;
 //CTF
 //in ctf, when we are weapons stay, only the master of a team of weapons
 //is spawned
@@ -121,27 +131,29 @@ void DoRespawn (edict_t *ent)
 			((int)dmflags->value & DF_WEAPONS_STAY) &&
 			master->item && (master->item->flags & IT_WEAPON))
 			ent = master;
-		else {
-//CTF
+		else 
+		{
+			count = 0;
+			for (ent = master; ent; ent = ent->chain)
+				count++;
 
-			for (count = 0, ent = master; ent; ent = ent->chain, count++)
-				;
+			choice = count ? rand() % count : 0;
 
-			assert(count != 0);
-			choice = rand() % count;
-
-			for (count = 0, ent = master; count < choice; ent = ent->chain, count++)
-				;
+			count = 0;
+			for (ent = master; count < choice; ent = ent->chain)
+				count++;
 		}
 	}
 
-	assert(ent != NULL);
+	if (ent)
+	{
 	ent->svflags &= ~SVF_NOCLIENT;
 	ent->solid = SOLID_TRIGGER;
 	gi.linkentity (ent);
 
 	// send an effect
 	ent->s.event = EV_ITEM_RESPAWN;
+	}
 }
 
 void SetRespawn (edict_t *ent, float delay)
