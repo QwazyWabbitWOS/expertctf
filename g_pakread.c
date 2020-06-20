@@ -34,7 +34,7 @@ qboolean searchFormedPathPakFiles(char* mapName, char* path)
 	qboolean stat = false;
 
 	char filename[MAX_QPATH] = { 0 };
-	char currentPakName[9];
+	char currentPakName[12];
 	char currentFullPakName[MAX_QPATH];
 
 	sprintf(filename, "%s.bsp", mapName);
