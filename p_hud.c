@@ -252,7 +252,7 @@ void DeathmatchScoreboardMessage (edict_t *ent, edict_t *killer)
 	if (strncmp(string, ent->client->szOldLayout, OLDLAYOUT_CHARS) == 0) {
 		return;
 	}
-	strncpy(ent->client->szOldLayout, string, OLDLAYOUT_CHARS);
+	Q_strncpy(ent->client->szOldLayout, string, OLDLAYOUT_CHARS);
 
 	gi.WriteByte (svc_layout);
 	gi.WriteString (string);

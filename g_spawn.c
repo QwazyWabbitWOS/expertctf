@@ -598,7 +598,7 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 		// level load time in order to support the changes as optional.  We do
 		// this once, immediately before "worldspawn" is spawned, since worldspawn
 		// sets up configstrings using the itemlist.
-		if (!Q_stricmp(ent->classname, "worldspawn")) {
+		if (ent && !Q_stricmp(ent->classname, "worldspawn")) {
 			ExpertItemListChanges();
 		}
 
@@ -823,10 +823,10 @@ void SP_worldspawn (edict_t *ent)
 	if (ent->message && ent->message[0])
 	{
 		gi.configstring (CS_NAME, ent->message);
-		strncpy (level.level_name, ent->message, sizeof(level.level_name));
+		Q_strncpy (level.level_name, ent->message, sizeof level.level_name - 1);
 	}
 	else
-		strncpy (level.level_name, level.mapname, sizeof(level.level_name));
+		Q_strncpy (level.level_name, level.mapname, sizeof level.level_name - 1);
 
 	if (st.sky && st.sky[0])
 		gi.configstring (CS_SKY, st.sky);

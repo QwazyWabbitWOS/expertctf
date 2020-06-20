@@ -65,7 +65,7 @@ void OverlayPrint(edict_t* pedTarget, byte flags, const char* pszEntry, byte cUp
 		Com_sprintf(szAddition, sizeof(szAddition), 
 			"xv %d yv 120 string \"%s\" ", 
 			160 - 4 * strlen(pszEntry),	pszEntry);
-		strncpy(pedTarget->client->szTimedEntry, szAddition, TIMEDENTRY_CHARS);
+		Q_strncpy(pedTarget->client->szTimedEntry, szAddition, TIMEDENTRY_CHARS);
 		pedTarget->client->cUpdatesLeft = cUpdates;
 		Success = true;
 	}
@@ -570,7 +570,7 @@ void OverlayUpdate(edict_t *pedViewer)
 	{
 		return;
 	}
-	strncpy (pedViewer->client->szOldLayout, szLayout, OLDLAYOUT_CHARS);
+	Q_strncpy (pedViewer->client->szOldLayout, szLayout, OLDLAYOUT_CHARS);
 
 	//final bandwidth reduction: no need for trailing space
 	szLayout[strlen(szLayout)-1] = '\0';
