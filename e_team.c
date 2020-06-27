@@ -705,9 +705,10 @@ void hackPrecacheModelSkin(char *modelSkin) {
 
 // setTeamEntry: parses the team name/path string into the team array.
 // Returns true if a team was successfully processed.
-static qboolean setTeamEntry(char *inputString, int currentTeam)
+static qboolean setTeamEntry(char* inputString, int currentTeam)
 {
-	char *teamName, *teamPath;
+	char* teamName;
+	char* teamPath;
 
 	trimWhitespace(inputString);
 
@@ -719,7 +720,7 @@ static qboolean setTeamEntry(char *inputString, int currentTeam)
 	// If there's no '=' char in the string, malformed string, ignore
 	if (strcspn(inputString, "=") == strlen(inputString)) {
 		gi.dprintf("ERROR: Malformed team string detected, "
-				"team name but no skins: %s\n", inputString);
+			"team name but no skins: %s\n", inputString);
 		return false;
 	}
 
@@ -784,17 +785,17 @@ static qboolean setTeamEntry(char *inputString, int currentTeam)
  */ 
 void loadTeams(void)
 {
-	FILE *teamfile;
-	char readString[1000] = {0};
+	FILE* teamfile;
+	char readString[1000] = { 0 };
 	int currentTeam = 0;
 
 	// If teamplay is disabled, return.
-	if (!teamplayEnabled()) { 
+	if (!teamplayEnabled()) {
 		// If Enforced Teams was set, disable it
 		if (expflags & EXPERT_ENFORCED_TEAMS) {
 			gi.dprintf("Enforced Teams enabled but neither skin "
-			           "teams nor\nmodel teams set.  Disabling "
-			           "Enforced Teams.\n");
+				"teams nor\nmodel teams set.  Disabling "
+				"Enforced Teams.\n");
 			gi.cvar_set("expflags", va("%d", expflags & ~EXPERT_ENFORCED_TEAMS));
 		}
 		return;
@@ -806,8 +807,8 @@ void loadTeams(void)
 	}
 
 	if ((int)sv_numteams->value < 2) {
-		gi.dprintf("Teamplay enabled but cvar \"numteams\" set less than 2" 
-		           ", disabling teamplay\n");
+		gi.dprintf("Teamplay enabled but cvar \"numteams\" set less than 2"
+			", disabling teamplay\n");
 		gi.cvar_set("dmflags", va("%d",
 			(int)dmflags->value & ~(DF_SKINTEAMS | DF_MODELTEAMS)));
 		return;
@@ -821,47 +822,52 @@ void loadTeams(void)
 
 	// Open the file
 	teamfile = OpenGamedirFile(gamedir->string, va("%s/%s", levelCycle->string, TEAM_FILENAME), "r");
-	
-	if (teamfile == NULL) {
-		// No models or skins, so no teams..
-		gi.dprintf("ERROR: Couldn't open %s.  Teamplay disabled.\n", 
-		           TEAM_FILENAME);
+
+	if (teamfile == NULL) // Team file not found, use default team skins.
+	{
+		gi.dprintf("ERROR: Couldn't open %s. Using default teams.\n", TEAM_FILENAME);
+		strcpy(readString, "Red=male/ctf_r;female/ctf_r;cyborg/ctf_r");
+		setTeamEntry(readString, currentTeam);
+		currentTeam++;
+		strcpy(readString, "Blue=male/ctf_b;female/ctf_b;cyborg/ctf_b");
+		setTeamEntry(readString, currentTeam);
+		currentTeam++; // Note: currentTeam must be 2 to satisfy CTF requirement.
+	}
+	else
+	{
+		// Team file found, read it into the gTeams array.
+		while (fgets(readString, 1000, teamfile) != NULL)
+		{
+			// If the maximum number of entries have been read, stop.
+			if (currentTeam == MAX_TEAMS) {
+				gi.dprintf("Hit max team limit while reading team file: %s",
+					TEAM_FILENAME);
+				break;
+			}
+
+			if (setTeamEntry(readString, currentTeam) == true)
+				currentTeam++;
+		}
+		fclose(teamfile);
+		gi.dprintf("Using %d teams out of %d defined in %s\n",
+			(int)sv_numteams->value, currentTeam, TEAM_FILENAME);
+	}
+
+	// If there aren't enough teams, then disable teamplay
+	if (currentTeam < 1) {
+		gi.dprintf("ERROR: Unable to load 2 team definitions from %s.\n"
+			"Disabling teamplay.\n", TEAM_FILENAME);
 		gi.cvar_set("dmflags", va("%d",
 			(int)dmflags->value & ~(DF_SKINTEAMS | DF_MODELTEAMS)));
 		return;
 	}
 
-	// This is the main team-reading loop.
-	while (fgets(readString, 1000, teamfile) != NULL) {
-
-		// If the maximum number of entries have been read, stop.
-		if (currentTeam == MAX_TEAMS) {
-			gi.dprintf("Hit max team limit while reading team file: %s",
-			           TEAM_FILENAME);
-			break;
-		}
-
-		if (setTeamEntry(readString, currentTeam) == true)
-			currentTeam++;
-	}
-
-	fclose(teamfile);
-
-	// If there aren't enough teams, then disable teamplay
-	if (currentTeam < 1) {
-		gi.dprintf("ERROR: Unable to load 2 team definitions from %s.\n"
-				   "Disabling teamplay.\n", TEAM_FILENAME);
-		gi.cvar_set("dmflags", va("%d", 
-			(int)dmflags->value & ~(DF_SKINTEAMS | DF_MODELTEAMS)));
-		return;
-	}
-	
 	// If there aren't enough teams to supply the requested number of teams,
 	// reduce the requested number of teams
 	if (currentTeam < (int)sv_numteams->value) {
 		gi.dprintf("Unable to load %d team definitions from %s.\n"
-				   "Reducing the number of teams to %d.\n",
-				   (int)sv_numteams->value, TEAM_FILENAME, currentTeam);
+			"Reducing the number of teams to %d.\n",
+			(int)sv_numteams->value, TEAM_FILENAME, currentTeam);
 		gi.cvar_set("numteams", va("%d", currentTeam));
 	}
 
@@ -869,9 +875,6 @@ void loadTeams(void)
 		gi.dprintf("Too many teams for CTF, reducing to 2 teams\n");
 		gi.cvar_set("numteams", "2");
 	}
-
-	gi.dprintf("Using %d teams out of %d defined in %s\n",
-		   (int)sv_numteams->value, currentTeam, TEAM_FILENAME);
 }
 
 /*
