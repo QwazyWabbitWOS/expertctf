@@ -63,17 +63,12 @@ cvar_t *sv_fogdensity;
 //edict_t *player;
 void ShutdownGame (void)
 {	
-	
 	char command[64] = {0};
 
 	// Expert: stop gibstats logging
 	if ( (int)sv_utilflags->value & EXPERT_ENABLE_GIBSTAT_LOGGING)
 			gsStopLogging();
 	
-	//// Expert: Deallocate the teamplay stuff
-	//if (expflags & EXPERT_ENFORCED_TEAMS)
-	//		shutdownTeamplay();
-
 	gi.cprintf(NULL, PRINT_HIGH,"==== ShutdownGame ====\n");
 
 	if(sv_autorestart->value == 1 && Q_stricmp(restartcfg->string, ""))

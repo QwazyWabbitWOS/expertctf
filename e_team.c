@@ -825,7 +825,7 @@ void loadTeams(void)
 
 	if (teamfile == NULL) // Team file not found, use default team skins.
 	{
-		gi.dprintf("ERROR: Couldn't open %s. Using default teams.\n", TEAM_FILENAME);
+		gi.dprintf("WARNING: Couldn't open %s. Using default teams.\n", TEAM_FILENAME);
 		strcpy(readString, "Red=male/ctf_r;female/ctf_r;cyborg/ctf_r");
 		setTeamEntry(readString, currentTeam);
 		currentTeam++;
@@ -855,7 +855,7 @@ void loadTeams(void)
 
 	// If there aren't enough teams, then disable teamplay
 	if (currentTeam < 1) {
-		gi.dprintf("ERROR: Unable to load 2 team definitions from %s.\n"
+		gi.dprintf("WARNING: Unable to load 2 team definitions from %s.\n"
 			"Disabling teamplay.\n", TEAM_FILENAME);
 		gi.cvar_set("dmflags", va("%d",
 			(int)dmflags->value & ~(DF_SKINTEAMS | DF_MODELTEAMS)));

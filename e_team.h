@@ -35,7 +35,6 @@ void assignToTeam(edict_t *player, int teamToAssign);
 void addPlayerToTeam(edict_t *player, int team);
 void removePlayerFromTeam(edict_t *player);
 void teamDisconnect(edict_t *player);
-//void shutdownTeamplay(void);
 
 void killAndSwitchTeam(edict_t *player, int desiredTeam);
 void enforceTeamModelSkin(edict_t *player);
