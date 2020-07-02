@@ -43,6 +43,7 @@ void E_LogClose(void);
 // misc
 void ResizeLevelMemory(void** ppMem, size_t sizeNew, size_t sizeOld);
 FILE *OpenGamedirFile(const char *basedir, const char *filename, char *mode);
+int CountPlayers(void);
 
 // settings
 unsigned int getSettingBit(char *setting);

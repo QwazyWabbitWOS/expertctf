@@ -81,6 +81,19 @@ void unicastSound(edict_t *player, int soundIndex, float volume)
           }
 */
 
+int CountPlayers(void)
+{
+	edict_t* player;
+
+	int count = 0;
+	for (int i = 1; i <= game.maxclients; i++) {
+		player = &g_edicts[i];
+		if (player->inuse && player->client)
+			count++;
+	}
+	return count;
+}
+
 int int_log2(unsigned int num)
 {
 	int i = 0;
@@ -430,28 +443,45 @@ int StrToInt(char *pszFrom, int Default)
 
 void ResizeLevelMemory(void** ppMem, size_t sizeNew, size_t sizeOld)
 {
-	byte* pOld = (byte *)*ppMem;
-	byte* pNew = gi.TagMalloc(sizeNew, TAG_LEVEL);
-
 	assert(ppMem != NULL && sizeNew > 0 && sizeOld > 0);
-	if (sizeNew == sizeOld) {
+	if (!ppMem || sizeNew == sizeOld)
+	{
+		gi.error("Bad arguments calling %s. Aborting.\n", __func__);
 		return;
 	}
 
+	byte* pOld = (byte*)*ppMem;
+	byte* pNew = gi.TagMalloc(sizeNew, TAG_LEVEL);
+
 	memcpy(pNew, pOld, sizeOld);
 
-	#ifdef _DEBUG
-	{
-		if (sizeNew > sizeOld) {
-			memset(pNew+sizeNew, 0xCC, sizeNew - sizeOld);
-		} else if (sizeOld > sizeNew) {
-			memset(pOld+sizeNew, 0xCC, sizeOld - sizeNew);
-		}
-	}
-	#endif
+/*
+//QW// Per Microsoft:
+https://docs.microsoft.com/en-us/visualstudio/debugger/crt-debug-heap-details?view=vs-2019
+NoMansLand (0xFD) The "NoMansLand" buffers on either side of the
+memory used by an application are currently filled with 0xFD.
+Freed blocks (0xDD) The freed blocks kept unused in the debug 
+heap's linked list when the _CRTDBG_DELAY_FREE_MEM_DF flag is set are currently filled with 0xDD.
+New objects (0xCD) New objects are filled with 0xCD when they are allocated.
+NOTE: Stack variables are initialized to 0xCC in DEBUG mode builds and
+zero-filled on RELEASE mode builds
+*/
+
+
+//QW// I'm not sure what was the point of this. TagMalloc zero-fills.
+//#ifdef _DEBUG
+//	{
+//		if (sizeNew > sizeOld) {
+//			memset(pNew + sizeNew, 0xCC, sizeNew - sizeOld);
+//		}
+//		else if (sizeOld > sizeNew) {
+//			memset(pOld + sizeNew, 0xCC, sizeOld - sizeNew);
+//		}
+//	}
+//#endif
 
 	gi.TagFree(pOld);
-	*ppMem = (void *)pNew;
+	*ppMem = (void*)pNew;
 }
 
 // OpenGamedirFile: Opens a filename from a given basedir.
@@ -470,7 +500,7 @@ FILE *OpenGamedirFile(const char *basedir, const char *filename, char *mode)
 
 	if (file == NULL)
 	{
-		gi.dprintf("Unable to load file %s\n",
+		gi.dprintf("ERROR: Unable to load file %s\n",
 			tempname);
 	}
 
