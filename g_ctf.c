@@ -2351,14 +2351,14 @@ CTFScoreboardMessage
 // team, name, frags, time connected, captures, total held time
 void CTFScoreboardMessage (edict_t *ent, edict_t *killer)
 {
-	char	entry[1024];
+	char	entry[1400];
 	char	string[1400];
 	size_t		len;
 	int		i, j, k, n;
 	//int		captures[2][MAX_CLIENTS];
 	int		sorted[2][MAX_CLIENTS];
-	int		sortedscores[2][MAX_CLIENTS];
-	int		score, total[2], totalscore[2];
+	int		sortedscores[2][MAX_CLIENTS] = { 0 };
+	int		score, total[2], totalscore[2] = { 0 };
 	int		last[2];
 	gclient_t	*cl;
 	edict_t		*cl_ent;

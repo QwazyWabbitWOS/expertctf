@@ -61,7 +61,11 @@ list_t listNew(int allocNum, listCompareFn comparator)
 	
 	// allocate the struct that holds all list_t info
 	list = gi.TagMalloc(sizeof(struct listImplementation), TAG_GAME); 
-	assert(list != NULL);
+	if (!list)
+	{
+		gi.error("ERROR: %s memory allocation failed.\n", __func__);
+		return list; // never executes
+	}
 
 	// set up constants in the struct
 	list->curSize = 0;
@@ -75,7 +79,7 @@ list_t listNew(int allocNum, listCompareFn comparator)
 	list->content = gi.TagMalloc(sizeof(char *)*allocNum, TAG_GAME);
 	assert(list->content != NULL);
 
-	//gi.dprintf("%s allocating %d elements\n", __func__, list->allocSize);
+	gi.dprintf("%s allocating %d elements\n", __func__, list->allocSize);
 	// return a pointer to the struct to the client
 	return(list);
 }
@@ -149,7 +153,7 @@ int linearSearch(list_t list, void *key) {
 
 /** 
  * Remove an element at a specific position.  Moves all memory in the
- * list past the insertion point.  Will realloc to a smaller size
+ * list past the insertion point.  Will reallocate to a smaller size
  * if actual elements in the list have dropped to less than half 
  * of the allocated size.
  */
@@ -160,10 +164,10 @@ void listDeleteAt(list_t list, int n)
 	assert(n>=0 && n < list->curSize);
 
 	// check whether we have more than double the space we need
-	// to store the current elements and realloc to half size if so
+	// to store the current elements and reallocate to half size if so
 	if (list->allocSize > list->curSize * 2 &&
-		list->allocSize > NO_REALLOC_FLOOR) { // never realloc if sufficiently small
-		list->allocSize = (int)ceil(list->allocSize * 0.5);
+		list->allocSize > NO_REALLOC_FLOOR) { // never reallocate if sufficiently small
+		list->allocSize = (int)ceil(list->allocSize / 2);
 		char** tmp = list->content;
 		int newsize = list->allocSize * sizeof(char*);
 		gi.dprintf("%s reallocating to %d elements.\n", __func__, newsize);
@@ -174,7 +178,7 @@ void listDeleteAt(list_t list, int n)
 			gi.TagFree(tmp);
 		}
 		else
-			gi.error("Reallocation failed in %s\n", __func__, ERR_DROP);
+			gi.error("Reallocation failed in %s\n", __func__);
 	}
 
 	// remove the element
@@ -199,7 +203,7 @@ int listContains(list_t list, void *key, int isSorted) {
 
 /**
  * Insert an element at a specific position.  Moves all memory in the
- * list past the insertion point.  Will realloc if necessary.
+ * list past the insertion point.  Will reallocate if necessary.
  */
 void listInsertAt(list_t list, void *newElem, int n)
 {	 
@@ -207,7 +211,7 @@ void listInsertAt(list_t list, void *newElem, int n)
 
 	assert(n>=0 && n <= list->curSize);
 
-	// realloc to double size if we need more room to store this new element
+	// Double size if we need more room to store this new element
 	if (list->allocSize<=list->curSize) {
 		char** tmp = list->content;
 		int newsize = list->allocSize * 2 * sizeof(char*);
@@ -218,7 +222,7 @@ void listInsertAt(list_t list, void *newElem, int n)
 			gi.TagFree(tmp);
 		}
 		else
-			gi.error("Reallocation failed in %s\n", __func__, ERR_DROP);
+			gi.error("Reallocation failed in %s\n", __func__);
 
 		gi.dprintf("%s reallocated to %d elements.\n", __func__, newsize);
 		list->allocSize = list->allocSize*2;
@@ -240,11 +244,11 @@ void listInsertAt(list_t list, void *newElem, int n)
 }
 
 /**
- * Append an element at the end of the list.  Will realloc if necessary.
+ * Append an element at the end of the list.  Will reallocate if necessary.
  */
 void listAppend(list_t list, void* newElem)
 {
-	// realloc to double size if we need more room to store this new element
+	// Double size if we need more room to store this new element
 	if (!(list->allocSize > list->curSize)) {
 		char** tmp = list->content;
 		int newsize = list->allocSize * 2 * sizeof(char*);
@@ -255,7 +259,7 @@ void listAppend(list_t list, void* newElem)
 			gi.TagFree(tmp);
 		}
 		else
-			gi.error("Reallocation failed in %s\n", __func__, ERR_DROP);
+			gi.error("Reallocation failed in %s\n", __func__);
 
 		//gi.dprintf("%s reallocated to %d elements.\n", __func__, newsize);
 		list->allocSize = list->allocSize * 2;

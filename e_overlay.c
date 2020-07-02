@@ -48,7 +48,7 @@ void OverlayPrint(edict_t* pedTarget, byte flags, const char* pszEntry, byte cUp
 	if (!Expired && flags & PRINT_APPEND) {
 		Com_sprintf(szAddition, sizeof(szAddition),
 			"xv %d yv %d string \"%s\" ",
-			160 - 4 * strlen(pszEntry),	
+			160 - 4 * strlen(pszEntry),
 			120 - 4 * numchr(pedTarget->client->szTimedEntry, '\"'),
 			pszEntry);
 
@@ -59,11 +59,11 @@ void OverlayPrint(edict_t* pedTarget, byte flags, const char* pszEntry, byte cUp
 			pedTarget->client->cUpdatesLeft = cUpdates;
 			Success = true;
 		}
-	} 
+	}
 
 	if (!Success && (Expired || flags & PRINT_FORCE)) {
-		Com_sprintf(szAddition, sizeof(szAddition), 
-			"xv %d yv 120 string \"%s\" ", 
+		Com_sprintf(szAddition, sizeof(szAddition),
+			"xv %d yv 120 string \"%s\" ",
 			160 - 4 * strlen(pszEntry),	pszEntry);
 		Q_strncpy(pedTarget->client->szTimedEntry, szAddition, TIMEDENTRY_CHARS);
 		pedTarget->client->cUpdatesLeft = cUpdates;
@@ -87,7 +87,7 @@ void RecordSighting(edict_t *pedViewer, edict_t *pedTarget)
 		if (mpaSightings[iSight].expiryframe < level.framenum) {
 			mpaSightings[iSight].pedTarget = pedTarget;
 			mpaSightings[iSight].expiryframe = level.framenum + EXPERT_UPDATE_FRAMES * 2;
-			mpaSightings[iSight].teamSeenBy = (byte)pedViewer->client->resp.team; 
+			mpaSightings[iSight].teamSeenBy = (byte)pedViewer->client->resp.team;
 			return;
 
 		} else if (mpaSightings[iSight].teamSeenBy == pedViewer->client->resp.team &&
@@ -105,7 +105,7 @@ void InitRadar(void)
 	edict_t *pedBlip = NULL;
 	short cEntsAllocated;
 
-	mpaSightings = gi.TagMalloc(game.maxclients*sizeof(sightEnt_t), TAG_LEVEL); 
+	mpaSightings = gi.TagMalloc(game.maxclients*sizeof(sightEnt_t), TAG_LEVEL);
 
 	mpaFixtures = gi.TagMalloc(64*sizeof(plotEnt_t), TAG_LEVEL);
 	cEntsAllocated = 32;
@@ -116,8 +116,8 @@ void InitRadar(void)
 			mpaFixtures[mcFixtures].pic = WEAP;
 			mcFixtures++;
 			if (mcFixtures == cEntsAllocated) {
-				ResizeLevelMemory((void **)&mpaFixtures, 
-					(cEntsAllocated*2)*sizeof(plotEnt_t), 
+				ResizeLevelMemory((void **)&mpaFixtures,
+					(cEntsAllocated*2)*sizeof(plotEnt_t),
 					cEntsAllocated*sizeof(plotEnt_t));
 				cEntsAllocated *= 2;
 			}
@@ -136,8 +136,8 @@ void InitRadar(void)
 				mpaFixtures[mcFixtures].pic = ITEM;
 				mcFixtures++;
 				if (mcFixtures == cEntsAllocated) {
-					ResizeLevelMemory((void **)&mpaFixtures, 
-						(cEntsAllocated*2)*sizeof(plotEnt_t), 
+					ResizeLevelMemory((void **)&mpaFixtures,
+						(cEntsAllocated*2)*sizeof(plotEnt_t),
 						cEntsAllocated*sizeof(plotEnt_t));
 					cEntsAllocated *= 2;
 				}
@@ -159,7 +159,7 @@ void Plot (edict_t *pedBlip, char pic, int flags)
 	int col, row, layer;
 
 	VectorSubtract (mpedCur->s.origin, pedBlip->s.origin, offset);
-	
+
 	layer = (int)(offset[2]);
 	offset[2] = 0.0;
 
@@ -200,12 +200,12 @@ void Plot (edict_t *pedBlip, char pic, int flags)
 		row != MAX(MIN(row, scrHeight[curScreen]), 0)) {
 		return;
 	}
-		
+
 	if (flags & PLOT_FORCE || blip[col][row] == NOPIC) {
 		blip[col][row] = pic;
 		IsColumn[col] = true;
 		IsRow[row] = true;
-	} 
+	}
 }
 
 void PlotFixtures(void)
@@ -227,7 +227,7 @@ void PlotFixtures(void)
 			break; default:
 				Plot(mpaFixtures[i].pedTarget, mpaFixtures[i].pic, 0);
 		}
-		
+
 	}
 }
 
@@ -279,7 +279,7 @@ void AppendRadar (char *pszLayout)
 		PlotPlayers();
 		PlotFixtures();
 	}
-	
+
 	//backdrop
 	if (curMode & SHOWBACK) {
 		blip[0][0] = scrPic[curScreen];
@@ -289,12 +289,12 @@ void AppendRadar (char *pszLayout)
 
 	cCols = cRows = 0;
 	for (col = 0; col <= scrWidth[curScreen]; col++) {
-		if (IsColumn[col]) 
+		if (IsColumn[col])
 			cCols++;
 	}
 
 	for (row = 0; row <= scrHeight[curScreen]; row++) {
-		if (IsRow[row]) 
+		if (IsRow[row])
 			cRows++;
 	}
 
@@ -302,39 +302,39 @@ void AppendRadar (char *pszLayout)
 	//one for column by column, other for row by row
 	if (cRows >= cCols) {
 		for (col = 0; col <= scrWidth[curScreen]; col++) {
-			if (!IsColumn[col]) 
-				continue; 
+			if (!IsColumn[col])
+				continue;
 			strcpy(szEntry, va("xl %d ", hpos+col));
-			if (strlen(szEntry) + strlen(pszLayout) > 1399) 
-				return; 
+			if (strlen(szEntry) + strlen(pszLayout) > 1399)
+				return;
 			strcat(pszLayout, szEntry);
 
 			for (row = 0; row <= scrHeight[curScreen]; row++) {
-				if (blip[col][row] == NOPIC) 
-					continue; 
+				if (blip[col][row] == NOPIC)
+					continue;
 				strcpy(szEntry, va("yt %d picn %c ", vpos+row, blip[col][row]));
-				if (strlen(szEntry) + strlen(pszLayout) > 1399) 
-					return; 
+				if (strlen(szEntry) + strlen(pszLayout) > 1399)
+					return;
 				strcat(pszLayout, szEntry);
 			}
-		}	
+		}
 	} else {
 		for (row = 0; row <= scrHeight[curScreen]; row++) {
-			if (!IsRow[row]) 
-				continue; 
+			if (!IsRow[row])
+				continue;
 
 			strcpy (szEntry, va("yt %d ", vpos+row));
-			if (strlen(szEntry) + strlen(pszLayout) > 1399) 
-				return; 
+			if (strlen(szEntry) + strlen(pszLayout) > 1399)
+				return;
 
 			strcat(pszLayout, szEntry);
-			for (col = 0; col <= scrWidth[curScreen]; col++) {	
-				if (blip[col][row] == NOPIC) 
-					continue; 
+			for (col = 0; col <= scrWidth[curScreen]; col++) {
+				if (blip[col][row] == NOPIC)
+					continue;
 
 				strcpy(szEntry, va("xl %d picn %c ", hpos+col, blip[col][row]));
-				if (strlen(szEntry) + strlen(pszLayout) > 1399) 
-					return; 
+				if (strlen(szEntry) + strlen(pszLayout) > 1399)
+					return;
 
 				strcat(pszLayout, szEntry);
 			}
@@ -360,13 +360,13 @@ short ReadShortKey(char *psKey, short min, short max, short def)
 	int value;
 	value = StrToInt(Info_ValueForKey(mpedCur->client->pers.userinfo, psKey), def);
 
-	if (value < min || value > max) 
+	if (value < min || value > max)
 		return def;
 	return (short)value;
 }
 
 void ResetConfig(void)
-{	
+{
 	SetIntKey("hpos", INIT_HPOS);
 	SetIntKey("vpos", INIT_VPOS);
 	SetIntKey("hscale", INIT_HSCALE);
@@ -397,13 +397,13 @@ void SetProperMode (short bit)
 	short oldMode = curMode;
 
 	//if on/yes/1, turn on
-	if (StrMatch(pszParam, "on") || 
-		StrMatch(pszParam, "yes") || 
+	if (StrMatch(pszParam, "on") ||
+		StrMatch(pszParam, "yes") ||
 		StrToInt(pszParam, -1) == 1)
 		curMode |= bit;
 	//otherwise if off/no/0, turn off
-	else if (StrMatch(pszParam, "off") || 
-		StrMatch(pszParam, "no") || 
+	else if (StrMatch(pszParam, "off") ||
+		StrMatch(pszParam, "no") ||
 		StrToInt(pszParam, -1) == 0)
 		curMode &= ~bit;
 	//otherwise, toggle
@@ -455,7 +455,7 @@ qboolean ValidOverlayCommand (edict_t *pedPlayer)
 				gi.cprintf(mpedCur, PRINT_HIGH, LEGEND_ITEMS);
 		}
 
-	//mode toggles		
+	//mode toggles
 	} else if (StrMatch(szCommand, "matrix")) {
 		mpedCur->client->showOverlay ^= 2;
 		OverlayUpdate(mpedCur);
@@ -463,9 +463,9 @@ qboolean ValidOverlayCommand (edict_t *pedPlayer)
 		SetProperMode (LEARNON);
 	else if (StrMatch(szCommand, "RADAR"))
 		SetProperMode (RADARON);
-	else if (StrMatch(szCommand, "backdrop")) 
+	else if (StrMatch(szCommand, "backdrop"))
 		SetProperMode (SHOWBACK);
-	else if (StrMatch(szCommand, "rotation")) 
+	else if (StrMatch(szCommand, "rotation"))
 		SetProperMode (LOCKFIT);
 	else if (StrMatch(szCommand, "ZVERT"))
 		SetProperMode (ZVERT);
@@ -486,7 +486,7 @@ qboolean ValidOverlayCommand (edict_t *pedPlayer)
 			gi.cprintf(mpedCur, PRINT_HIGH, "Testvar value: %i\n", testvar);
 		else
 			testvar = parameter;
-		
+
 	} else if (StrMatch(szCommand, "vpos")) {
 		if (parameter > 0 && parameter < 1280)
 			SetIntKey("vpos", parameter);
@@ -534,7 +534,7 @@ qboolean ValidOverlayCommand (edict_t *pedPlayer)
 void OverlayUpdate(edict_t *pedViewer)
 {
 	char szLayout[1400] = "";
-	
+
 	pedViewer->client->updateFrame = level.framenum + EXPERT_UPDATE_FRAMES;
 	mpedCur = pedViewer;
 	if (expflags & EXPERT_RADAR) {
@@ -543,15 +543,15 @@ void OverlayUpdate(edict_t *pedViewer)
 		}
 		SetCurrentPlayer();
 	}
-	
+
 	if (pedViewer->client->cUpdatesLeft) {
-		strcpy(szLayout, pedViewer->client->szTimedEntry); 
+		strcpy(szLayout, pedViewer->client->szTimedEntry);
 	}
 
 	if (pedViewer->client->showOverlay & 2) {
 		if (curMode & LEARNON)
 			DrawMatrix(mpedCur, szLayout, MXLEARN);
-		else 
+		else
 			DrawMatrix(mpedCur, szLayout, 0);
 	} else if (expflags & EXPERT_RADAR && curMode & RADARON) {
 		AppendRadar(szLayout);

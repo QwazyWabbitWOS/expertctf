@@ -1018,7 +1018,7 @@ void MacroAddAll(unsigned int cFlag, const char* message)
 		}
 		else
 		{
-			// The message store exists, realloc it.
+			// The message store exists, reallocate it.
 			curObit->msgCount++;
 			void* tmp = curObit->messages;
 			void* tp = gi.TagMalloc(sizeof(char*) * (curObit->msgCount), TAG_LEVEL);

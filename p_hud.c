@@ -60,19 +60,19 @@ void BeginIntermission (edict_t *targ)
 
 	if (level.intermissiontime)
 		return;		// allready activated
-	
+
 //CTF
 	if (deathmatch->value && ctf->value)
 		CTFCalcScores();
 //CTF
 
-	/*if(ctfgame.total1 == ctfgame.total2 && 
+	/*if(ctfgame.total1 == ctfgame.total2 &&
 		 ctfgame.teamScore[TEAM1] == ctfgame.teamScore[TEAM2])*/
 	//{
 	//	if (expflags & EXPERT_TIE_BREAKER && ctf->value ||
 	//		expflags & EXPERT_TIE_BREAKER && damagedropflags->value)
 	//}
-	
+
 	game.autosaved = false;
 
 	// respawn any dead clients
@@ -252,7 +252,7 @@ void DeathmatchScoreboardMessage (edict_t *ent, edict_t *killer)
 	if (strncmp(string, ent->client->szOldLayout, OLDLAYOUT_CHARS) == 0) {
 		return;
 	}
-	Q_strncpy(ent->client->szOldLayout, string, OLDLAYOUT_CHARS);
+	strcpy(ent->client->szOldLayout, string);
 
 	gi.WriteByte (svc_layout);
 	gi.WriteString (string);
@@ -336,12 +336,12 @@ void HelpComputer (edict_t *ent)
 		"xv 0 yv 54 cstring2 \"%s\" "		// help 1
 		"xv 0 yv 110 cstring2 \"%s\" "		// help 2
 		"xv 50 yv 164 string2 \" kills     goals    secrets\" "
-		"xv 50 yv 172 string2 \"%3i/%3i     %i/%i       %i/%i\" ", 
+		"xv 50 yv 172 string2 \"%3i/%3i     %i/%i       %i/%i\" ",
 		sk,
 		level.level_name,
 		game.helpmessage1,
 		game.helpmessage2,
-		level.killed_monsters, level.total_monsters, 
+		level.killed_monsters, level.total_monsters,
 		level.found_goals, level.total_goals,
 		level.found_secrets, level.total_secrets);
 
@@ -418,7 +418,7 @@ void G_SetStats (edict_t *ent)
 		ent->client->ps.stats[STAT_AMMO_ICON] = gi.imageindex (item->icon);
 		ent->client->ps.stats[STAT_AMMO] = ent->client->pers.inventory[ent->client->ammo_index];
 	}
-	
+
 	//
 	// armor
 	//
@@ -567,12 +567,12 @@ void G_SetStats (edict_t *ent)
 	}
 
 		// Expert CTF
-	if (ctf->value && sv_damagedropflags->value == 0) 
+	if (ctf->value && sv_damagedropflags->value == 0)
 	{
 		SetCTFStats(ent);
 	}
-	else if(ctf->value && sv_damagedropflags->value == 1) 
-	{	
+	else if(ctf->value && sv_damagedropflags->value == 1)
+	{
 		//modified Stats Diplay for damagedropping
 		CTFOWNTEAMSetStats(ent);
 	}

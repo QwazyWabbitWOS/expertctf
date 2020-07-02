@@ -10,184 +10,185 @@
 // uses sv prop instead of warp_list
 
 char voteMap[MAX_QPATH];
-int yesVotes, voteEndTime, numplayers = 0;
+int yesVotes;
+int voteEndTime;
+int numplayers = 0;
 qboolean electionInProgress = false;
-cvar_t *sv_electpercentage, *sv_votetime;//*sv_warp_list,
+cvar_t* sv_electpercentage;
+cvar_t* sv_votetime;
 
 // big array, indexed by playernum
 qboolean whoVoted[MAX_CLIENTS];
 
-edict_t *warper = NULL;
+edict_t* warper = NULL;
 
 void printelection(void)
 {
-    int voteTimeLeft, neededVotes = 0;
+	int voteTimeLeft;
+	int neededVotes = 0;
 
-    gi.bprintf(PRINT_CHAT, "%s has requested warping to level %s.\n", 
-	       warper->client->pers.netname, voteMap);
-    gi.bprintf(PRINT_HIGH, "Type YES or NO to vote on this request.\n");
+	gi.bprintf(PRINT_CHAT, "%s has requested warping to level %s.\n",
+		warper->client->pers.netname, voteMap);
+	gi.bprintf(PRINT_HIGH, "Type YES or NO to vote on this request.\n");
 
-    voteTimeLeft = voteEndTime - (int)level.time;
-    neededVotes = ceilf(sv_electpercentage->value/100.0f * (numplayers - 1) - yesVotes);
-    gi.bprintf(PRINT_HIGH, "Votes: %d  Needed: %d  Time left: %ds\n", 
-	       yesVotes, neededVotes, voteTimeLeft);
+	voteTimeLeft = voteEndTime - (int)level.time;
+	neededVotes = ceilf(sv_electpercentage->value / 100.0f * (numplayers - 1) - yesVotes);
+	gi.bprintf(PRINT_HIGH, "Votes: %d  Needed: %d  Time left: %ds\n",
+		yesVotes, neededVotes, voteTimeLeft);
 }
 
 void mapwins(void)
 {
-    electionInProgress = false;
-    gi.bprintf(PRINT_HIGH, "%s is warping to level %s.\n", 
-	       warper->client->pers.netname, voteMap);
-    gi.AddCommandString(va("gamemap %s\n", voteMap));
+	electionInProgress = false;
+	gi.bprintf(PRINT_HIGH, "%s is warping to level %s.\n",
+		warper->client->pers.netname, voteMap);
+	gi.AddCommandString(va("gamemap %s\n", voteMap));
 }
 
 void checkElectionTime(void)
 {
-    if (voteEndTime < (int)level.time){
-	electionInProgress = false;
-	gi.bprintf(PRINT_CHAT, "Election timed out and has been cancelled.\n");
-    }
+	if (voteEndTime < (int)level.time) {
+		electionInProgress = false;
+		gi.bprintf(PRINT_CHAT, "Election timed out and has been cancelled.\n");
+	}
 }
 
 
-void Cmd_Warp(edict_t *ent)
+void Cmd_Warp(edict_t* ent)
 {
-    int i, voteStartTime;
-    edict_t *player;
-//    int pairs;
-//    props_t *props;
-    char *value;
+	int i, voteStartTime;
+	char* value;
 
-    sv_electpercentage = gi.cvar("electpercentage", "0", CVAR_SERVERINFO);
-	sv_votetime = gi.cvar("votetime", "60",0);
+	sv_electpercentage = gi.cvar("electpercentage", "0", CVAR_SERVERINFO);
+	sv_votetime = gi.cvar("votetime", "60", 0);
 
-    if(! (int)sv_electpercentage->value){
-	gi.cprintf(ent, PRINT_HIGH, "Elections are disabled\n");
-	return;
-    }
+	if (!(int)sv_electpercentage->value) {
+		gi.cprintf(ent, PRINT_HIGH, "Elections are disabled\n");
+		return;
+	}
 
-    if(electionInProgress){
-	gi.cprintf(ent, PRINT_HIGH, "Election already in progress.\n");
-	return;
-    }
+	if (electionInProgress) {
+		gi.cprintf(ent, PRINT_HIGH, "Election already in progress.\n");
+		return;
+	}
 
-    //sv_warp_list = gi.cvar("warp_list", "", CVAR_SERVERINFO);
+	//sv_warp_list = gi.cvar("warp_list", "", CVAR_SERVERINFO);
 
-    if (gi.argc() == 1) {
-	gi.cprintf(ent, PRINT_HIGH, "Usage:  warp mapname\n");
-	gi.cprintf(ent, PRINT_HIGH, "like:   warp q2ctf1\n");
-/*  	gi.cprintf(ent, PRINT_HIGH, "Available levels are:\n"); */
+	if (gi.argc() == 1) {
+		gi.cprintf(ent, PRINT_HIGH, "Usage:  warp mapname\n");
+		gi.cprintf(ent, PRINT_HIGH, "like:   warp q2ctf1\n");
+		/*  	gi.cprintf(ent, PRINT_HIGH, "Available levels are:\n"); */
 
-/*  	  props = gProperties; */
-/*  	  pairs = listSize(props->keys); */
-/*  	  for (i = 0; i < pairs; i++){ */
-/*  	      value = (char *)listElementAt(props->values, i); */
-/*  	      if(Q_stricmp(value, "remove") != 0) */
-/*  		  gi.cprintf(ent, PRINT_HIGH, "%s\n",  */
-/*  			     (char *)listElementAt(props->keys, i)); */
-/*  	  } */
-	return;
-    }
+		/*  	  props = gProperties; */
+		/*  	  pairs = listSize(props->keys); */
+		/*  	  for (i = 0; i < pairs; i++){ */
+		/*  	      value = (char *)listElementAt(props->values, i); */
+		/*  	      if(Q_stricmp(value, "remove") != 0) */
+		/*  		  gi.cprintf(ent, PRINT_HIGH, "%s\n",  */
+		/*  			     (char *)listElementAt(props->keys, i)); */
+		/*  	  } */
+		return;
+	}
 
 
-    Com_sprintf(voteMap, sizeof(voteMap), "%s", gi.argv(1));
+	Com_sprintf(voteMap, sizeof(voteMap), "%s", gi.argv(1));
 
-    value = getProp(gProperties, voteMap);
-    if((! value) || (Q_stricmp(value, "remove") == 0)){
-	gi.cprintf(ent, PRINT_HIGH, "Level not in map rotation.\n");
-//	  gi.cprintf(ent, PRINT_HIGH, "Available levels are:\n");
-//
-//	  props = gProperties;
-//	  pairs = listSize(props->keys);
-//	  for (i = 0; i < pairs; i++){
-//	      value = (char *)listElementAt(props->values, i);
-//	      if(Q_stricmp(value, "remove") != 0)
-//		  gi.cprintf(ent, PRINT_HIGH, "%s\n", 
-//			     (char *)listElementAt(props->keys, i));
-//	  }
-//
-	return;
-    }				  
+	value = getProp(gProperties, voteMap);
+	if ((!value) || (Q_stricmp(value, "remove") == 0)) {
+		gi.cprintf(ent, PRINT_HIGH, "Level not in map rotation.\n");
+		//	  gi.cprintf(ent, PRINT_HIGH, "Available levels are:\n");
+		//
+		//	  props = gProperties;
+		//	  pairs = listSize(props->keys);
+		//	  for (i = 0; i < pairs; i++){
+		//	      value = (char *)listElementAt(props->values, i);
+		//	      if(Q_stricmp(value, "remove") != 0)
+		//		  gi.cprintf(ent, PRINT_HIGH, "%s\n", 
+		//			     (char *)listElementAt(props->keys, i));
+		//	  }
+		//
+		return;
+	}
 
-    numplayers = 0;
-    for (i = 1; i <= game.maxclients; i++){
-	player = &g_edicts[i];
-	if (player->inuse && player->client)
-	    numplayers++;
-    }
+	numplayers = 0;
+	for (i = 1; i <= game.maxclients; i++) {
+		edict_t* player = &g_edicts[i];
+		if (player->inuse && player->client)
+			numplayers++;
+	}
 
-    for (i = 0; i < game.maxclients; i++)
-	whoVoted[i] = false;
+	for (i = 0; i < game.maxclients; i++)
+		whoVoted[i] = false;
 
-    warper = ent;
-    if(numplayers == 1)
-	mapwins();
-    else{
-	yesVotes = 0;
-	voteStartTime = (int)level.time;
-	voteEndTime = voteStartTime + sv_votetime->value;
-	electionInProgress = true;
+	warper = ent;
+	// sole player on server always warps.
+	if (numplayers == 1)
+		mapwins();
+	else {
+		yesVotes = 0;
+		voteStartTime = (int)level.time;
+		voteEndTime = voteStartTime + sv_votetime->value;
+		electionInProgress = true;
+		printelection();
+	}
+}
+
+void Cmd_Yes(edict_t* ent)
+{
+	int playernum;
+
+	if (!electionInProgress) {
+		gi.cprintf(ent, PRINT_HIGH, "No election is in progress.\n");
+		return;
+	}
+	if (ent == warper) {
+		gi.cprintf(ent, PRINT_HIGH, "You can't vote for yourself.\n");
+		return;
+	}
+	playernum = ent - g_edicts - 1;
+	if (whoVoted[playernum]) {
+		gi.cprintf(ent, PRINT_HIGH, "You already voted.\n");
+		return;
+	}
+	whoVoted[playernum] = true;
+	yesVotes++;
+	if (numplayers > 1 && (float)yesVotes / (numplayers - 1) >= sv_electpercentage->value / 100)
+		mapwins();
+	else
+		printelection();
+}
+
+void Cmd_No(edict_t* ent)
+{
+	int playernum;
+
+	if (!electionInProgress) {
+		gi.cprintf(ent, PRINT_HIGH, "No election is in progress.\n");
+		return;
+	}
+	if (ent == warper) {
+		gi.cprintf(ent, PRINT_HIGH, "You can't vote for yourself.\n");
+		return;
+	}
+	playernum = ent - g_edicts - 1;
+	if (whoVoted[playernum]) {
+		gi.cprintf(ent, PRINT_HIGH, "You already voted.\n");
+		return;
+	}
+	whoVoted[playernum] = true;
 	printelection();
-    }
-
-}
-
-void Cmd_Yes(edict_t *ent)
-{
-    int playernum;
-
-    if (!electionInProgress){
-	gi.cprintf(ent, PRINT_HIGH, "No election is in progress.\n");
-	return;
-    }
-    if (ent == warper){
-	gi.cprintf(ent, PRINT_HIGH, "You can't vote for yourself.\n");
-	return;
-    }
-    playernum = ent - g_edicts - 1;
-    if (whoVoted[playernum]){
-	gi.cprintf(ent, PRINT_HIGH, "You already voted.\n");
-	return;
-    }
-    whoVoted[playernum] = true;
-    yesVotes++;
-    if ((float)yesVotes/(numplayers - 1) >= sv_electpercentage->value/100)
-	mapwins();
-    else
-	printelection();
-}
-
-void Cmd_No(edict_t *ent)
-{
-    int playernum;
-
-    if (!electionInProgress){
-	gi.cprintf(ent, PRINT_HIGH, "No election is in progress.\n");
-	return;
-    }
-    if (ent == warper){
-	gi.cprintf(ent, PRINT_HIGH, "You can't vote for yourself.\n");
-	return;
-    }
-    playernum = ent - g_edicts - 1;
-    if (whoVoted[playernum]){
-	gi.cprintf(ent, PRINT_HIGH, "You already voted.\n");
-	return;
-    }
-    whoVoted[playernum] = true;
-    printelection();
 }
 
 /*
  g_cmds.c:ClientCommand()
 
-           begin warp
+		   begin warp
 	  else if (Q_stricmp(cmd, "warp") == 0)
-	      Cmd_Warp(ent);
+		  Cmd_Warp(ent);
 	  else if (Q_stricmp(cmd, "yes") == 0)
-	      Cmd_Yes(ent);
+		  Cmd_Yes(ent);
 	  else if (Q_stricmp(cmd, "no") == 0)
-	      Cmd_No(ent);
+		  Cmd_No(ent);
 	   end warp
 
 	  else    // anything that doesn't match a command will be a chat
@@ -195,7 +196,7 @@ void Cmd_No(edict_t *ent)
 
  in g_main.c:G_RunFrame()
 
-	  edict_t	*ent; 
+	  edict_t	*ent;
 
 	  // begin warp
 	  extern qboolean electionInProgress;
@@ -212,12 +213,12 @@ void Cmd_No(edict_t *ent)
 
 	  // begin warp
 	  if (electionInProgress)
-	      checkElectionTime();
+		  checkElectionTime();
 	  // end warp
 
 	  //
 	  // treat each object in turn
-*/	
+*/
 //add warp.o to the makefile:
 /*
 GAME_OBJS = \
@@ -232,7 +233,7 @@ GAME_OBJS = \
 
  include warp.h in g_cmd.c:
 
-void Cmd_Warp(edict_t *ent);   
+void Cmd_Warp(edict_t *ent);
 void Cmd_Yes(edict_t *ent);
 void Cmd_No(edict_t *ent);
 */

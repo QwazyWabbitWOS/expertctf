@@ -35,6 +35,11 @@ DArray ArrayNew(int elemSize, int allocNum, ArrayCompareFn comparator)
 	// allocate the struct that holds all DArray info
 	arr = gi.TagMalloc(sizeof(struct DArrayImplementation), TAG_LEVEL); // size of
 	assert(arr != NULL);
+	if (!arr)
+	{
+		gi.error("Allocation failed in %s\n", __func__);
+		return arr;	// never executes
+	}
 
 	// set up constants in the struct
 	arr->elemSize = elemSize;
@@ -92,7 +97,7 @@ void *ArrayElementAt(DArray darray, int n)
 
 /** 
  * Remove an element at a specific position.  Moves all memory in the
- * array past the insertion point.  Will realloc to a smaller size
+ * array past the insertion point.  Will reallocate to a smaller size
  * if actual elements in the array have dropped to less than half 
  * of the allocated size.
  */
@@ -103,10 +108,10 @@ void ArrayDeleteAt(DArray darray, int n)
 	assert(n>=0 && n < darray->curSize);
 
 	// check whether we have more than double the space we need
-	// to store the current elements and realloc to half size if so
+	// to store the current elements and reallocate to half size if so
 	if (darray->allocSize > darray->curSize*2 &&
 	    darray->allocSize > NO_REALLOC_FLOOR) 
-	{ // never realloc if sufficiently small
+	{ // never reallocate if sufficiently small
 		darray->allocSize = (int)ceil(darray->allocSize * 0.5);
 		int newsize = darray->allocSize * darray->elemSize;
 		void* tmp = darray->content;
@@ -142,7 +147,7 @@ int ArrayContains(DArray darray, const void *key) {
 
 /**
  * Insert an element at a specific position.  Moves all memory in the
- * array past the insertion point.  Will realloc if necessary.
+ * array past the insertion point.  Will reallocate if necessary.
  */
 void ArrayInsertAt(DArray darray, const void *newElem, int n)
 {	 
@@ -150,7 +155,7 @@ void ArrayInsertAt(DArray darray, const void *newElem, int n)
 
 	assert(n>=0 && n <= darray->curSize);
 
-	// realloc to double size if we need more room to store this new element
+	// Double size if we need more room to store this new element
 	if (darray->allocSize<=darray->curSize) {
 		int newsize = darray->allocSize * 2 * darray->elemSize;
 		void* tmp = darray->content;
@@ -180,11 +185,11 @@ void ArrayInsertAt(DArray darray, const void *newElem, int n)
 }
 
 /**
- * Append an element at the end of the array.  Will realloc if necessary.
+ * Append an element at the end of the array.  Will reallocate if necessary.
  */
 void ArrayAppend(DArray darray, const void *newElem)
 {
-	// realloc to double size if we need more room to store this new element
+	// Double size if we need more room to store this new element
 	if (!(darray->allocSize>darray->curSize)) {
 		int newsize = darray->allocSize * 2 * darray->elemSize;
 		void* tmp = darray->content;
