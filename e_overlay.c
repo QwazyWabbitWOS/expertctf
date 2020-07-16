@@ -456,10 +456,17 @@ qboolean ValidOverlayCommand (edict_t *pedPlayer)
 		}
 
 	//mode toggles
-	} else if (StrMatch(szCommand, "matrix")) {
-		mpedCur->client->showOverlay ^= 2;
-		OverlayUpdate(mpedCur);
-	} else if (StrMatch(szCommand, "LEARN"))
+	} 
+	else if (StrMatch(szCommand, "matrix")) 
+	{
+		// Player matrix isn't initialized unless radar is enabled.
+		if ((int)sv_expflags->value & EXPERT_RADAR)
+		{
+			mpedCur->client->showOverlay ^= 2;
+			OverlayUpdate(mpedCur);
+		}
+	} 
+	else if (StrMatch(szCommand, "LEARN"))
 		SetProperMode (LEARNON);
 	else if (StrMatch(szCommand, "RADAR"))
 		SetProperMode (RADARON);
@@ -531,6 +538,7 @@ qboolean ValidOverlayCommand (edict_t *pedPlayer)
 	return true; //command matched
 }
 
+//FIXME: Matrix initialization is broken.
 void OverlayUpdate(edict_t *pedViewer)
 {
 	char szLayout[1400] = "";
