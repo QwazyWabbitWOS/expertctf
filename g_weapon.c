@@ -367,7 +367,7 @@ void fire_blaster (edict_t *self, vec3_t start, vec3_t dir, int damage, int spee
 		VectorMA (bolt->s.origin, -10, dir, bolt->s.origin);
 		bolt->touch (bolt, tr.ent, NULL, NULL);
 	}
-}	
+}
 
 
 /*
@@ -482,7 +482,7 @@ static void Grenade_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurfa
 		else
 			gi.sound (ent, CHAN_VOICE, gi.soundindex ("weapons/grenlb1b.wav"), 1, ATTN_NORM, 0);
 
-		// Spider: 2 bounces grenades 
+		// Spider: 2 bounces grenades
 		if (surf && (weaponflags & EXPERT_ALT_GL))
 		{
 			if (ent->touchnumber == 0)
@@ -538,7 +538,7 @@ void fire_grenade (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int s
 	grenade->firedFromAir = !nearToGround(self);
 	// Expert: no misprediction on hit
 	grenade->svflags |= SVF_DEADMONSTER;
-	// Expert: under NO_HACKS, make sure all 
+	// Expert: under NO_HACKS, make sure all
 	// projectiles are easy to see.
 	if (expflags & EXPERT_NO_HACKS) {
 		grenade->s.renderfx |= RF_FULLBRIGHT;
@@ -592,7 +592,7 @@ void fire_grenade2 (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int 
 	grenade->firedFromAir = !nearToGround(self);
 	// Expert: no misprediction on hit
 	grenade->svflags |= SVF_DEADMONSTER;
-	// Expert: under NO_HACKS, make sure all 
+	// Expert: under NO_HACKS, make sure all
 	// projectiles are easy to see.
 	if (expflags & EXPERT_NO_HACKS) {
 		grenade->s.renderfx |= RF_FULLBRIGHT;
@@ -713,8 +713,8 @@ void fire_rocket (edict_t *self, vec3_t start, vec3_t dir, int damage, int speed
 	// Save whether shot was fired from the air
 	rocket->firedFromAir = !nearToGround(self);
 	// Expert: no misprediction on hit
-	rocket->svflags |= SVF_DEADMONSTER;
-	// Expert: under NO_HACKS, make sure all 
+	//rocket->svflags |= SVF_DEADMONSTER;
+	// Expert: under NO_HACKS, make sure all
 	// projectiles are easy to see.
 	if (expflags & EXPERT_NO_HACKS) {
 		rocket->s.renderfx |= RF_FULLBRIGHT;
@@ -790,13 +790,13 @@ void fire_rail (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick
 		else
 		{
 			gi.WriteByte (svc_temp_entity);
-   			gi.WriteByte (TE_BFG_LASER);      
-    		gi.WritePosition (start);
-    		gi.WritePosition (tr.endpos);
+			gi.WriteByte (TE_BFG_LASER);
+			gi.WritePosition (start);
+			gi.WritePosition (tr.endpos);
 			gi.multicast (tr.endpos, MULTICAST_PHS);
 		}
 	}
-	else 
+	else
 	{
 		// send gun puff / flash
 		gi.WriteByte (svc_temp_entity);
@@ -936,7 +936,7 @@ void bfg_think (edict_t *self)
 	ent = NULL;
 	//gi.dprintf("%s\n", weaponflags & EXPERT_ALT_BFG);
 	while ((ent = findradius(ent, self->s.origin, 256)) != NULL)
-	{	
+	{
 		if (ent == self)
 		continue;
 
@@ -950,13 +950,13 @@ void bfg_think (edict_t *self)
 			continue;
 
 		// Expert: BFG lasers fire only at enemy teams
-		
+
 		if (ent->client &&	self->owner->client &&
 			expflags & EXPERT_ENFORCED_TEAMS && 
 			ent->client->resp.team == self->owner->client->resp.team)
 			continue;
-		
-		
+
+
 
 		VectorMA (ent->absmin, 0.5f, ent->size, point);
 
@@ -1148,8 +1148,8 @@ void fire_bfg2 (edict_t *self, vec3_t start, vec3_t dir, vec3_t los, int damage,
 	bfg->movetype = MOVETYPE_FLYMISSILE;
 	bfg->clipmask = MASK_SHOT;
 	bfg->solid = SOLID_BBOX;
-	//test section to identify who shot the bfg 
-	if(self->client->resp.team == TEAM1){			
+	//test section to identify who shot the bfg
+	if(self->client->resp.team == TEAM1){
 		bfg->s.effects |= EF_PENT | EF_ROTATE; //;
 		bfg->s.renderfx |= RF_SHELL_RED | RF_TRANSLUCENT;
 	}
@@ -1163,10 +1163,10 @@ void fire_bfg2 (edict_t *self, vec3_t start, vec3_t dir, vec3_t los, int damage,
 		bfg->s.effects |= EF_BFG | EF_ROTATE;
 		bfg->s.renderfx |= RF_SHELL_GREEN | RF_TRANSLUCENT;
 	}
-	
+
 	VectorClear (bfg->mins);
 	VectorClear (bfg->maxs);
-	
+
 	bfg->s.modelindex = gi.modelindex("models/objects/grenade2/tris.md2");
     bfg->owner = self;
 	bfg->touch = bfg2_touch;

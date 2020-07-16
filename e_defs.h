@@ -12,7 +12,7 @@
  */
 
 // Version of the Expert modification
-#define	EXPERT_VERSION "4.0.8"
+#define	EXPERT_VERSION "4.0.9"	// QwazyWabbit from 4.0.4
 
 // additional DM Flags
 #define DF_ARMOR_PROTECT						(1 << 18) 	// 262144
@@ -65,9 +65,9 @@ extern char	e_bits[NUM_SETTINGS][25];
 #define EXPERT_DISABLE_CLIENT_OBITUARIES	(1 << 1)		// 2	Disable Context Obit code
 //#define	EXPERT_RESERVED					(1 << 2)		// 4	Reserved for future use
 #define EXPERT_DISABLE_MOTD					(1 << 3)		// 8	Disable MOTD
-#define EXPERT_DISABLE_SPAWNMSGS				(1 << 4)		// 16	Disable Spawn messages
+#define EXPERT_DISABLE_SPAWNMSGS			(1 << 4)		// 16	Disable Spawn messages
 #define EXPERT_DISABLE_BOT_DETECT			(1 << 5)		// 32	Disable Bot Detection
-#define EXPERT_ENABLE_PLAYER_FORWARDING	(1 << 6)		// 64	Forward players to another server when full
+#define EXPERT_ENABLE_PLAYER_FORWARDING		(1 << 6)		// 64	Forward players to another server when full
 #define EXPERT_GIBSTAT_PER_GAME				(1 << 7)		// 128  Log each map to a separate log file
 
 // flags cvar shortcuts
