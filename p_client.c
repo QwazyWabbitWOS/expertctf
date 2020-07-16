@@ -539,7 +539,6 @@ void player_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damag
 	// Expert: bodies no longer solid.  Too often they absorb random hits.  
 	// Bodies can still be gibbed by explosions for entertainment value.
 	self->solid = SOLID_NOT;
-//	self->solid = SOLID_NOT;
 	self->svflags |= SVF_DEADMONSTER;
 
 	if (!self->deadflag)

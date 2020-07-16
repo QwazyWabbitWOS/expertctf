@@ -11,7 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>gamex86</ProjectName>
+    <ProjectName>gamex86.real</ProjectName>
     <SccProjectName>"$/expert40", JAAAAAAA</SccProjectName>
     <SccLocalPath>.</SccLocalPath>
     <ProjectGuid>{7C257D89-8C3B-1F34-20DB-58BDBBEC3B95}</ProjectGuid>

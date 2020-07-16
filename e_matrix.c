@@ -150,12 +150,14 @@ void DrawMatrix (edict_t* pedViewer, char* pszLayout, byte flags)
 	}
 }
 
+//FIXME: mpaTranslateRank is NULL.
+// Matrix initialization is broken.
 void RankPlayerUp (gclient_t* pclPlayer)
 {
-	int			myScore;
+	int			myScore = 0;
 	byte		oldIndex;
-	gclient_t*	pclOther;
-	
+	gclient_t*	pclOther = NULL;
+
 	//while this player is better than the next player on the list
 	for (myScore = pclPlayer->resp.score; pclPlayer->resp.iRank != 0; ) {
 		pclOther = game.clients + mpaTranslateRank[pclPlayer->resp.iRank-1];
@@ -175,11 +177,13 @@ void RankPlayerUp (gclient_t* pclPlayer)
 	} 
 }
 
+//FIXME: mpaTranslateRank is NULL.
+// Matrix initialization is broken.
 void RankPlayerDown (gclient_t* pclPlayer)
 {
-	int			myScore;
+	int			myScore = 0;
 	byte		oldIndex;
-	gclient_t*	pclOther;
+	gclient_t*	pclOther = NULL;
 	
 	//while this player is better than the next player on the list
 	for (myScore = pclPlayer->resp.score; pclPlayer->resp.iRank != gcPlayers-1; ) {
@@ -255,7 +259,7 @@ void ExpandMatrix (edict_t* pedJoining)
 	for (iClient = 0; iClient < game.maxclients; iClient++) {
 		pedPlayer = g_edicts + iClient + 1;
 		//if the names match, it's him
-		if (pedPlayer->inuse && Q_stricmp(pedJoining->client->pers.netname, pedPlayer->client->pers.netname)) {
+		if (pedPlayer->inuse && !Q_stricmp(pedJoining->client->pers.netname, pedPlayer->client->pers.netname)) {
 			mpaTranslateRank[iNewRank] = iClient; 
 			break;
 		}

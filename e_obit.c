@@ -626,10 +626,10 @@ void addMessageToCause(char *message, int causeInt, int cFlag)
 		// Create a container for messages of this context
 		if (gCauseTable[causeInt]->entryCount == 0) {
 			gCauseTable[causeInt]->obituary = gi.TagMalloc(sizeof(obits_t*), TAG_LEVEL);
-		} else {
-
-			mallocSize = sizeof(obits_t*) * 
-					(gCauseTable[causeInt]->entryCount + 1);
+		}
+		else
+		{
+			mallocSize = sizeof(obits_t*) * (gCauseTable[causeInt]->entryCount + 1);
 			void* tmp = gCauseTable[causeInt]->obituary;
 			void* tp = gi.TagMalloc(mallocSize, TAG_LEVEL);
 			gCauseTable[causeInt]->obituary = tp;
