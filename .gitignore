@@ -16,3 +16,5 @@ ipch/
 *.o
 *.so
 dependencies
+*.suo
+*.user

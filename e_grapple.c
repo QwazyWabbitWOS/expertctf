@@ -115,7 +115,7 @@ void Grapple_Touch(edict_t *hook, edict_t *other, cplane_t *plane, csurface_t *s
 	if (other != g_edicts && other->clipmask == MASK_SHOT)
 		return;
 
-	gi.sound(hook, CHAN_ITEM, gi.soundindex("world/land.wav"), 1, ATTN_NORM, 0);
+	gi.sound(hook, CHAN_AUTO, gi.soundindex("world/land.wav"), 1, ATTN_NORM, 0);
 
 	// Do damage to those that need it
 	if (sv_lethalmode->value)
@@ -363,7 +363,7 @@ void Throw_Grapple (edict_t *player)
 	}
 
 	// FIXME: Possibly change channel
-	gi.sound(player, CHAN_ITEM, gi.soundindex("plats/pt1_mid.wav"), 0.5, ATTN_NORM, 0);
+	gi.sound(player, CHAN_AUTO, gi.soundindex("plats/pt1_mid.wav"), 0.5, ATTN_NORM, 0);
 
 	player->client->hook_touch = NULL;
 	
@@ -384,7 +384,7 @@ void Release_Grapple (edict_t *hook)
 	// so ignore this attempt to release 
 	if (client->hook != NULL) {
 		client->hook = NULL;
-		gi.sound(owner, CHAN_ITEM, gi.soundindex("misc/menu3.wav"), 1, ATTN_NORM, 0);
+		gi.sound(owner, CHAN_AUTO, gi.soundindex("misc/menu3.wav"), 1, ATTN_NORM, 0);
 		VectorClear(client->oldvelocity);
 
 		hook->think = NULL;
