@@ -1,4 +1,5 @@
 #include "g_local.h"  
+#include "props.h"
 
 // all for warp command (vote on map change)
 
@@ -53,6 +54,22 @@ void checkElectionTime(void)
 	}
 }
 
+void ListMaps(edict_t* ent)
+{
+	char* value;
+	int pairs;
+	props_t* props;
+
+	gi.cprintf(ent, PRINT_HIGH, "Available levels are:\n");
+	props = gProperties;
+	pairs = listSize(props->keys);
+	for (int i = 0; i < pairs; i++)
+	{
+		value = (char*)listElementAt(props->values, i);
+		if (Q_stricmp(value, "remove") != 0)
+			gi.cprintf(ent, PRINT_HIGH, "%s\n", (char*)listElementAt(props->keys, i));
+	}
+}
 
 void Cmd_Warp(edict_t* ent)
 {
@@ -74,39 +91,20 @@ void Cmd_Warp(edict_t* ent)
 
 	//sv_warp_list = gi.cvar("warp_list", "", CVAR_SERVERINFO);
 
-	if (gi.argc() == 1) {
+	if (gi.argc() == 1)
+	{
 		gi.cprintf(ent, PRINT_HIGH, "Usage:  warp mapname\n");
 		gi.cprintf(ent, PRINT_HIGH, "like:   warp q2ctf1\n");
-		/*  	gi.cprintf(ent, PRINT_HIGH, "Available levels are:\n"); */
-
-		/*  	  props = gProperties; */
-		/*  	  pairs = listSize(props->keys); */
-		/*  	  for (i = 0; i < pairs; i++){ */
-		/*  	      value = (char *)listElementAt(props->values, i); */
-		/*  	      if(Q_stricmp(value, "remove") != 0) */
-		/*  		  gi.cprintf(ent, PRINT_HIGH, "%s\n",  */
-		/*  			     (char *)listElementAt(props->keys, i)); */
-		/*  	  } */
+		ListMaps(ent);
 		return;
 	}
-
 
 	Com_sprintf(voteMap, sizeof(voteMap), "%s", gi.argv(1));
 
 	value = getProp(gProperties, voteMap);
 	if ((!value) || (Q_stricmp(value, "remove") == 0)) {
 		gi.cprintf(ent, PRINT_HIGH, "Level not in map rotation.\n");
-		//	  gi.cprintf(ent, PRINT_HIGH, "Available levels are:\n");
-		//
-		//	  props = gProperties;
-		//	  pairs = listSize(props->keys);
-		//	  for (i = 0; i < pairs; i++){
-		//	      value = (char *)listElementAt(props->values, i);
-		//	      if(Q_stricmp(value, "remove") != 0)
-		//		  gi.cprintf(ent, PRINT_HIGH, "%s\n", 
-		//			     (char *)listElementAt(props->keys, i));
-		//	  }
-		//
+		ListMaps(ent);
 		return;
 	}
 

@@ -975,9 +975,9 @@ ClientCommand
 =================
 */
 
-void ClientCommand (edict_t *ent)
+void ClientCommand(edict_t* ent)
 {
-	char	*cmd;
+	char* cmd;
 	extern qboolean electionInProgress;
 
 	if (!ent->client)
@@ -985,29 +985,29 @@ void ClientCommand (edict_t *ent)
 
 	cmd = gi.argv(0);
 
-	if (Q_stricmp (cmd, "players") == 0)
+	if (Q_stricmp(cmd, "players") == 0)
 	{
-		Cmd_Players_f (ent);
+		Cmd_Players_f(ent);
 		return;
 	}
-	else if (Q_stricmp (cmd, "say") == 0)
+	else if (Q_stricmp(cmd, "say") == 0)
 	{
-		Cmd_Say_f (ent, false, false);
+		Cmd_Say_f(ent, false, false);
 		return;
 	}
-	else if (Q_stricmp (cmd, "say_team") == 0 || Q_stricmp (cmd, "steam") == 0)
+	else if (Q_stricmp(cmd, "say_team") == 0 || Q_stricmp(cmd, "steam") == 0)
 	{
 		CTFSay_Team(ent, gi.args());
 		return;
 	}
-	else if (Q_stricmp (cmd, "score") == 0)
+	else if (Q_stricmp(cmd, "score") == 0)
 	{
-		Cmd_Score_f (ent);
+		Cmd_Score_f(ent);
 		return;
 	}
-	else if (Q_stricmp (cmd, "help") == 0)
+	else if (Q_stricmp(cmd, "help") == 0)
 	{
-		Cmd_Help_f (ent);
+		Cmd_Help_f(ent);
 		return;
 	}
 
@@ -1018,83 +1018,84 @@ void ClientCommand (edict_t *ent)
 
 	// Expert TeamAudio
 	else if (Q_stricmp(cmd, "ta") == 0 ||
-	           Q_stricmp(cmd, "speech") == 0 ||
-	           Q_stricmp(cmd, "play_team") == 0 ||
-	           Q_stricmp(cmd, "teamaudio") == 0) {
-		Cmd_TeamAudio_f (ent);
+		Q_stricmp(cmd, "speech") == 0 ||
+		Q_stricmp(cmd, "play_team") == 0 ||
+		Q_stricmp(cmd, "teamaudio") == 0) {
+		Cmd_TeamAudio_f(ent);
 	}
-		// Expert SwitchFire
+	// Expert SwitchFire
 	else if (sv_cheats->value)//MODIFIED BY BILL K
 	{
 		if (Q_stricmp(cmd, "sw") == 0 || Q_stricmp(cmd, "switchfire") == 0)
 		{
-			Cmd_SwitchFire_f (ent);
+			Cmd_SwitchFire_f(ent);
 		}
 	}
-	else if (Q_stricmp (cmd, "use") == 0)
-		Cmd_Use_f (ent);
-	else if (Q_stricmp (cmd, "drop") == 0)
-		Cmd_Drop_f (ent);
-	else if (Q_stricmp (cmd, "give") == 0)
-		Cmd_Give_f (ent);
-	else if (Q_stricmp (cmd, "god") == 0)
-		Cmd_God_f (ent);
-	else if (Q_stricmp (cmd, "notarget") == 0)
-		Cmd_Notarget_f (ent);
-	else if (Q_stricmp (cmd, "noclip") == 0)
-		Cmd_Noclip_f (ent);
-	else if (Q_stricmp (cmd, "inven") == 0)
-		Cmd_Inven_f (ent);
-	else if (Q_stricmp (cmd, "invnext") == 0)
-		SelectNextItem (ent, -1);
-	else if (Q_stricmp (cmd, "invprev") == 0)
-		SelectPrevItem (ent, -1);
-	else if (Q_stricmp (cmd, "invnextw") == 0)
-		SelectNextItem (ent, IT_WEAPON);
-	else if (Q_stricmp (cmd, "invprevw") == 0)
-		SelectPrevItem (ent, IT_WEAPON);
-	else if (Q_stricmp (cmd, "invnextp") == 0)
-		SelectNextItem (ent, IT_POWERUP);
-	else if (Q_stricmp (cmd, "invprevp") == 0)
-		SelectPrevItem (ent, IT_POWERUP);
-	else if (Q_stricmp (cmd, "invuse") == 0)
-		Cmd_InvUse_f (ent);
-	else if (Q_stricmp (cmd, "invdrop") == 0)
-		Cmd_InvDrop_f (ent);
-	else if (Q_stricmp (cmd, "weapprev") == 0)
-		Cmd_WeapPrev_f (ent);
-	else if (Q_stricmp (cmd, "weapnext") == 0)
-		Cmd_WeapNext_f (ent);
-	else if (Q_stricmp (cmd, "weaplast") == 0)
-		Cmd_WeapLast_f (ent);
-	else if (Q_stricmp (cmd, "kill") == 0)
-		Cmd_Kill_f (ent);
-	else if (Q_stricmp (cmd, "putaway") == 0)
-		Cmd_PutAway_f (ent);
-	else if (Q_stricmp (cmd, "wave") == 0)
-		Cmd_Wave_f (ent);
+	else if (Q_stricmp(cmd, "use") == 0)
+		Cmd_Use_f(ent);
+	else if (Q_stricmp(cmd, "drop") == 0)
+		Cmd_Drop_f(ent);
+	else if (Q_stricmp(cmd, "give") == 0)
+		Cmd_Give_f(ent);
+	else if (Q_stricmp(cmd, "god") == 0)
+		Cmd_God_f(ent);
+	else if (Q_stricmp(cmd, "notarget") == 0)
+		Cmd_Notarget_f(ent);
+	else if (Q_stricmp(cmd, "noclip") == 0)
+		Cmd_Noclip_f(ent);
+	else if (Q_stricmp(cmd, "inven") == 0)
+		Cmd_Inven_f(ent);
+	else if (Q_stricmp(cmd, "invnext") == 0)
+		SelectNextItem(ent, -1);
+	else if (Q_stricmp(cmd, "invprev") == 0)
+		SelectPrevItem(ent, -1);
+	else if (Q_stricmp(cmd, "invnextw") == 0)
+		SelectNextItem(ent, IT_WEAPON);
+	else if (Q_stricmp(cmd, "invprevw") == 0)
+		SelectPrevItem(ent, IT_WEAPON);
+	else if (Q_stricmp(cmd, "invnextp") == 0)
+		SelectNextItem(ent, IT_POWERUP);
+	else if (Q_stricmp(cmd, "invprevp") == 0)
+		SelectPrevItem(ent, IT_POWERUP);
+	else if (Q_stricmp(cmd, "invuse") == 0)
+		Cmd_InvUse_f(ent);
+	else if (Q_stricmp(cmd, "invdrop") == 0)
+		Cmd_InvDrop_f(ent);
+	else if (Q_stricmp(cmd, "weapprev") == 0)
+		Cmd_WeapPrev_f(ent);
+	else if (Q_stricmp(cmd, "weapnext") == 0)
+		Cmd_WeapNext_f(ent);
+	else if (Q_stricmp(cmd, "weaplast") == 0)
+		Cmd_WeapLast_f(ent);
+	else if (Q_stricmp(cmd, "kill") == 0)
+		Cmd_Kill_f(ent);
+	else if (Q_stricmp(cmd, "putaway") == 0)
+		Cmd_PutAway_f(ent);
+	else if (Q_stricmp(cmd, "wave") == 0)
+		Cmd_Wave_f(ent);
 	else if (Q_stricmp(cmd, "playerlist") == 0)
 		Cmd_PlayerList_f(ent);
 	// Expert Teamplay
-	else if (Q_stricmp (cmd, "team") == 0)
+	else if (Q_stricmp(cmd, "team") == 0)
 	{
-		Cmd_Team_f (ent);
-	// Expert Player id
-	} else if (Q_stricmp(cmd, "id") == 0) {
-		Cmd_ID_f (ent);
+		Cmd_Team_f(ent);
+		// Expert Player id
+	}
+	else if (Q_stricmp(cmd, "id") == 0) {
+		Cmd_ID_f(ent);
 	}
 	// Expert: MOTD command
-	else if ( (Q_stricmp(cmd, "motd") == 0) && 
-	         !(utilflags & EXPERT_DISABLE_MOTD) )
+	else if ((Q_stricmp(cmd, "motd") == 0) &&
+		!(utilflags & EXPERT_DISABLE_MOTD))
 		DisplayMOTD(ent);
 	// Expert: FlagTrack drop flag
 	else if (Q_stricmp(cmd, "flagdrop") == 0 && flagtrack->value)
 		Cmd_Drop_Flag(ent);
-	
-	else if (Q_stricmp(cmd,"dropflag") == 0)
+
+	else if (Q_stricmp(cmd, "dropflag") == 0)
 		CTFOWNTEAM_Cmd_Drop_Flag(ent);
 	// Expert: Settings command
-	
+
 	else if (Q_stricmp(cmd, "settings") == 0)
 		DisplaySettings(ent);
 	// Expert Overlay
@@ -1105,31 +1106,34 @@ void ClientCommand (edict_t *ent)
 		//gi.dprintf("Client %s does not appear to be a bot\n", ent->client->pers.netname);
 	}
 	// Expert: Team array examination command
-	else if (Q_stricmp(cmd, "gteams") == 0 && ctf->value )
+	else if (Q_stricmp(cmd, "gteams") == 0 && ctf->value)
 		Cmd_Examine_Teams(ent);
 	// Expert: Enter/leave observer mode
 	else if (Q_stricmp(cmd, "observer") == 0 ||
-			 Q_stricmp(cmd, "observe") == 0 ||
-			 Q_stricmp(cmd, "chase") == 0 ||
-			 Q_stricmp(cmd, "camera") == 0 ||
-			 Q_stricmp(cmd, "chasecam") == 0)
+		Q_stricmp(cmd, "observe") == 0 ||
+		Q_stricmp(cmd, "chase") == 0 ||
+		Q_stricmp(cmd, "camera") == 0 ||
+		Q_stricmp(cmd, "chasecam") == 0)
 		Cmd_Observe(ent);
 	// Expert: Development code for entmap modification
 	else if (Q_stricmp(cmd, "showpos") == 0)
 		Cmd_ShowPos(ent);
+	else if (Q_stricmp(cmd, "votemap") == 0) //QW// Alias for warp
+		Cmd_Warp(ent);
 	else if (Q_stricmp(cmd, "warp") == 0)
-	      Cmd_Warp(ent);
+		Cmd_Warp(ent);
 	else if (Q_stricmp(cmd, "yes") == 0 && (electionInProgress))
-	      Cmd_Yes(ent);
+		Cmd_Yes(ent);
 	else if (Q_stricmp(cmd, "no") == 0 && (electionInProgress))
-	      Cmd_No(ent);
-	else if(Q_stricmp(cmd, "ctfmenu") == 0 && ctf->value)
+		Cmd_No(ent);
+	else if (Q_stricmp(cmd, "ctfmenu") == 0 && ctf->value)
 		if (ent->client->menu) {
 			PMenu_Close(ent);
-		}else{
+		}
+		else {
 			CTFOpenJoinMenu(ent);
 		}
 	else    // anything that doesn't match a command will be a chat
-		Cmd_Say_f (ent, false, true);
+		Cmd_Say_f(ent, false, true);
 }
 
