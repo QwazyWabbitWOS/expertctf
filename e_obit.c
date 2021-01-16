@@ -631,7 +631,7 @@ void addMessageToCause(char *message, int causeInt, int cFlag)
 		{
 			mallocSize = sizeof(obits_t*) * (gCauseTable[causeInt]->entryCount + 1);
 			void* tmp = gCauseTable[causeInt]->obituary;
-			void* tp = gi.TagMalloc(mallocSize, TAG_LEVEL);
+			void* tp = gi.TagMalloc((int)mallocSize, TAG_LEVEL);
 			gCauseTable[causeInt]->obituary = tp;
 			gi.TagFree(tmp);
 		}
@@ -663,8 +663,8 @@ void addMessageToCause(char *message, int causeInt, int cFlag)
 	}
 
 	// Now, allocate the string buffer.
-	mallocSize = ( sizeof(char *) * (strlen(message)) ) + 2;
-	newMessage = gi.TagMalloc( mallocSize, TAG_LEVEL);
+	mallocSize = ( sizeof(char *) * ((unsigned int)strlen(message)) ) + 2;
+	newMessage = gi.TagMalloc((int)mallocSize, TAG_LEVEL);
 	strcpy(newMessage, message);
 	gMemAllocated += mallocSize;
 	gMsgCount++;
@@ -695,7 +695,7 @@ obitContainer_t **LoadMessageTree(const char *szFilename)
 	char *filename;
 
 	// Create the filename.
-	filename = gi.TagMalloc(strlen(gamedir->string) + strlen(szFilename) + 2, TAG_LEVEL);
+	filename = gi.TagMalloc((int)(strlen(gamedir->string) + strlen(szFilename) + 2), TAG_LEVEL);
 	strcpy(filename, gamedir->string);
 	strcat(filename, "/");
 	strcat(filename, szFilename);
@@ -953,7 +953,7 @@ void MacroAddAll(unsigned int cFlag, const char* message)
 	obits_t			*curObit;	
 
 	// First, allocate the stringspace.
-	mallocSize = ( sizeof(char *) * (strlen(message)) ) + 2;
+	mallocSize = ( sizeof(char *) * ((int)strlen(message)) ) + 2;
 	newMessage = gi.TagMalloc( mallocSize, TAG_LEVEL);
 	if (newMessage == NULL)
 	{

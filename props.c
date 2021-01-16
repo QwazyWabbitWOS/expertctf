@@ -46,12 +46,12 @@ void addProp(props_t *props, char *newKey, char *newValue)
 		gi.TagFree(storedValue);
 		listDeleteAt(props->values, keyPos);
 		// and replace with new
-		storedValue = gi.TagMalloc(strlen(newValue) + 1, TAG_GAME);
+		storedValue = gi.TagMalloc((int)strlen(newValue) + 1, TAG_GAME);
 		listInsertAt(props->values, strcpy(storedValue, newValue), keyPos);
 	} else {
 		// append new key and value pair
-		storedKey = gi.TagMalloc(strlen(newKey) + 1, TAG_GAME);
-		storedValue = gi.TagMalloc(strlen(newValue) + 1, TAG_GAME);
+		storedKey = gi.TagMalloc((int)strlen(newKey) + 1, TAG_GAME);
+		storedValue = gi.TagMalloc((int)strlen(newValue) + 1, TAG_GAME);
 		listAppend(props->keys, strcpy(storedKey, newKey));
 		listAppend(props->values, strcpy(storedValue, newValue));
 	}

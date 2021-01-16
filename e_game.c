@@ -1351,7 +1351,8 @@ void LoadCustomEntmap(char *mapname, char **entities)
 	char filename[MAX_QPATH]={0};
 	char buffer[ENT_READSIZE];
 	char *tmpmap=NULL, *tmpmap2;
-	int numbytes = 0, bytesread = 0;
+	int numbytes = 0;
+	int bytesread = 0;
 	int bytehunk = 0;
 
 	// Build filename
@@ -1369,10 +1370,7 @@ void LoadCustomEntmap(char *mapname, char **entities)
 	gi.cprintf(NULL, PRINT_HIGH, "Loading entmap from %s...\n", filename);
 	
 	// Read in all the text
-	// FIXME: fgets'ing several hundred lines of text is not very efficient.
-	// This needs to be rewritten to use something that ignores newlines.
-	// fread() doesn't work now but it might with some added character translation
-	while ((bytesread = fread(buffer, 1, ENT_READSIZE-1, fp)) != 0) {
+	while ((bytesread = (int)fread(buffer, 1, ENT_READSIZE-1, fp)) != 0) {
 		// Put the trailing NUL on the buffer because we read it in binary
 		buffer[bytesread] = 0;
 
@@ -1416,7 +1414,7 @@ void LoadCustomEntmap(char *mapname, char **entities)
 		return;
 
 	// Allocate tagged space for the entmap
-	if ((tmpmap2 = gi.TagMalloc(numbytes, TAG_LEVEL)) == NULL) {
+	if ((tmpmap2 = gi.TagMalloc((int)numbytes, TAG_LEVEL)) == NULL) {
 		gi.dprintf("Error - can't allocate memory for entmap, releasing memory..\n");
 		free(tmpmap);
 		return;
