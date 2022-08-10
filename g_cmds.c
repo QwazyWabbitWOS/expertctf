@@ -978,7 +978,6 @@ ClientCommand
 void ClientCommand(edict_t* ent)
 {
 	char* cmd;
-	extern qboolean electionInProgress;
 
 	if (!ent->client)
 		return;		// not fully in game yet

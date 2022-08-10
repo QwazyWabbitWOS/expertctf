@@ -197,7 +197,7 @@ void Cmd_No(edict_t* ent)
 	  edict_t	*ent;
 
 	  // begin warp
-	  extern qboolean electionInProgress;
+	  // extern qboolean electionInProgress;
 	  // end warp
 
 	  level.framenum++;

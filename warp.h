@@ -7,5 +7,6 @@ void Cmd_No(edict_t *ent);
 void checkElectionTime(void);
 void ListMaps(edict_t* ent);
 
+qboolean electionInProgress; //QW// declared here for global access
 
 #endif
