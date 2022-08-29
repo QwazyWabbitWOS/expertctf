@@ -47,7 +47,7 @@ void PlayerTrail_Init (void)
 
 void PlayerTrail_Add (vec3_t spot)
 {
-	vec3_t	temp;
+	vec3_t	temp = { 0 };
 
 	if (!trail_active)
 		return;

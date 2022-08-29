@@ -27,7 +27,7 @@ int safediv (int numer, int denom, int zeroval)
 	return numer / denom;
 }
 
-void DrawMatrix (edict_t* pedViewer, char* pszLayout, byte flags)
+void DrawMatrix (edict_t* pedViewer, char* pszLayout, byte mxflags)
 {
 	byte	iRank;
 	byte	iRank2;
@@ -36,12 +36,12 @@ void DrawMatrix (edict_t* pedViewer, char* pszLayout, byte flags)
 	byte	cLength;
 	char	szEntry[ENTRYCHARS+1];
 	char	szSubEntry[64];
-	int		skill;
+	int		mxskill;
 	byte	misc;
 	byte	ypos;
 	gclient_t*	pclClient;
 
-	if (flags & MXLEARN) {
+	if (mxflags & MXLEARN) {
 		cLength = LEARNROWS;
 		iMiddle = LEARNROWS/2;
 	} else {
@@ -65,7 +65,7 @@ void DrawMatrix (edict_t* pedViewer, char* pszLayout, byte flags)
 	strcpy (pszLayout, va("xv %d ", MATRIXLEFT));
 
 	//print the first legend
-	if (flags & MXLEARN) {
+	if (mxflags & MXLEARN) {
 		strcat(pszLayout, va("yv %d string2 \"%s\" ", ypos, "Name Frags Ping Rank Eff FPM Skill"));
 		ypos += MATRIXROW;
 	}
@@ -77,11 +77,11 @@ void DrawMatrix (edict_t* pedViewer, char* pszLayout, byte flags)
 		assert(strlen(pclClient->pers.netname) != 0);
 		assert(pclClient->resp.iRank == iRank);
 
-		skill = misc = 0;
+		mxskill = misc = 0;
 		for (iRank2 = 0; iRank2 < gcPlayers; iRank2++) {
 			if (pclClient->resp.paKillsVersus[iRank2]) {
 				misc++;
-				skill += pclClient->resp.paKillsVersus[iRank2] * game.clients[mpaTranslateRank[iRank2]].resp.score;
+				mxskill += pclClient->resp.paKillsVersus[iRank2] * game.clients[mpaTranslateRank[iRank2]].resp.score;
 			}
 		}
 
@@ -92,7 +92,7 @@ void DrawMatrix (edict_t* pedViewer, char* pszLayout, byte flags)
 			,pclClient->resp.score - pclClient->resp.cDeaths
 			,safediv(pclClient->resp.score * 100, pclClient->resp.score + pclClient->resp.cDeaths, 0)
 			,safediv(pclClient->resp.score, (level.framenum - pclClient->resp.enterframe)/600, pclClient->resp.score)
-			,safediv(skill, misc, 0)
+			,safediv(mxskill, misc, 0)
 			));
 
 		if (iRank == pedViewer->client->resp.iRank) {
@@ -111,7 +111,7 @@ void DrawMatrix (edict_t* pedViewer, char* pszLayout, byte flags)
 	ypos += MATRIXROW;
 
 	//print the second legend
-	if (flags & MXLEARN) {
+	if (mxflags & MXLEARN) {
 		strcpy(szSubEntry, va("%s,", game.clients[mpaTranslateRank[iFirstRank]].pers.netname));
 		if (gcPlayers > 1) {
 			strcat(szSubEntry, va(" %s,", game.clients[mpaTranslateRank[iFirstRank+1]].pers.netname));
@@ -127,7 +127,7 @@ void DrawMatrix (edict_t* pedViewer, char* pszLayout, byte flags)
 	//print the matrix
 	for (iRank = iFirstRank; iRank < iFirstRank+cLength; iRank++) {
 
-		if (flags & MXLEARN) {
+		if (mxflags & MXLEARN) {
 			strcpy(szSubEntry, va("%-8.8s ", pedViewer->client->pers.netname));
 		} else {
 			szSubEntry[0] = '\0';

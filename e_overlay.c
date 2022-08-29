@@ -13,12 +13,12 @@
 static int testvar;
 
 //radar
-static char blip[MAX_HORIZ+1][MAX_VERT+1];
-static qboolean IsColumn[MAX_HORIZ+1];
-static qboolean IsRow[MAX_VERT+1];
+static char blip[MAX_HORIZ + 1][MAX_VERT + 1];
+static qboolean IsColumn[MAX_HORIZ + 1];
+static qboolean IsRow[MAX_VERT + 1];
 
 //current player & settings
-static edict_t *mpedCur;
+static edict_t* mpedCur;
 static unsigned short curMode = LEARNON, curScreen;
 static unsigned short hpos, vpos;
 static unsigned short hscale, vscale;
@@ -31,9 +31,9 @@ static short mcFixtures;
 // =============================================================================
 //  Overlay Special Routines
 // =============================================================================
-void OverlayPrint(edict_t* pedTarget, byte flags, const char* pszEntry, byte cUpdates)
+void OverlayPrint(edict_t* pedTarget, byte ovflags, const char* pszEntry, byte cUpdates)
 {
-	char szAddition[TIMEDENTRY_CHARS+1];
+	char szAddition[TIMEDENTRY_CHARS + 1];
 	qboolean Success = false;
 	qboolean Expired = false;
 
@@ -45,7 +45,7 @@ void OverlayPrint(edict_t* pedTarget, byte flags, const char* pszEntry, byte cUp
 		Expired = true;
 	}
 
-	if (!Expired && flags & PRINT_APPEND) {
+	if (!Expired && ovflags & PRINT_APPEND) {
 		Com_sprintf(szAddition, sizeof(szAddition),
 			"xv %d yv %d string \"%s\" ",
 			160 - 4 * strlen(pszEntry),
@@ -61,21 +61,21 @@ void OverlayPrint(edict_t* pedTarget, byte flags, const char* pszEntry, byte cUp
 		}
 	}
 
-	if (!Success && (Expired || flags & PRINT_FORCE)) {
+	if (!Success && (Expired || ovflags & PRINT_FORCE)) {
 		Com_sprintf(szAddition, sizeof(szAddition),
 			"xv %d yv 120 string \"%s\" ",
-			160 - 4 * strlen(pszEntry),	pszEntry);
+			160 - 4 * strlen(pszEntry), pszEntry);
 		strcpy(pedTarget->client->szTimedEntry, szAddition);
 		pedTarget->client->cUpdatesLeft = cUpdates;
 		Success = true;
 	}
 
-	if (Success && flags & UPDATE_NOW) {
+	if (Success && ovflags & UPDATE_NOW) {
 		OverlayUpdate(pedTarget);
 	}
 }
 
-void RecordSighting(edict_t *pedViewer, edict_t *pedTarget)
+void RecordSighting(edict_t* pedViewer, edict_t* pedTarget)
 {
 	byte iSight;
 
@@ -90,7 +90,8 @@ void RecordSighting(edict_t *pedViewer, edict_t *pedTarget)
 			mpaSightings[iSight].teamSeenBy = (byte)pedViewer->client->resp.team;
 			return;
 
-		} else if (mpaSightings[iSight].teamSeenBy == pedViewer->client->resp.team &&
+		}
+		else if (mpaSightings[iSight].teamSeenBy == pedViewer->client->resp.team &&
 			mpaSightings[iSight].pedTarget == pedTarget) {
 			mpaSightings[iSight].expiryframe = level.framenum + EXPERT_UPDATE_FRAMES * 2;
 			return;
@@ -102,12 +103,12 @@ void RecordSighting(edict_t *pedViewer, edict_t *pedTarget)
 
 void InitRadar(void)
 {
-	edict_t *pedBlip = NULL;
+	edict_t* pedBlip = NULL;
 	short cEntsAllocated;
 
-	mpaSightings = gi.TagMalloc(game.maxclients*sizeof(sightEnt_t), TAG_LEVEL);
+	mpaSightings = gi.TagMalloc(game.maxclients * sizeof(sightEnt_t), TAG_LEVEL);
 
-	mpaFixtures = gi.TagMalloc(64*sizeof(plotEnt_t), TAG_LEVEL);
+	mpaFixtures = gi.TagMalloc(64 * sizeof(plotEnt_t), TAG_LEVEL);
 	cEntsAllocated = 32;
 
 	for (pedBlip = g_edicts + game.maxclients + 1; pedBlip < g_edicts + globals.num_edicts; pedBlip++) {
@@ -116,13 +117,14 @@ void InitRadar(void)
 			mpaFixtures[mcFixtures].pic = WEAP;
 			mcFixtures++;
 			if (mcFixtures == cEntsAllocated) {
-				ResizeLevelMemory((void **)&mpaFixtures,
-					(cEntsAllocated*2)*sizeof(plotEnt_t),
-					cEntsAllocated*sizeof(plotEnt_t));
+				ResizeLevelMemory((void**)&mpaFixtures,
+					(size_t)(cEntsAllocated * 2) * sizeof(plotEnt_t),
+					(size_t)cEntsAllocated * sizeof(plotEnt_t));
 				cEntsAllocated *= 2;
 			}
 
-		} else if (strncmp(pedBlip->classname, "ite", 3) == 0) {
+		}
+		else if (strncmp(pedBlip->classname, "ite", 3) == 0) {
 			if (strcmp(pedBlip->classname, "item_p") == 0 ||
 				strcmp(pedBlip->classname, "item_inv") == 0 ||
 				strcmp(pedBlip->classname, "item_qua") == 0 ||
@@ -132,13 +134,13 @@ void InitRadar(void)
 				strcmp(pedBlip->classname, "item_armor_body") == 0 ||
 				strcmp(pedBlip->classname, "item_armor_combat") == 0) {
 
-			mpaFixtures[mcFixtures].pedTarget = pedBlip;
+				mpaFixtures[mcFixtures].pedTarget = pedBlip;
 				mpaFixtures[mcFixtures].pic = ITEM;
 				mcFixtures++;
 				if (mcFixtures == cEntsAllocated) {
-					ResizeLevelMemory((void **)&mpaFixtures,
-						(cEntsAllocated*2)*sizeof(plotEnt_t),
-						cEntsAllocated*sizeof(plotEnt_t));
+					ResizeLevelMemory((void**)&mpaFixtures,
+						(size_t)(cEntsAllocated * 2U) * sizeof(plotEnt_t),
+						(size_t)cEntsAllocated * sizeof(plotEnt_t));
 					cEntsAllocated *= 2;
 				}
 			}
@@ -151,14 +153,14 @@ void InitRadar(void)
 // =============================================================================
 
 //Places a position and picture pair in the array for drawing
-void Plot (edict_t *pedBlip, char pic, int flags)
+void Plot(edict_t* pedBlip, char pic, int plflags)
 {
-	vec3_t	offset;
-	vec3_t	NORMAL = {0,0,-1};
+	vec3_t	offset = { 0 };
+	vec3_t	NORMAL = { 0, 0, -1 };
 	vec3_t	final;
 	int col, row, layer;
 
-	VectorSubtract (mpedCur->s.origin, pedBlip->s.origin, offset);
+	VectorSubtract(mpedCur->s.origin, pedBlip->s.origin, offset);
 
 	layer = (int)(offset[2]);
 	offset[2] = 0.0;
@@ -169,22 +171,24 @@ void Plot (edict_t *pedBlip, char pic, int flags)
 
 	if (curMode & LOCKFIT) {
 		RotatePointAroundVector(final, NORMAL, offset, 90.0);
-	} else {
+	}
+	else {
 		//FIXME: various hacks - is the angle off by 90 degrees?
 		RotatePointAroundVector(final, NORMAL, offset, mpedCur->s.angles[YAW]);
 	}
 
 	//FIXME: Inelegant
 	if (curMode & ZVERT) {
-		row = (int)(layer / vscale) + scrHeight[curScreen]/2;
+		row = (int)(layer / vscale) + scrHeight[curScreen] / 2;
 		layer = (int)(final[1] / Y_LAYERSCALE);
-	} else {
-		row = (int)(final[0] / vscale) + scrHeight[curScreen]/2;
 	}
-	col = (int)(final[1] / hscale) + scrWidth[curScreen]/2;
+	else {
+		row = (int)(final[0] / vscale) + scrHeight[curScreen] / 2;
+	}
+	col = (int)(final[1] / hscale) + scrWidth[curScreen] / 2;
 
 	//FIXME: Add seperate arrow for above/below
-//	if (flags & PLOT_LAYER) {
+//	if (plflags & PLOT_LAYER) {
 //		if (layer < BELOW_FEET) {
 //			pic = PLOT_BELOW;
 //		} else if (layer > ABOVE_FEET) {
@@ -193,15 +197,16 @@ void Plot (edict_t *pedBlip, char pic, int flags)
 //	}
 
 	//plot on edge, even if out of range
-	if (flags & PLOT_EDGE) {
+	if (plflags & PLOT_EDGE) {
 		col = MAX(MIN(col, scrWidth[curScreen]), 0);
 		row = MAX(MIN(row, scrHeight[curScreen]), 0);
-	} else if (col != MAX(MIN(col, scrWidth[curScreen]), 0) ||
+	}
+	else if (col != MAX(MIN(col, scrWidth[curScreen]), 0) ||
 		row != MAX(MIN(row, scrHeight[curScreen]), 0)) {
 		return;
 	}
 
-	if (flags & PLOT_FORCE || blip[col][row] == NOPIC) {
+	if (plflags & PLOT_FORCE || blip[col][row] == NOPIC) {
 		blip[col][row] = pic;
 		IsColumn[col] = true;
 		IsRow[row] = true;
@@ -214,18 +219,18 @@ void PlotFixtures(void)
 
 	for (i = 0; i < mcFixtures; i++) {
 		switch (mpaFixtures[i].pic) {
-			case WEAP:
+		case WEAP:
 			if (curMode & SHOWWEAP) {
 				Plot(mpaFixtures[i].pedTarget, mpaFixtures[i].pic, 0);
 			}
 
-			break; case ITEM:
+		break; case ITEM:
 			if (curMode & SHOWPOWER) {
 				Plot(mpaFixtures[i].pedTarget, mpaFixtures[i].pic, 0);
 			}
 
-			break; default:
-				Plot(mpaFixtures[i].pedTarget, mpaFixtures[i].pic, 0);
+		break; default:
+			Plot(mpaFixtures[i].pedTarget, mpaFixtures[i].pic, 0);
 		}
 
 	}
@@ -254,7 +259,7 @@ void PlotPlayers(void)
 }
 
 //Appends all plots, backdrop and stuff to string
-void AppendRadar (char *pszLayout)
+void AppendRadar(char* pszLayout)
 {
 	char	szEntry[20];
 	short	col, row;
@@ -263,7 +268,7 @@ void AppendRadar (char *pszLayout)
 	//empty it out
 	for (col = 0; col <= scrWidth[curScreen]; col++) {
 		IsColumn[col] = false;
-		for (row = 0;row <= scrHeight[curScreen]; row++) {
+		for (row = 0; row <= scrHeight[curScreen]; row++) {
 			IsRow[row] = false;
 			blip[col][row] = NOPIC;
 		}
@@ -275,7 +280,8 @@ void AppendRadar (char *pszLayout)
 		PlotPlayers();
 #endif
 		PlotFixtures();
-	} else {
+	}
+	else {
 		PlotPlayers();
 		PlotFixtures();
 	}
@@ -304,7 +310,7 @@ void AppendRadar (char *pszLayout)
 		for (col = 0; col <= scrWidth[curScreen]; col++) {
 			if (!IsColumn[col])
 				continue;
-			strcpy(szEntry, va("xl %d ", hpos+col));
+			strcpy(szEntry, va("xl %d ", hpos + col));
 			if (strlen(szEntry) + strlen(pszLayout) > 1399)
 				return;
 			strcat(pszLayout, szEntry);
@@ -312,18 +318,19 @@ void AppendRadar (char *pszLayout)
 			for (row = 0; row <= scrHeight[curScreen]; row++) {
 				if (blip[col][row] == NOPIC)
 					continue;
-				strcpy(szEntry, va("yt %d picn %c ", vpos+row, blip[col][row]));
+				strcpy(szEntry, va("yt %d picn %c ", vpos + row, blip[col][row]));
 				if (strlen(szEntry) + strlen(pszLayout) > 1399)
 					return;
 				strcat(pszLayout, szEntry);
 			}
 		}
-	} else {
+	}
+	else {
 		for (row = 0; row <= scrHeight[curScreen]; row++) {
 			if (!IsRow[row])
 				continue;
 
-			strcpy (szEntry, va("yt %d ", vpos+row));
+			strcpy(szEntry, va("yt %d ", vpos + row));
 			if (strlen(szEntry) + strlen(pszLayout) > 1399)
 				return;
 
@@ -332,7 +339,7 @@ void AppendRadar (char *pszLayout)
 				if (blip[col][row] == NOPIC)
 					continue;
 
-				strcpy(szEntry, va("xl %d picn %c ", hpos+col, blip[col][row]));
+				strcpy(szEntry, va("xl %d picn %c ", hpos + col, blip[col][row]));
 				if (strlen(szEntry) + strlen(pszLayout) > 1399)
 					return;
 
@@ -355,7 +362,7 @@ void SetIntKey(char sKey[32], int value)
 	}
 }
 
-short ReadShortKey(char *psKey, short min, short max, short def)
+short ReadShortKey(char* psKey, short min, short max, short def)
 {
 	int value;
 	value = StrToInt(Info_ValueForKey(mpedCur->client->pers.userinfo, psKey), def);
@@ -383,15 +390,16 @@ void SetCurrentPlayer(void)
 	vpos = ReadShortKey("vpos", 0, 1600, INIT_VPOS);
 	hscale = ReadShortKey("hscale", 2, 1000, INIT_HSCALE);
 	vscale = ReadShortKey("vscale", 2, 1000, INIT_VSCALE);
-	curScreen = ReadShortKey("screen", 0, SCREENS-1, INIT_SCREEN);
+	curScreen = ReadShortKey("screen", 0, SCREENS - 1, INIT_SCREEN);
 	if (gametype == GAME_DM) {
-		curMode = ReadShortKey("rmode",  0, 32767, INIT_MODE | LEARN_MODE);
-	} else {
-		curMode = ReadShortKey("rmode",  0, 32767, INIT_MODE);
+		curMode = ReadShortKey("rmode", 0, 32767, INIT_MODE | LEARN_MODE);
+	}
+	else {
+		curMode = ReadShortKey("rmode", 0, 32767, INIT_MODE);
 	}
 }
 
-void SetProperMode (short bit)
+void SetProperMode(short bit)
 {
 	char* pszParam = gi.argv(1);
 	short oldMode = curMode;
@@ -414,7 +422,7 @@ void SetProperMode (short bit)
 	}
 }
 
-void PrintProperMessage (char *pszType, int value)
+void PrintProperMessage(char* pszType, int value)
 {
 	int parameter = StrToInt(gi.argv(1), -999);
 
@@ -424,7 +432,7 @@ void PrintProperMessage (char *pszType, int value)
 		gi.cprintf(mpedCur, PRINT_HIGH, "%i is an unusable %s setting. Please try a different value.\n", parameter, pszType);
 }
 
-qboolean ValidOverlayCommand (edict_t *pedPlayer)
+qboolean ValidOverlayCommand(edict_t* pedPlayer)
 {
 	char* szCommand = gi.argv(0);
 	int parameter = StrToInt(gi.argv(1), -1);
@@ -437,27 +445,30 @@ qboolean ValidOverlayCommand (edict_t *pedPlayer)
 	if (StrMatch(szCommand, "reset")) {
 		ResetConfig();
 
-	} else if (StrMatch(szCommand, "overlay")) {
+	}
+	else if (StrMatch(szCommand, "overlay")) {
 		gi.cprintf(mpedCur, PRINT_HIGH, OVERLAYVER);
 
-	} else if (StrMatch(szCommand, "print")) {
-	//	OverlayPrint(mpedCur, PRINT_APPEND | PRINT_FORCE | UPDATE_NOW, gi.args, 5);
+	}
+	else if (StrMatch(szCommand, "print")) {
+		//	OverlayPrint(mpedCur, PRINT_APPEND | PRINT_FORCE | UPDATE_NOW, gi.args, 5);
 
-	} else if (StrMatch(szCommand, "legend")) {
-		switch(gametype) {
-			case GAME_DM:
-				break;
-			default:
-				gi.cprintf(mpedCur, PRINT_HIGH, "No legend defined for current game mode.\n");
-				break;
+	}
+	else if (StrMatch(szCommand, "legend")) {
+		switch (gametype) {
+		case GAME_DM:
+			break;
+		default:
+			gi.cprintf(mpedCur, PRINT_HIGH, "No legend defined for current game mode.\n");
+			break;
 		}
 		if (curMode & SHOWWEAP || curMode & SHOWPOWER) {
-				gi.cprintf(mpedCur, PRINT_HIGH, LEGEND_ITEMS);
+			gi.cprintf(mpedCur, PRINT_HIGH, LEGEND_ITEMS);
 		}
 
-	//mode toggles
-	} 
-	else if (StrMatch(szCommand, "matrix")) 
+		//mode toggles
+	}
+	else if (StrMatch(szCommand, "matrix"))
 	{
 		// Player matrix isn't initialized unless radar is enabled.
 		if ((int)sv_expflags->value & EXPERT_RADAR)
@@ -465,73 +476,83 @@ qboolean ValidOverlayCommand (edict_t *pedPlayer)
 			mpedCur->client->showOverlay ^= 2;
 			OverlayUpdate(mpedCur);
 		}
-	} 
+	}
 	else if (StrMatch(szCommand, "LEARN"))
-		SetProperMode (LEARNON);
+		SetProperMode(LEARNON);
 	else if (StrMatch(szCommand, "RADAR"))
-		SetProperMode (RADARON);
+		SetProperMode(RADARON);
 	else if (StrMatch(szCommand, "backdrop"))
-		SetProperMode (SHOWBACK);
+		SetProperMode(SHOWBACK);
 	else if (StrMatch(szCommand, "rotation"))
-		SetProperMode (LOCKFIT);
+		SetProperMode(LOCKFIT);
 	else if (StrMatch(szCommand, "ZVERT"))
-		SetProperMode (ZVERT);
+		SetProperMode(ZVERT);
 	else if (StrMatch(szCommand, "SHOWWEAP"))
-		SetProperMode (SHOWWEAP);
+		SetProperMode(SHOWWEAP);
 	else if (StrMatch(szCommand, "SHOWPOWER")) {
-		SetProperMode (SHOWPOWER);
+		SetProperMode(SHOWPOWER);
 
-	//setting commands
-	} else if (StrMatch(szCommand, "hpos")) {
+		//setting commands
+	}
+	else if (StrMatch(szCommand, "hpos")) {
 		if (parameter > 0 && parameter < 1600)
 			SetIntKey("hpos", parameter);
 		else
 			PrintProperMessage("horizontal position", hpos);
 
-	} else if (StrMatch(szCommand, "testvar")) {
+	}
+	else if (StrMatch(szCommand, "testvar")) {
 		if (parameter == -9999)
 			gi.cprintf(mpedCur, PRINT_HIGH, "Testvar value: %i\n", testvar);
 		else
 			testvar = parameter;
 
-	} else if (StrMatch(szCommand, "vpos")) {
+	}
+	else if (StrMatch(szCommand, "vpos")) {
 		if (parameter > 0 && parameter < 1280)
 			SetIntKey("vpos", parameter);
 		else
 			PrintProperMessage("vertical position", vpos);
 
-	} else if (StrMatch(szCommand, "scale")) { //both
+	}
+	else if (StrMatch(szCommand, "scale")) { //both
 		if (parameter > 2 && parameter < 1000) {
 			SetIntKey("hscale", parameter);
 			SetIntKey("vscale", parameter);
-		} else
+		}
+		else
 			PrintProperMessage("scale", vscale);
 
-	} else if (StrMatch(szCommand, "hscale")) {
+	}
+	else if (StrMatch(szCommand, "hscale")) {
 		if (parameter > 2 && parameter < 1000)
 			SetIntKey("hscale", parameter);
 		else
 			PrintProperMessage("horizontal scale", hscale);
 
-	} else if (StrMatch(szCommand, "vscale")) {
+	}
+	else if (StrMatch(szCommand, "vscale")) {
 		if (parameter > 2 && parameter < 1000)
 			SetIntKey("vscale", parameter);
 		else
 			PrintProperMessage("vertical scale", vscale);
 
-	} else if (StrMatch(szCommand, "screen")) {
+	}
+	else if (StrMatch(szCommand, "screen")) {
 		if (parameter > 0 && parameter <= SCREENS)
-			SetIntKey("screen", parameter-1);
+			SetIntKey("screen", parameter - 1);
 		else
-			PrintProperMessage("screen", curScreen+1);
+			PrintProperMessage("screen", curScreen + 1);
 
-	} else if (StrMatch(szCommand, "rmode")) { //direct changes
+	}
+	else if (StrMatch(szCommand, "rmode")) { //direct changes
 		if (parameter >= 0 && parameter < 32767)
 			SetIntKey("rmode", parameter);
 		else
 			PrintProperMessage("rmode", curMode);
 
-	} else {
+	}
+	else {
 		return false; //command doesn't match
 	}
 
@@ -539,7 +560,7 @@ qboolean ValidOverlayCommand (edict_t *pedPlayer)
 }
 
 //FIXME: Matrix initialization is broken.
-void OverlayUpdate(edict_t *pedViewer)
+void OverlayUpdate(edict_t* pedViewer)
 {
 	char szLayout[1400] = "";
 
@@ -561,11 +582,14 @@ void OverlayUpdate(edict_t *pedViewer)
 			DrawMatrix(mpedCur, szLayout, MXLEARN);
 		else
 			DrawMatrix(mpedCur, szLayout, 0);
-	} else if (expflags & EXPERT_RADAR && curMode & RADARON) {
+	}
+	else if (expflags & EXPERT_RADAR && curMode & RADARON) {
 		AppendRadar(szLayout);
-	} else if (pedViewer->client->cUpdatesLeft) {
+	}
+	else if (pedViewer->client->cUpdatesLeft) {
 		pedViewer->client->cUpdatesLeft--;
-	} else {
+	}
+	else {
 		pedViewer->client->szOldLayout[0] = '\0';
 		pedViewer->client->showOverlay = 0;
 		return;
@@ -578,17 +602,17 @@ void OverlayUpdate(edict_t *pedViewer)
 	{
 		return;
 	}
-	strcpy (pedViewer->client->szOldLayout, szLayout);
+	strcpy(pedViewer->client->szOldLayout, szLayout);
 
 	//final bandwidth reduction: no need for trailing space
-	szLayout[strlen(szLayout)-1] = '\0';
+	szLayout[strlen(szLayout) - 1] = '\0';
 
 #ifdef PIDTEST
 	gi.cprintf(mpedCur, PRINT_MEDIUM, "%i\n", strlen(szLayout));
 #endif
 
 	gi.WriteByte(svc_layout);
-	gi.WriteString (szLayout);
+	gi.WriteString(szLayout);
 	gi.unicast(mpedCur, false);
 }
 

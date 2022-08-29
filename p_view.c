@@ -54,7 +54,7 @@ void P_DamageFeedback (edict_t *player)
 	gclient_t	*client;
 	float	side;
 	float	realcount, count, kick;
-	vec3_t	v;
+	vec3_t	v = { 0 };
 	int		r, l;
 	static	vec3_t	power_color = {0.0, 1.0, 0.0};
 	static	vec3_t	acolor = {1.0, 1.0, 1.0};
@@ -207,7 +207,7 @@ void SV_CalcViewOffset (edict_t *ent)
 	float		ratio;
 	float		delta;
 	float		fall_offset;
-	vec3_t		v;
+	vec3_t		v = { 0 };
 	// Expert: player option for no screen tilting
 	char		*notilt = Info_ValueForKey(ent->client->pers.userinfo, "notilt");
 
@@ -413,7 +413,7 @@ SV_CalcBlend
 void SV_CalcBlend (edict_t *ent)
 {
 	int		contents;
-	vec3_t	vieworg;
+	vec3_t	vieworg = { 0 };
 	int		remaining;
 	// Expert
 	char		*noflash = Info_ValueForKey(ent->client->pers.userinfo, "noflash");
@@ -517,7 +517,7 @@ void P_FallingDamage (edict_t *ent)
 {
 	float	delta;
 	int		damage;
-	vec3_t	dir;
+	vec3_t	dir = { 0 };
 
 	if (ent->s.modelindex != 255)
 		return;		// not in the player model

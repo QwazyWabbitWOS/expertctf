@@ -158,18 +158,18 @@ DeathmatchScoreboardMessage
 */
 void DeathmatchScoreboardMessage (edict_t *ent, edict_t *killer)
 {
-	char			entry[1024];
-	char			string[1400];
+	char		entry[1024] = { 0 };
+	char		string[1400] = { 0 };
 	int			stringlength;
 	int			i, j, k;
-	int			sorted[MAX_CLIENTS];
-	int			sortedscores[MAX_CLIENTS];
+	int			sorted[MAX_CLIENTS] = { 0 };
+	int			sortedscores[MAX_CLIENTS] = { 0 };
 	int			score, total;
-//	int			picnum; // unused
+	//int			picnum; // unused
 	int			x, y;
 	gclient_t	*cl;
 	edict_t		*cl_ent;
-	char			*tag;
+	char		*tag;
 
 //CTF
 	if (ctf->value) {
@@ -215,7 +215,7 @@ void DeathmatchScoreboardMessage (edict_t *ent, edict_t *killer)
 		cl = &game.clients[sorted[i]];
 		cl_ent = g_edicts + 1 + sorted[i];
 
-//		picnum = gi.imageindex ("i_fixme");
+		//picnum = gi.imageindex ("i_fixme");
 		x = (i>=6) ? 160 : 0;
 		y = 32 + 32 * (i%6);
 

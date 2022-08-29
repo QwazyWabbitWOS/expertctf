@@ -12,13 +12,13 @@ vec3_t vec3_origin = {0,0,0};
 
 void RotatePointAroundVector( vec3_t dst, const vec3_t dir, const vec3_t point, float degrees )
 {
-	float	m[3][3];
+	float	m[3][3] = { 0 };
 	float	im[3][3];
 	float	zrot[3][3];
 	float	tmpmat[3][3];
 	float	rot[3][3];
 	int	i;
-	vec3_t vr, vup, vf;
+	vec3_t vr, vup, vf = { 0 };
 
 	vf[0] = dir[0];
 	vf[1] = dir[1];
@@ -111,7 +111,7 @@ void AngleVectors (vec3_t angles, vec3_t forward, vec3_t right, vec3_t up)
 void ProjectPointOnPlane( vec3_t dst, const vec3_t p, const vec3_t normal )
 {
 	float d;
-	vec3_t n;
+	vec3_t n = { 0 };
 	float inv_denom;
 
 	inv_denom = 1.0F / DotProduct( normal, normal );
@@ -135,7 +135,7 @@ void PerpendicularVector( vec3_t dst, const vec3_t src )
 	int	pos;
 	int i;
 	float minelem = 1.0F;
-	vec3_t tempvec;
+	vec3_t tempvec = { 0 };
 
 	/*
 	** find the smallest magnitude axially aligned vector
@@ -282,7 +282,7 @@ int BoxOnPlaneSide2 (vec3_t emins, vec3_t emaxs, struct cplane_s *p)
 	int		i;
 	float	dist1, dist2;
 	int		sides;
-	vec3_t	corners[2];
+	vec3_t	corners[2] = { 0 };
 
 	for (i=0 ; i<3 ; i++)
 	{
@@ -804,9 +804,9 @@ void COM_StripExtension (char *in, char *out)
 COM_FileExtension
 ============
 */
-char *COM_FileExtension (char *in)
+char* COM_FileExtension(char* in)
 {
-	static char exten[8];
+	static char exten[8] = { 0 };
 	int		i;
 
 	while (*in && *in != '.')
@@ -814,7 +814,7 @@ char *COM_FileExtension (char *in)
 	if (!*in)
 		return "";
 	in++;
-	for (i=0 ; i<7 && *in ; i++,in++)
+	for (i = 0; i < 7 && *in; i++, in++)
 		exten[i] = *in;
 	exten[i] = 0;
 	return exten;
@@ -1157,10 +1157,10 @@ int Q_stricmp(const char* s1, const char* s2)
 		* uc1 = (const unsigned char*)s1,
 		* uc2 = (const unsigned char*)s2;
 
-	while (tolower(*uc1) == tolower(*uc2++))
+	while (Q_tolower(*uc1) == Q_tolower(*uc2++))
 		if (*uc1++ == '\0')
 			return (0);
-	return (tolower(*uc1) - tolower(*--uc2));
+	return (Q_tolower(*uc1) - Q_tolower(*--uc2));
 }
 
 int Q_strnicmp(const char* s1, const char* s2, size_t count)
@@ -1169,7 +1169,7 @@ int Q_strnicmp(const char* s1, const char* s2, size_t count)
 		return 0;
 	else
 	{
-		while (count-- != 0 && tolower(*s1) == tolower(*s2))
+		while (count-- != 0 && Q_tolower(*s1) == Q_tolower(*s2))
 		{
 			if (count == 0 || *s1 == '\0' || *s2 == '\0')
 				break;
@@ -1177,13 +1177,13 @@ int Q_strnicmp(const char* s1, const char* s2, size_t count)
 			s2++;
 		}
 
-		return tolower(*(unsigned char*)s1) - tolower(*(unsigned char*)s2);
+		return Q_tolower(*(unsigned char*)s1) - Q_tolower(*(unsigned char*)s2);
 	}
 }
 
 int Q_strncasecmp (char *s1, char *s2, int n)
 {
-	int		c1, c2;
+	int		c1=0, c2;
 	
 	do
 	{
@@ -1207,19 +1207,73 @@ int Q_strncasecmp (char *s1, char *s2, int n)
 	return 0;		// strings are equal
 }
 
-static char bigbuffer[0x10000];
+// These two functions courtesy Knightmare
+size_t Q_strncpyz(char* dst, size_t dstSize, const char* src)
+{
+	char* d = dst;
+	const char* s = src;
+	size_t        decSize = dstSize;
 
-void Com_sprintf (char *dest, int size, char *fmt, ...)
+	if (!dst || !src || dstSize < 1) {
+		Com_Printf("Bad arguments passed to %s\n", __func__);
+		return 0;
+	}
+
+	while (--decSize && *s)
+		*d++ = *s++;
+	*d = 0;
+
+	if (decSize == 0)    // Unsufficent room in dst, return count + length of remaining src
+		return (s - src - 1 + strlen(s));
+	else
+		return (s - src - 1);    // returned count excludes NULL terminator
+}
+
+size_t Q_strncatz(char* dst, size_t dstSize, const char* src)
+{
+	char* d = dst;
+	const char* s = src;
+	size_t        decSize = dstSize;
+	size_t        dLen;
+
+	if (!dst || !src || dstSize < 1) {
+		Com_Printf("Bad arguments passed to %s\n", __func__);
+		return 0;
+	}
+
+	while (--decSize && *d)
+		d++;
+	dLen = d - dst;
+
+	if (decSize == 0)
+		return (dLen + strlen(s));
+
+	if (decSize > 0) { // Always true!
+		while (--decSize && *s)
+			*d++ = *s++;
+
+		*d = 0;
+	}
+
+	return (dLen + (s - src));    // returned count excludes NULL terminator
+}
+
+void Com_sprintf(char* dest, int size, char* fmt, ...)
 {
 	int		len;
-	va_list		argptr;
+	va_list	argptr;
+	char	bigbuffer[0x1000];
 
-	va_start (argptr,fmt);
-	len = vsprintf (bigbuffer,fmt,argptr);
-	va_end (argptr);
-	if (len >= size)
-		Com_Printf ("Com_sprintf: overflow of %i in %i\n", len, size);
-	strncpy (dest, bigbuffer, size-1);
+	va_start(argptr, fmt);
+	len = vsprintf(bigbuffer, fmt, argptr);
+	va_end(argptr);
+	if (len < size)
+		strncpy(dest, bigbuffer, (size_t)size - 1);
+	else
+	{
+		Com_Printf("ERROR! %s: destination buffer overflow of len %i, size %i\n"
+			"Input was: %s", __func__, len, size, bigbuffer);
+	}
 }
 
 /*
@@ -1240,7 +1294,7 @@ key and returns the associated value, or an empty string.
 */
 char *Info_ValueForKey (char *s, char *key)
 {
-	char	pkey[MAX_INFO_STRING];
+	char	pkey[MAX_INFO_STRING] = { 0 };
 	static	char value[2][MAX_INFO_STRING];	// use two buffers so compares
 								// work without stomping on each other
 	static	int	valueindex;
@@ -1283,8 +1337,8 @@ char *Info_ValueForKey (char *s, char *key)
 void Info_RemoveKey (char *s, char *key)
 {
 	char	*start;
-	char	pkey[MAX_INFO_STRING];
-	char	value[MAX_INFO_STRING];
+	char	pkey[MAX_INFO_STRING] = { 0 };
+	char	value[MAX_INFO_STRING] = { 0 };
 	char	*o;
 
 	if (strstr (key, "\\"))

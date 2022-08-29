@@ -185,7 +185,7 @@ char *modelFromString(char *modelSkin) {
 	whichModel ^= 1;
 
 	// length of string before /
-	modelLength = strcspn(modelSkin, "/");
+	modelLength = (int)strcspn(modelSkin, "/");
 	// copy just up to the /
 	Q_strncpy(model[whichModel], modelSkin, modelLength);
 	// add null terminator
@@ -728,7 +728,7 @@ static qboolean setTeamEntry(char* inputString, int currentTeam)
 	teamName = strtok(inputString, "=");
 
 	// Store the teamName to the global gTeams array
-	gTeams[currentTeam].teamName = gi.TagMalloc(strlen(teamName) + 1, TAG_LEVEL);
+	gTeams[currentTeam].teamName = gi.TagMalloc((unsigned)strlen(teamName) + 1, TAG_LEVEL);
 	strcpy(gTeams[currentTeam].teamName, teamName);
 	trimWhitespace(gTeams[currentTeam].teamName);
 
@@ -743,14 +743,14 @@ static qboolean setTeamEntry(char* inputString, int currentTeam)
 		if (validSkinName(teamPath))
 		{
 			if (gTeams[currentTeam].skinPaths == NULL) {
-				int skinPathLength = strlen(teamPath) + 2;
+				int skinPathLength = (int)strlen(teamPath) + 2;
 				gTeams[currentTeam].skinPaths = gi.TagMalloc(skinPathLength, TAG_LEVEL);
 				assert(gTeams[currentTeam].skinPaths != 0);
 				strcpy(gTeams[currentTeam].skinPaths, teamPath);
 				gTeams[currentTeam].skinPathLength = skinPathLength;
 			}
 			else {
-				int newskinPathlength = strlen(gTeams[currentTeam].skinPaths) + strlen(teamPath) + 2;
+				int newskinPathlength = (int)strlen(gTeams[currentTeam].skinPaths) + (int)strlen(teamPath) + 2;
 				char* tmp = gi.TagMalloc(newskinPathlength, TAG_LEVEL);
 				strcpy(tmp, gTeams[currentTeam].skinPaths); // copy the old string
 				char* p = gTeams[currentTeam].skinPaths;	// don't lose the pointer

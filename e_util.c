@@ -134,13 +134,14 @@ int numberOfBitsSet(unsigned int bitField)
 }
 
 // Note this won't work on platforms where 1 char != 8 bits
+//QW// I think I fixed this for all char sizes but untested.
 char *stringForBitField(unsigned int field)
 {
 	int i;
-	static char buf[sizeof(unsigned int) * 8 + 1];
+	static char buf[sizeof(unsigned int) * CHAR_BIT + 1] = { 0 };
 
-	buf[sizeof(int) * 8] = '\0';
-	for (i = 0; i < (sizeof(unsigned int) * 8); i++)
+	buf[sizeof(int) * CHAR_BIT] = '\0';
+	for (i = 0; i < (sizeof(unsigned int) * CHAR_BIT); i++)
 	{
 		if (field & (1 << i)) 
 			buf[i] = '1'; 
@@ -176,7 +177,7 @@ void BootPlayer(edict_t *player, char *error, char *global)
 	char *buf;
 
 	// Create command buffer and stuff it
-	buf = gi.TagMalloc(strlen(error) + 32, TAG_LEVEL);
+	buf = gi.TagMalloc((int)strlen(error) + 32, TAG_LEVEL);
 	buf = strcpy(buf, "\nerror \"");
 	buf = strcat(buf, error);
 	buf = strcat(buf, "\"\n");
@@ -185,7 +186,7 @@ void BootPlayer(edict_t *player, char *error, char *global)
 	gi.TagFree(buf);
 
 	// Kick the player for good measure
-	buf = gi.TagMalloc(7 + strlen(player->client->pers.netname), TAG_LEVEL);
+	buf = gi.TagMalloc(7 + (unsigned)strlen(player->client->pers.netname), TAG_LEVEL);
 	buf = strcpy(buf, va("kick %d\n", player - g_edicts - 1));
 	gi.AddCommandString(buf);
 	gi.TagFree(buf);
@@ -232,7 +233,9 @@ void E_LogClose(void)
 
 qboolean nearToGround(edict_t *ent)
 {
-	vec3_t		startPos, traceTo, dist;
+	vec3_t	startPos = { 0 };
+	vec3_t	traceTo = { 0 };
+	vec3_t	dist = { 0 };
 	trace_t		trace;
 
 	if (ent->waterlevel > 0) return true;
@@ -252,6 +255,41 @@ qboolean nearToGround(edict_t *ent)
 	return (true);
 }
 
+#if 1
+void trimWhitespace(char* szString)
+{
+	char* tmp;
+	char* start;
+	char* end;
+	int len;
+
+	len = (int)strlen(szString);
+
+	if (len == 0)
+		return;
+
+	tmp = gi.TagMalloc(len + 1, TAG_GAME);;
+	strcpy(tmp, szString);
+	start = tmp;
+
+	/* skip leading whitespace */
+	while (isspace(*tmp)) {
+		tmp = tmp + 1;
+	}
+
+	/* remove trailing whitespace */
+	end = tmp + strlen(tmp) - 1;
+	while (end > tmp && isspace(*end)) {
+		end = end - 1;
+	}
+
+	/* write null character */
+	*(end + 1) = '\0';
+
+	strcpy(szString, tmp);
+	gi.TagFree(start);
+}
+#else
 void trimWhitespace(char *szString)
 {
 	char *temp;
@@ -263,7 +301,7 @@ void trimWhitespace(char *szString)
 	if (szString == NULL)
 		return;
 
-	len = strlen(szString);
+	len = (int)strlen(szString);
 
 	if (len == 0)
 		return;
@@ -302,10 +340,10 @@ void trimWhitespace(char *szString)
 	free(temp);
 
 }
-
+#endif
 float playerDistance(edict_t *plyr1, edict_t *plyr2)
 {
-	vec3_t	v;
+	vec3_t	v = { 0 };
 	float	distance = 0;
 
 	VectorSubtract (plyr1->s.origin, plyr2->s.origin, v);
@@ -338,7 +376,7 @@ char *greenCopy(char *szDest, const char *szSrc)
 	int len = 0;
 	int i = 0;
 
-	len = strlen(szSrc);
+	len = (int)strlen(szSrc);
 
 	if (len == 0)
 		return NULL;
@@ -359,7 +397,7 @@ char *greenCopy(char *szDest, const char *szSrc)
 
 int strBeginsWith (char *prefix, char *s2)
 {
-	int 	c1, c2, max = 999999;
+	int 	c1 = { 0 }, c2, max = 999999;
 	
 	do
 	{
@@ -396,8 +434,8 @@ int insertValue(char *mess, char *format_str, char *field, char *value, int max_
 				//PRINT2("Found match on '%s' for field '%s\n", format_str, field);
 				matches++;
 				strcpy(mess+y, value);
-				y = y + strlen(value);
-				x = x + strlen(field);
+				y = y + (int)strlen(value);
+				x = x + (int)strlen(field);
 			}
 			else {
 				// Buffer overflow would occur.
@@ -451,7 +489,7 @@ void ResizeLevelMemory(void** ppMem, size_t sizeNew, size_t sizeOld)
 	}
 
 	byte* pOld = (byte*)*ppMem;
-	byte* pNew = gi.TagMalloc(sizeNew, TAG_LEVEL);
+	byte* pNew = gi.TagMalloc((unsigned)sizeNew, TAG_LEVEL);
 
 	memcpy(pNew, pOld, sizeOld);
 
@@ -524,7 +562,7 @@ int getSettingNumber(char *setting)
 {
 	unsigned int l;
 	char *token;
-	char buffer[100], settingName[100];
+	char buffer[100] = { 0 }, settingName[100];
 	
 	for (l = 0; l < NUM_SETTINGS; l++)
 	{

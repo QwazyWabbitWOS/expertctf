@@ -167,7 +167,7 @@ void listDeleteAt(list_t list, int n)
 	// to store the current elements and reallocate to half size if so
 	if (list->allocSize > list->curSize * 2 &&
 		list->allocSize > NO_REALLOC_FLOOR) { // never reallocate if sufficiently small
-		list->allocSize = (int)ceil(list->allocSize / 2);
+		list->allocSize = (int)ceil(list->allocSize / 2.0f); //QW//
 		char** tmp = list->content;
 		int newsize = list->allocSize * sizeof(char*);
 		gi.dprintf("%s reallocating to %d elements.\n", __func__, newsize);
@@ -183,7 +183,7 @@ void listDeleteAt(list_t list, int n)
 
 	// remove the element
 	killpos = list->content + n; 
-	memmove(killpos, killpos+1, sizeof(char *)*(list->curSize - n));
+	memmove(killpos, killpos+1, sizeof(char *)*(list->curSize - (size_t)n));
 	list->curSize--;
 }
 
@@ -214,7 +214,7 @@ void listInsertAt(list_t list, void *newElem, int n)
 	// Double size if we need more room to store this new element
 	if (list->allocSize<=list->curSize) {
 		char** tmp = list->content;
-		int newsize = list->allocSize * 2 * sizeof(char*);
+		int newsize = list->allocSize * 2 * (int)sizeof(char*);
 		char** tp = gi.TagMalloc(newsize, TAG_GAME);
 		if (tp) {
 			list->content = tp;
@@ -234,7 +234,7 @@ void listInsertAt(list_t list, void *newElem, int n)
 	// slide the contents of the list up one slot,
 	// if we aren't inserting the only element at the 0 position
 	if (list->curSize > 0) {
-		memmove(insertPos+1, insertPos, sizeof(void *)*(list->curSize - n));
+		memmove(insertPos+1, insertPos, sizeof(void *)*(list->curSize - (size_t)n));
 	}
 	
 	//gi.dprintf("%s element inserted at %d.\n", __func__, n);
@@ -251,7 +251,7 @@ void listAppend(list_t list, void* newElem)
 	// Double size if we need more room to store this new element
 	if (!(list->allocSize > list->curSize)) {
 		char** tmp = list->content;
-		int newsize = list->allocSize * 2 * sizeof(char*);
+		int newsize = list->allocSize * 2 * (int)sizeof(char*);
 		char** tp = gi.TagMalloc(newsize, TAG_GAME);
 		if (tp) {
 			list->content = tp;

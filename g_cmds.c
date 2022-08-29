@@ -7,7 +7,7 @@
 char *ClientTeam (edict_t *ent)
 {
 	char		*p;
-	static char	value[MAX_INFO_VALUE];
+	static char	value[MAX_INFO_VALUE] = { 0 };
 
 	value[0] = 0;
 
@@ -785,8 +785,8 @@ void Cmd_Players_f (edict_t *ent)
 	int		i;
 	int		count;
 	char	small[64];
-	char	large[1280];
-	int		index[256];
+	char	large[1280] = { 0 };
+	int		index[256] = { 0 };
 
 	count = 0;
 	for (i = 0 ; i < maxclients->value ; i++)
@@ -934,8 +934,8 @@ void Cmd_Say_f (edict_t *ent, qboolean team, qboolean arg0)
 void Cmd_PlayerList_f(edict_t *ent)
 {
 	int i;
-	char st[80];
-	char text[1400];
+	char str[80];
+	char text[1400] = { 0 };
 	edict_t *e2;
 
 	// connect time, ping, score, name
@@ -944,19 +944,19 @@ void Cmd_PlayerList_f(edict_t *ent)
 		if (!e2->inuse)
 			continue;
 
-		Com_sprintf(st, sizeof(st), "%02d:%02d %4d %3d %s%s\n",
+		Com_sprintf(str, sizeof(str), "%02d:%02d %4d %3d %s%s\n",
 			(level.framenum - e2->client->resp.enterframe) / 600,
 			((level.framenum - e2->client->resp.enterframe) % 600)/10,
 			e2->client->ping,
 			e2->client->resp.score,
 			e2->client->pers.netname,
 			IsObserver(e2) ? " (spectator)" : "");
-		if (strlen(text) + strlen(st) > sizeof(text) - 50) {
+		if (strlen(text) + strlen(str) > sizeof(text) - 50) {
 			sprintf(text+strlen(text), "And more...\n");
 			gi.cprintf(ent, PRINT_HIGH, "%s", text);
 			return;
 		}
-		strcat(text, st);
+		strcat(text, str);
 	}
 	gi.cprintf(ent, PRINT_HIGH, "%s", text);
 }

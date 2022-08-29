@@ -398,7 +398,7 @@ void SVCmd_AddIP_f (void)
 	}
 	//force 3 digit ip subbits and dont allow sv addip 0 thru 9 without
 	//at least a period as this is troublesome
-	iplen = strlen(gi.argv(2));
+	iplen = (int)strlen(gi.argv(2));
 	sprintf(argval,gi.argv(2),iplen);
 	
 	//loc = strstr(argval,"00");
@@ -523,14 +523,14 @@ void SVCmd_WriteIP_f (void)
 	char	name[MAX_OSPATH];
 	byte	b[4];
 	int		i, j;
-	cvar_t	*game;
+	//cvar_t	*game;
 
-	game = gi.cvar("game", "", 0);
+	//game = gi.cvar("game", "", 0);
 
-	if (!*game->string)
+	if (!*gamedir->string)
 		sprintf (name, "%s/listip.cfg", GAMEVERSION);
 	else
-		sprintf (name, "%s/listip.cfg", game->string);
+		sprintf (name, "%s/listip.cfg", gamedir->string);
 
 	gi.cprintf (NULL, PRINT_HIGH, "Writing %s.\n", name);
 

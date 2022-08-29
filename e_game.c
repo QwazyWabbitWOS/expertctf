@@ -1172,7 +1172,7 @@ void ItemEffects(edict_t *dropped)
 			// quad effect should be removed when the player can no
 			// longer get quad from the weapon.  One second buffer
 			// to avoid a bunch of extra thinks
-			dropped->nextthink = dropped->included_quad/10 + 1;
+			dropped->nextthink = (float)dropped->included_quad/10 + 1;
 		}
 		if (dropped->s.effects & EF_PENT)
 		{
@@ -1180,7 +1180,7 @@ void ItemEffects(edict_t *dropped)
 
 //			gi.bprintf(PRINT_HIGH, "Setting nextthink to remove pent effect..\n");
 	
-			pentTimeout = dropped->included_invincibility/10 + 1;
+			pentTimeout = (float)dropped->included_invincibility/10 + 1;
 			// pent will expire before quad
 			if (pentTimeout < dropped->nextthink) {
 				dropped->nextthink = pentTimeout;
@@ -1379,7 +1379,7 @@ void LoadCustomEntmap(char *mapname, char **entities)
 			bytehunk += ENT_HUNKSIZE;
 		
 		if (tmpmap == NULL) {
-			// The string must first be initialized to 0 to be usuable.
+			// The string must first be initialized to 0 to be usable.
 			// Thus calloc is used. Also note that to avoid overwriting
 			// the previous pointer value when NULL is returned, a temp
 			// pointer is used to get the return value.
@@ -1414,7 +1414,7 @@ void LoadCustomEntmap(char *mapname, char **entities)
 		return;
 
 	// Allocate tagged space for the entmap
-	if ((tmpmap2 = gi.TagMalloc((int)numbytes, TAG_LEVEL)) == NULL) {
+	if ((tmpmap2 = gi.TagMalloc(numbytes, TAG_LEVEL)) == NULL) {
 		gi.dprintf("Error - can't allocate memory for entmap, releasing memory..\n");
 		free(tmpmap);
 		return;
