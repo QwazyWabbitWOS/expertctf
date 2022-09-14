@@ -135,7 +135,7 @@ void InitGame (void)
 	_CrtMemCheckpoint(&startup1);
 #endif
 
-	gi.dprintf ("==== InitGame ECTF "EXPERT_VERSION" ====\n");
+	gi.dprintf ("==== InitGame ECTF %s ====\n", EXPERT_VERSION);
 
 	gun_x = gi.cvar ("gun_x", "0", 0);
 	gun_y = gi.cvar ("gun_y", "0", 0);
