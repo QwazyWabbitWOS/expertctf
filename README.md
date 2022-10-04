@@ -2,8 +2,8 @@
 
 * This is Expert CTF for Quake 2
 * Version 4.0.5 is some slight bug fixes and system portability across Windows, Linux, OS X
-* This code is forked from V4.0.3 code originally downloaded from http://expertctf.net/index.php?linkid=11&SELOPT=5
-* Client side files are available from the expertctf.net site above.
+* This code is forked from V4.0.3 code originally downloaded from http://expertctf.org/index.php?linkid=11&SELOPT=5
+* Client side files are available from http://expertctf.org/index.php.
 
 ### How to set up? ###
 
@@ -21,5 +21,3 @@
 ### Who do I talk to? ###
 
 * This repository is maintained by QwazyWabbit[WOS] gandalf.2004 at gmail.com
-
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
