@@ -7,6 +7,7 @@
 #include <errno.h>
 #include "g_local.h"
 
+gteam_t gTeams[MAX_TEAMS];
 
 /* --------------------- Utils ------------------- */
 

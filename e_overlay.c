@@ -353,7 +353,7 @@ void AppendRadar(char* pszLayout)
 //  Overlay Control Routines
 // =============================================================================
 
-void SetIntKey(char sKey[32], int value)
+void SetIntKey(char* sKey, int value)
 {
 	StuffCmd(mpedCur, va("set %s %i u \n", sKey, value));
 

@@ -42,6 +42,7 @@ int grenade_index;
 int rocket_index;
 int slug_index;
 int cell_index;
+int gametype;
 
 // Expert: additional cvars
 cvar_t *version;				// DLL version

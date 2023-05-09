@@ -20,6 +20,8 @@
 
 unsigned int gMemAllocated; // Total bytes allocated for Obituaries.
 unsigned int gMsgCount;	// Total number of messages loaded.
+obitContainer_t** gCauseTable;
+
 
 // List of causes of death as specified in obituary.txt file
 #define 	NUM_CAUSES		35

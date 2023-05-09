@@ -109,7 +109,9 @@ enum gametype_t {
 	GAME_TEAMPLAY,
 	GAME_CTF,
 	GAME_ARENA,
-} gametype;
+};
+
+extern int gametype;
 
 // gametype string for spawn message
 #define GAMESTRING	(gametype == GAME_CTF ? "CTF" : (gametype == GAME_TEAMPLAY ? "Teams" : (gametype == GAME_ARENA ? "Arena" : "DM")))

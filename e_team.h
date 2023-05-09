@@ -58,6 +58,6 @@ typedef struct
 	edict_t *teamList;
 } gteam_t;
 
-gteam_t gTeams[MAX_TEAMS]; 
+extern gteam_t gTeams[MAX_TEAMS]; 
 
 #endif

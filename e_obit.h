@@ -132,8 +132,6 @@ typedef struct obitContainer_s {
 	obits_t **obituary;
 } obitContainer_t;
 
-obitContainer_t **gCauseTable;
-
 //
 // e_obit.c
 //

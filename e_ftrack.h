@@ -2,7 +2,7 @@
 #define E_FTRACK_H
 
 
-list_t flags;
+extern list_t flags;
 extern char *flagtrack_statusbar;
 
 void Cmd_Drop_Flag(edict_t *player);
