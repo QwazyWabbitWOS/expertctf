@@ -12,7 +12,7 @@
  */
 
 // Version of the Expert modification
-#define	EXPERT_VERSION "4.0.11"	// QwazyWabbit from 4.0.4
+#define	EXPERT_VERSION "4.0.12"	// QwazyWabbit from 4.0.4
 
 // additional DM Flags
 #define DF_ARMOR_PROTECT						(1 << 18) 	// 262144
@@ -88,19 +88,6 @@ extern char	e_bits[NUM_SETTINGS][25];
 // other cvar shortcuts
 #define pace			((float)sv_pace->value)
 #define lethality		((float)sv_lethality->value)
-
-#ifdef _WIN32
-// MSVC++ #pragma to disable warnings about unreferenced formal parameters,
-// constant conditional expressions, and assignments in conditionals
-#pragma warning(disable : 4100 4127)
-// MSVC++ #pragma to disable warnings about vars being used before being initialized.
-// As it turns out, they DO get initialized, but the compiler isn't smart enough to
-// figure it out..
-#pragma warning(disable : 4701)
-// MSVC++ #pragma to disable warnings about wacky typecasts. Admittedly dangerous,
-// use at your own risk
-#pragma warning(disable : 4054)
-#endif
 
 // Possible game types
 enum gametype_t {
