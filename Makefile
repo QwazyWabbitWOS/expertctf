@@ -86,8 +86,10 @@ depends:
 	$(CC) $(CFLAGS) -MM *.c > dependencies
 
 all:
-	make clean
-	make depends
-	make
+	$(MAKE) clean
+	$(MAKE) depends
+	$(MAKE)
+	$(MAKE) clean
+	setarch i386 $(MAKE)
 
 -include dependencies
