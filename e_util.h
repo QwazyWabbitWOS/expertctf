@@ -13,7 +13,10 @@
 // strings
 
 //cuts through 3 layers of calls
-#define StrMatch(left, right) (Q_stricmp((left), (right)) == 0)
+inline int StrMatch(const char* left, const char* right)
+{
+	return (Q_stricmp((left), (right)) == 0);
+}
 
 int StrToInt(char *pszFrom, int Default);
 int numchr(char *str, int c);
