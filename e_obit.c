@@ -107,7 +107,7 @@ void PrintRandObitMsg(char *aName, char *vName, int aGender, int vGender, obits_
 unsigned int DiscoverContexts(edict_t *vict, edict_t *infl, edict_t *attk, vec3_t point);
 void DisplayBestObituaryMessage(int cause, unsigned int context, int aGender, int vGender, char *aName, char *vName);
 obits_t* messagesForContext(unsigned int cause, unsigned int cFlag);
-qboolean ReTagObitData();
+//QW//qboolean ReTagObitData();
 obits_t** TagMallocObituary(obitContainer_t *obitCont);
 char** TagMallocMessages(obits_t *obitEntry);
 unsigned int getCauseNumber(char *szCause);
