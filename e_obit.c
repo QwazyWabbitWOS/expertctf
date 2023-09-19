@@ -750,10 +750,10 @@ obitContainer_t **LoadMessageTree(const char *szFilename)
 			qboolean validCause;
 
 			// Re-initialize all temporary vars...
-			message = NULL;
-			causeList = NULL;
-			cause = NULL;
-			context = NULL;
+			message = "";
+			causeList = "";
+			cause = "";
+			context = "";
 			causeInt = 0;
 			cFlag = 0;
 
