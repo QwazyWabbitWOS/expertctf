@@ -270,17 +270,6 @@ void PrintRandObitMsg(char *aName, char *vName,
 	char szTemp[sizeof(char) * OBIT_BUFF_SIZE] = { 0 };
 	char atkName[sizeof(char) * 20] = { 0 };
 	char vicName[sizeof(char) * 20] = { 0 };
-	/* QwazyWabbit:
-	 * This function originally allocated these buffers with calloc() but it did
-	 * a silly thing by allocating them constant spaces of 512 and 100 characters.
-	 * It also ignored the OBIT_BUF_SIZE constant. I didn't see much point to
-	 * calling reallocating and freeing every time a player dies just to fill fix-sized
-	 * buffers for the messages so I'm setting them up here. Attacker and victim
-	 * names are fixed and limited size as well and 100 chars was WAY over-committed.
-	 * FIXME: Another remedy might be to allocate the buffers at GameInit
-	 * with gi.TagMalloc to accommodate user-defined variable length obituary
-	 * strings but I see no reason to go to the trouble at this time.
-	 */
 
 	if (aName == NULL || vName == NULL) {
 		gi.dprintf("Null player names passed to %s\n", __func__);
@@ -601,13 +590,14 @@ void InitExpertObituary(void)
 		return;
 	}
 
-	if (ReTagObitData(gCauseTable) == false)
-	{	
-		gi.dprintf(ERR_OBIT_SEP);
-		gi.dprintf(ERR_OBIT_MALLOC);
-		gi.dprintf(ERR_OBIT_SEP);
-		return;
-	}
+	//QW// Not needed, all allocations are already TagMalloc'd
+	//if (ReTagObitData(gCauseTable) == false)
+	//{	
+	//	gi.dprintf(ERR_OBIT_SEP);
+	//	gi.dprintf(ERR_OBIT_MALLOC);
+	//	gi.dprintf(ERR_OBIT_SEP);
+	//	return;
+	//}
 
 	gi.dprintf(ERR_OBIT_SUCCESS);
 	gi.dprintf(OBIT_SEP);
@@ -634,8 +624,11 @@ void addMessageToCause(char *message, int causeInt, int cFlag)
 			mallocSize = sizeof(obits_t*) * (size_t)(gCauseTable[causeInt]->entryCount + 1);
 			void* tmp = gCauseTable[causeInt]->obituary;
 			void* tp = gi.TagMalloc(mallocSize, TAG_LEVEL);
-			gCauseTable[causeInt]->obituary = tp;
-			gi.TagFree(tmp);
+			if (tp) {
+				gCauseTable[causeInt]->obituary = tp;
+				memcpy(tp, tmp, mallocSize);
+				gi.TagFree(tmp);
+			}
 		}
 		gCauseTable[causeInt]->entryCount++;
 
@@ -660,8 +653,11 @@ void addMessageToCause(char *message, int causeInt, int cFlag)
 		curObit->msgCount++;
 		char** tmp = curObit->messages;
 		char** tp = gi.TagMalloc(sizeof(char*) * (curObit->msgCount), TAG_LEVEL);
-		curObit->messages = tp;
-		gi.TagFree(tmp);
+		if (tp) {
+			curObit->messages = tp;
+			memcpy(tp, tmp, sizeof(char*) * (curObit->msgCount));
+			gi.TagFree(tmp);
+		}
 	}
 
 	// Now, allocate the string buffer.
@@ -828,25 +824,26 @@ records the memory usage.
 The routine then frees the "temporary" string pointers that were originally
 allocated.
 */
-qboolean ReTagObitData()
-{
-	unsigned int ulCause;
-	
-	// The causes member of the obitInfo structure should be the correct size.
-	
-	for (ulCause = 0 ; ulCause < NUM_CAUSES ; ulCause++)
-	{	// We'll loop through all of the entries in gCauseTable
-		// And retag the obituary. The obituary will then retag all of the messages.
-		
-		if (TagMallocObituary(gCauseTable[ulCause]) == NULL)
-		{	// Malloc error...
-			return (false);
-		}
-	}
-	
-	return (true);
-	
-}
+//QW// Function not needed.
+// //qboolean ReTagObitData()
+//{
+//	unsigned int ulCause;
+//	
+//	// The causes member of the obitInfo structure should be the correct size.
+//	
+//	for (ulCause = 0 ; ulCause < NUM_CAUSES ; ulCause++)
+//	{	// We'll loop through all of the entries in gCauseTable
+//		// And retag the obituary. The obituary will then retag all of the messages.
+//		
+//		if (TagMallocObituary(gCauseTable[ulCause]) == NULL)
+//		{	// Malloc error...
+//			return (false);
+//		}
+//	}
+//	
+//	return (true);
+//	
+//}
 
 obits_t** TagMallocObituary(obitContainer_t *obitCont)
 {
@@ -981,8 +978,11 @@ void MacroAddAll(unsigned int cFlag, const char* message)
 				mallocSize = sizeof(obits_t*) * (size_t)(gCauseTable[i]->entryCount + 1);
 				void* tmp = gCauseTable[i]->obituary;
 				void* tp = gi.TagMalloc(mallocSize, TAG_LEVEL);
-				gCauseTable[i]->obituary = tp;
-				gi.TagFree(tmp);
+				if (tp) {
+					gCauseTable[i]->obituary = tp;
+					memcpy(tp, tmp, mallocSize);
+					gi.TagFree(tmp);
+				}
 			}
 			gCauseTable[i]->entryCount++;
 
@@ -1024,8 +1024,11 @@ void MacroAddAll(unsigned int cFlag, const char* message)
 			curObit->msgCount++;
 			void* tmp = curObit->messages;
 			void* tp = gi.TagMalloc(sizeof(char*) * (curObit->msgCount), TAG_LEVEL);
-			curObit->messages = tp;
-			gi.TagFree(tmp);
+			if (tp) {
+				curObit->messages = tp;
+				memcpy(tp, tmp, sizeof(char*) * (curObit->msgCount));
+				gi.TagFree(tmp);
+			}
 			if (curObit->messages == NULL)
 			{
 				gi.dprintf(ERR_OBIT_MALLOC);
