@@ -15,10 +15,10 @@ CC = gcc -std=c11 -Wall -Wpedantic
 # this will let you build 32-bits on ia64 systems
 #
 # This is for native build
-CFLAGS=-O3 -DARCH="$(ARCH)"
+CFLAGS=-O3 -fPIC -DARCH="$(ARCH)"
 # This is for 32-bit build on 64-bit host
 ifeq ($(ARCH),i386)
-CFLAGS =-m32 -O3 -fPIC -DARCH="$(ARCH)" -DSTDC_HEADERS -I/usr/include
+CFLAGS +=-m32 -DSTDC_HEADERS -I/usr/include
 endif
 
 # use this when debugging
