@@ -135,7 +135,7 @@ game_export_t *GetGameAPI (game_import_t *import)
 
 	globals.edict_size = sizeof(edict_t);
 /*
-#ifdef __GL__ // Check if GL is enabled
+#ifdef USE_GL // Check if GL is enabled
 	//BD 6/24/98 - Fog using OpenGL
 	{
 		GLfloat fogColor[] = {sv_fogred->value, sv_foggreen->value, sv_fogblue->value, 1}; // Setup array for fog color of grey
@@ -632,7 +632,7 @@ void G_RunFrame(void)
 }
 
 /*
-#ifdef __GL__ // Check if GL is enabled
+#ifdef USE_GL // Check if GL is enabled
 
 #define GL_FOG                            0x0B60
 #define GL_FOG_INDEX                      0x0B61

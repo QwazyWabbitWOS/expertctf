@@ -5,7 +5,6 @@
 # this nice line comes from the linux kernel makefile
 ARCH := $(shell uname -m | sed -e s/i.86/i386/ -e s/sun4u/sparc64/ -e s/arm.*/arm/ -e s/sa110/arm/ -e s/alpha/axp/)
 
-#ARCH = i386
 CC = gcc -std=c11 -Wall -Wpedantic
 
 # on x64 machines do this preparation:
@@ -84,7 +83,5 @@ all:
 	$(MAKE) clean
 	$(MAKE) depends
 	$(MAKE)
-	$(MAKE) clean
-	setarch i386 $(MAKE)
 
 -include dependencies
