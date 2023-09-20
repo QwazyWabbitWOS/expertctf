@@ -433,106 +433,32 @@ qboolean MapExists(char *mapname)
 	}
 
 }
-/*
-================
-G_RunFrame
 
-Advances the world by 0.1 seconds
-================
-*/
-void G_RunFrame (void)
+// Update Timeleft variable for gspy (Spider)
+void UpdateTimeleft(void)
 {
-	edict_t	*ent;
-	edict_t	*player;			// Spider: player "object"
-
-	int	i = 0;
+	int i;
+	edict_t* player;			// Spider: player "object"
 	int	count = 0;				// Spider: Number of connected players
-	int	teamcount[2] = { 0 };	// Spider: Number of player in each team
 	int	minutes, seconds;		// Spider: Info for the timer indicator
-	char	ch[4] = { 0 };		// Spider: String with player id
-	static char	team1list[40];	// Spider: String with player id list
-	static char	team2list[40];	// Spider: String with player id list
-	static char	speclist[40];	// Spider: String with player id list
-
-	level.framenum++;
-	level.time = level.framenum*FRAMETIME;
-
-	// choose a client for monsters to target this frame
-	AI_SetSightClient ();
-
-	// exit intermissions
-
-	if (level.exitintermission)
-	{
-		ExitLevel ();
-		return;
-	}
-
-	//map warping
-	if (electionInProgress)
-	      checkElectionTime();
-
-	// Expert Arena 
-	if ((int)sv_arenaflags->value & EXPERT_ENABLE_ARENA) {
-		arenaCountdown();
-	}
-
-	//
-	// treat each object in turn
-	// even the world gets a chance to think
-	//
-	ent = &g_edicts[0];
-	for (i=0 ; i<globals.num_edicts ; i++, ent++)
-	{
-		if (!ent->inuse)
-			continue;
-
-		level.current_entity = ent;
-
-		VectorCopy (ent->s.origin, ent->s.old_origin);
-
-		// if the ground entity moved, make sure we are still on it
-		if ((ent->groundentity) && (ent->groundentity->linkcount != ent->groundentity_linkcount))
-		{
-			ent->groundentity = NULL;
-			if ( !(ent->flags & (FL_SWIM|FL_FLY)) && (ent->svflags & SVF_MONSTER) )
-			{
-				M_CheckGround (ent);
-			}
-		}
-
-		if (i > 0 && i <= maxclients->value)
-		{
-			ClientBeginServerFrame (ent);
-			continue;
-		}
-
-		G_RunEntity (ent);
-	}
-
-	// see if it is time to end a deathmatch
-	CheckDMRules ();
-
-	// build the playerstate_t structures for all players
-	ClientEndServerFrames ();
-
 
 	// Spider: update timeleft in gspy
 	if ((level.framenum % 10 == 1) && (deathmatch->value)) {	// once every second
 
-		minutes = (int)timelimit->value - (int)level.time/60;
-		seconds = (int)((int)timelimit->value*60 - (int)level.time)%60;
+		minutes = (int)timelimit->value - (int)level.time / 60;
+		seconds = (int)((int)timelimit->value * 60 - (int)level.time) % 60;
 
 		if (timelimit->value > 0) {
 
-			if (minutes-1 > 0) {	// Spider: if minutes is not negative
+			if (minutes - 1 >= 0) {	// Spider: if minutes is not negative
 
 				if ((seconds < 10) && (seconds >= 0))
 					gi.cvar_forceset("Timeleft", va("%i:0%i", minutes - 1, seconds));
 				else
 					gi.cvar_forceset("Timeleft", va("%i:%i", minutes - 1, seconds));
 
-			} else {
+			}
+			else {
 				gi.cvar_forceset("Timeleft", "Time limit reached");
 
 				// Spider: count the number of connected client
@@ -545,13 +471,27 @@ void G_RunFrame (void)
 					ExitLevel();
 			}
 
-		} else if (timelimit->value == 0)
+		}
+		else if (timelimit->value == 0)
 			gi.cvar_forceset("Timeleft", "No time limit");
 		else
 			gi.cvar_forceset("Timeleft", "Invalid");
 
 	}
-	
+}
+
+// Update Team variables for gspy (Spider)
+void UpdateTeamXList(void)
+{
+	int i;
+	edict_t* player;			// Spider: player "object"
+	int	count = 0;				// Spider: Number of connected players
+	int	teamcount[2] = { 0 };	// Spider: Number of player in each team
+	char	ch[4] = { 0 };		// Spider: String with player id
+	static char	team1list[40];	// Spider: String with player id list
+	static char	team2list[40];	// Spider: String with player id list
+	static char	speclist[40];	// Spider: String with player id list
+
 	// Spider: update TeamXList in gspy
 	if ((level.framenum % 150 == 1) && (deathmatch->value) && (ctf->value)) { // once every 15 seconds
 
@@ -568,13 +508,13 @@ void G_RunFrame (void)
 			teamcount[TEAM1] = 0;
 			teamcount[TEAM2] = 0;
 
-			if(count < 10)
+			if (count < 10)
 			{
 				ch[0] = (char)(count + 48);				// Spider: (char)(48) = '0'
 				ch[1] = '-';
 				ch[2] = '\0';
 			}
-			else if((count >= 10) && (count < 100))
+			else if ((count >= 10) && (count < 100))
 			{
 				ch[0] = (char)(count / 10 + 48);
 				ch[1] = (char)(count % 10 + 48);			// Spider: (char)(48) = '0'
@@ -598,7 +538,7 @@ void G_RunFrame (void)
 				strcat(speclist, ch);
 		}
 
-		if(SvEvenTeam->value && (teamcount[TEAM1] != teamcount[TEAM2]))
+		if (SvEvenTeam->value && (teamcount[TEAM1] != teamcount[TEAM2]))
 			sv_paused->value = 1;
 
 		gi.cvar_forceset("Team1List", team1list);
@@ -613,17 +553,98 @@ void G_RunFrame (void)
 		else
 			gi.cvar_forceset("needpass", "0");
 	}
-//#define GL_FOG                            0x0B60
-//#define GL_FOG_INDEX                      0x0B61
-//#define GL_FOG_DENSITY                    0x0B62
-//#define GL_FOG_START                      0x0B63
-//#define GL_FOG_END                        0x0B64
-//#define GL_FOG_MODE                       0x0B65
-//#define GL_FOG_COLOR                      0x0B66
-/*
+}
 
+/*
+================
+G_RunFrame
+
+Advances the world by 0.1 seconds
+================
+*/
+void G_RunFrame(void)
+{
+	edict_t* ent;
+	int	i = 0;
+
+	level.framenum++;
+	level.time = level.framenum * FRAMETIME;
+
+	// choose a client for monsters to target this frame
+	AI_SetSightClient();
+
+	// exit intermissions
+	if (level.exitintermission) {
+		ExitLevel();
+		return;
+	}
+
+	//map warping
+	if (electionInProgress) {
+		checkElectionTime();
+	}
+
+  // Expert Arena 
+	if ((int)sv_arenaflags->value & EXPERT_ENABLE_ARENA) {
+		arenaCountdown();
+	}
+
+	//
+	// treat each object in turn
+	// even the world gets a chance to think
+	//
+	ent = &g_edicts[0];
+	for (i = 0; i < globals.num_edicts; i++, ent++)
+	{
+		if (!ent->inuse)
+			continue;
+
+		level.current_entity = ent;
+
+		VectorCopy(ent->s.origin, ent->s.old_origin);
+
+		// if the ground entity moved, make sure we are still on it
+		if ((ent->groundentity) && (ent->groundentity->linkcount != ent->groundentity_linkcount))
+		{
+			ent->groundentity = NULL;
+			if (!(ent->flags & (FL_SWIM | FL_FLY)) && (ent->svflags & SVF_MONSTER))
+			{
+				M_CheckGround(ent);
+			}
+		}
+
+		if (i > 0 && i <= maxclients->value)
+		{
+			ClientBeginServerFrame(ent);
+			continue;
+		}
+
+		G_RunEntity(ent);
+	}
+
+	// see if it is time to end a deathmatch
+	CheckDMRules();
+
+	// build the playerstate_t structures for all players
+	ClientEndServerFrames();
+	UpdateTimeleft();
+	UpdateTeamXList();
+}
+
+/*
 #ifdef __GL__ // Check if GL is enabled
+
+#define GL_FOG                            0x0B60
+#define GL_FOG_INDEX                      0x0B61
+#define GL_FOG_DENSITY                    0x0B62
+#define GL_FOG_START                      0x0B63
+#define GL_FOG_END                        0x0B64
+#define GL_FOG_MODE                       0x0B65
+#define GL_FOG_COLOR                      0x0B66
+
 //BD 6/24/98 - Fog using OpenGL
+void OpenGLFog(void)
+{
 	{
 		if(sv_fogred->value > 1 || sv_fogred->value < 0)
 		{
@@ -640,7 +661,7 @@ void G_RunFrame (void)
 			gi.dprintf("valid blue fog color option 0.0 to 1.0 resetting to default\n");
 			gi.cvar_forceset("sv_fogblue","0.2");
 		}
-		
+
 		GLfloat fogColor[] = {sv_fogred->value, sv_foggreen->value, sv_fogblue->value, 1}; // Setup array for fog color of grey
 		//GLfloat fogColor[] = {0.2, 0.2, 0.2, 1}; // Setup array for fog color of grey
 
@@ -650,10 +671,9 @@ void G_RunFrame (void)
 		glHint (GL_FOG_HINT, GL_DONT_CARE);// Set the default calculation mode to best possible
 		glFogf (GL_FOG_START, 1);           // Start the near fog clipping plane to 1
 		glFogf (GL_FOG_END, sv_fogclipping->value);// Set the far clipping plane to the server setting
-		
+
 	}
 	glClearColor ( sv_fogred->value, sv_foggreen->value, sv_fogblue->value, 1.0); // Clear the background color to the fog color
+}
 #endif
 */
-}
-

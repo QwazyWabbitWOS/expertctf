@@ -12,7 +12,7 @@
  */
 
 // Version of the Expert modification
-#define	EXPERT_VERSION "4.0.13"	// QwazyWabbit from 4.0.4
+#define	EXPERT_VERSION "4.0.14"	// QwazyWabbit from 4.0.4
 
 // additional DM Flags
 #define DF_ARMOR_PROTECT						(1 << 18) 	// 262144
