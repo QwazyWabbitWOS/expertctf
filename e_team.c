@@ -614,7 +614,7 @@ void enforceTeamModelSkin(edict_t *player)
 	int bestrating, currentrating;
 	char *chosenModelAndSkin = Info_ValueForKey (player->client->pers.userinfo, "skin");
 	char* chosenModel, * allowedModel;
-//	char* chosenSkin, * allowedSkin;
+	//char* chosenSkin, * allowedSkin;
 	int numEqualSkins;
 
 	if (!(expflags & EXPERT_ENFORCED_TEAMS)) {
@@ -675,8 +675,8 @@ void enforceTeamModelSkin(edict_t *player)
 	chosenModel = modelFromString(chosenModelAndSkin);
 	allowedModel = modelFromString(bestAllowedModelAndSkin);
 	
-//	chosenSkin = skinFromString(chosenModelAndSkin);
-//	allowedSkin = skinFromString(bestAllowedModelAndSkin);
+	//chosenSkin = skinFromString(chosenModelAndSkin);
+	//allowedSkin = skinFromString(bestAllowedModelAndSkin);
 
 	if (Q_stricmp(chosenModel, allowedModel) == 0) {
 		setSkinAndModel(player, chosenModelAndSkin);
