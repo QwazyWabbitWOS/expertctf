@@ -8,9 +8,9 @@
 ### How to set up? ###
 
 * git clone https://github.com/QwazyWabbitWOS/expertctf.git
-* On Linux, make clean, then make.
+* On Linux, make clean, then make all.
 * Dependencies: Visual Studio 2019 on Windows, or gcc/clang and GNU make on Linux
-* On Windows with VS2019, use git clone per above, then open the .sln file with VS.
+* On Windows with VS2022, use git clone per above, then open the .sln file with VS.
 * This version compiles cleanly on Debian Linux GCC 4.3.2 and OS X 10.12.2 with Clang 8.0.0
 * NOTE: the Debug directory will be created by cloning the repo, you'll need to delete it after your local repository is created, sorry about that. The .gitignore file wasn't up to date before I installed the repo here.
 
