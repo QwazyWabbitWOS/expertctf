@@ -1,23 +1,26 @@
-### Expert CTF DLL code for Windows and Linux ###
+## Expert CTF DLL code for Windows and Linux ##
 
 * This is Expert CTF for Quake 2
 * Version 4.0.5 is some slight bug fixes and system portability across Windows, Linux, OS X
 * This code is forked from V4.0.3 code originally downloaded from http://expertctf.org/index.php?linkid=11&SELOPT=5
 * Client side files are available from http://expertctf.org/index.php.
 
-### How to set up? ###
+## How to set up? ##
 
+### Linux ###
 * git clone https://github.com/QwazyWabbitWOS/expertctf.git
-* On Linux, make clean, then make all.
-* Dependencies: Visual Studio 2019 on Windows, or gcc/clang and GNU make on Linux
-* On Windows with VS2022, use git clone per above, then open the .sln file with VS.
-* This version compiles cleanly on Debian Linux GCC 4.3.2 and OS X 10.12.2 with Clang 8.0.0
-* NOTE: the Debug directory will be created by cloning the repo, you'll need to delete it after your local repository is created, sorry about that. The .gitignore file wasn't up to date before I installed the repo here.
+* Then 'make clean', then 'make -j all'.
+* Dependencies: gcc and GNU make.
+* Copy or move the resulting *.so files to the ctf folder of your quake2 installation. This will be either 'ctf' or 'expert'.
 
-### Knowns bugs as of 2020.05.17 ###
+### Windows ###
+* On Windows with VS2022, use git clone per above, then open the .sln file with VS.
+* Rebuild Solution.
+
+## Knowns bugs as of 2020.05.17 ##
 
 * None
 
-### Who do I talk to? ###
+## Who do I talk to? ##
 
 * This repository is maintained by QwazyWabbit[WOS] gandalf.2004 at gmail.com
