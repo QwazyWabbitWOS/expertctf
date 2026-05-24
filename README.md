@@ -9,7 +9,7 @@
 
 ### Linux ###
 * git clone https://github.com/QwazyWabbitWOS/expertctf.git
-* Then 'make clean', then 'make -j all'.
+* Then 'make clean', then 'make -j all'. This builds x64 by default on x64 Linux. See the instructions in the Makefile for x86 targets in on x64 Linux hosts.
 * Dependencies: gcc and GNU make.
 * Copy or move the resulting *.so files to the ctf folder of your quake2 installation. This will be either 'ctf' or 'expert'.
 
